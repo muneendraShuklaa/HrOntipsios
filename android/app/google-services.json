@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "758960097793",
+    "project_id": "hrontips-cda03",
+    "storage_bucket": "hrontips-cda03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758960097793:android:11cbd9a8f2c16beccb0e00",
+        "android_client_info": {
+          "package_name": "com.hrontips"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758960097793-rib7eftasfrkidstrp8gd6m824h611oq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHzXt1AwraqaZp8OnWV1oj4qJumB6xDWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758960097793-rib7eftasfrkidstrp8gd6m824h611oq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

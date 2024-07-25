@@ -1,0 +1,32 @@
+export const color = {
+  theameColor: '#fff', ////if change whole app theame
+  background: '#fff',
+  textColor: '#000',
+  TextColorWhite: '#fff',
+  bordercolor: '#3083EF',
+  HeaderColor: '#3083EF',
+  textColorheading: '#3083EF',
+  ClorText: '#3083EF',
+  BackPagecolor: '#E4F5FF',
+  Darkk: '',
+  Done: '#3083EF',
+  theameColorEjoin: '#f2f2f2',
+  EjoinText: '#003982',
+  IconColor: '#3083EF',
+};
+export const darkColor = {
+  theameColor: '#000', ////if change whole app theame
+  background: '#000',
+  textColor: '#fff',
+  TextColorWhite: '#000',
+  HeaderColor: '#3083EF',
+  bordercolor: '#3083EF',
+  textColor: '#fff',
+  ClorText: '#fff',
+  BackPagecolor: '#000',
+  Darkk: '#000',
+  Done: '#000',
+  theameColorEjoin: '#000',
+  EjoinText: '#fff',
+  IconColor: '#3083EF',
+};
