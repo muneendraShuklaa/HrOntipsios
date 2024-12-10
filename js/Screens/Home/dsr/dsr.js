@@ -53,6 +53,7 @@ class dsr extends Component {
             rightFunctionality={() => {
               this.RBSheet.open();
             }}
+            isDark={this.props.isDark}
           />
           {this.state.DSR == '' ? (
             <View style={{flex: 1, marginTop: 50}}>
@@ -289,7 +290,14 @@ class dsr extends Component {
               </Text>
             </View>
             <View
-              style={{height: 'auto', justifyContent: 'center', width: '50%'}}>
+              style={{
+                height: 'auto',
+                justifyContent: 'center',
+                width: '50%',
+                backgroundColor: this.props.isDark ? 'lightgrey' : '#fff',
+                // borderWidth: 1,
+                // borderColor: this.props.isDark ? '#FFF' : '#fff',
+              }}>
               <Text
                 style={[
                   styles.Title,
@@ -297,7 +305,7 @@ class dsr extends Component {
                   {
                     alignSelf: 'center',
                     fontSize: 16,
-                    color: utils.color.textColor,
+                    color: this.props.isDark ? '#000' : '#000',
                   },
                 ]}>
                 {item.DSRDate}
@@ -345,7 +353,7 @@ const styles = StyleSheet.create({
     height: 'auto',
     width: '100%',
     borderRadius: 10,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: {

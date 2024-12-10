@@ -33,8 +33,8 @@ export default class signInHelper {
         {
           username: this.self.state.email,
           password: this.self.state.password,
-          // "username":  "JHT10088",
-          // "password":"amit@098",
+          // username: 'rituparnaganguly@drdangslab.com',
+          // password: 'Ritu@0808',
           // IMEI: '',
           // DeviceId: '',
           DomainName: 'MobileApplicationLogin',
@@ -49,8 +49,10 @@ export default class signInHelper {
       )
 
       .then(async response => {
-        console.log('dataaaaassdsfs', response.data);
+        console.log('dataaaaassdsfs =======>', response.data);
         console.log('loginTokennnnn', response.data.AuthToken);
+        this.self.setState({message: response.data.Message});
+
         await AsyncStorage.setItem('Name', response.data.FirstName);
         await AsyncStorage.setItem('Department', response.data.DesignationId);
         await AsyncStorage.setItem('AuthToken', response.data.AuthToken);
@@ -81,12 +83,11 @@ export default class signInHelper {
         // this.self.props.navigation.navigate('bottomTabBarr', {});
 
         // else {
-        //     this.self.setState({ isloading: false })
         //     alert(response.data.message)
         // }
       })
       .catch(function (error) {
-        console.log(error);
+        console.log('error is =====>', error);
         // alert('Please Enter Valid Credentials');
         alert(response.data.message);
         // console.warn("guggsgggdsy", error);

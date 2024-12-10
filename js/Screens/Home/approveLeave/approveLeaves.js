@@ -44,6 +44,7 @@ class approveLeaves extends Component {
     this.helper.LeaveApprove();
   }
   render() {
+    console.log('Leave Record------->', this.state.LeaveRecord);
     return (
       <ImageBackground
         imageStyle={{tintColor: this.props.themeColor.Darkk}}
@@ -103,12 +104,14 @@ class approveLeaves extends Component {
               <View style={{height: 100, width: 100}}>
                 <View
                   style={{
-                    backgroundColor: '#fff',
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
                     height: 65,
                     width: 65,
                     borderRadius: 10,
                     justifyContent: 'center',
                     alignSelf: 'center',
+                    borderWidth: 1,
+                    borderColor: this.props.isDark ? '#fff' : '#fff',
                   }}>
                   <Text
                     style={{
@@ -135,7 +138,9 @@ class approveLeaves extends Component {
               <View style={{height: 100, width: 100}}>
                 <View
                   style={{
-                    backgroundColor: '#fff',
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
+                    borderWidth: 1,
+                    borderColor: this.props.isDark ? '#fff' : '#fff',
                     height: 65,
                     width: 65,
                     borderRadius: 10,
@@ -167,7 +172,9 @@ class approveLeaves extends Component {
               <View style={{height: 100, width: 100}}>
                 <View
                   style={{
-                    backgroundColor: '#fff',
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
+                    borderWidth: 1,
+                    borderColor: this.props.isDark ? '#fff' : '#fff',
                     height: 65,
                     width: 65,
                     borderRadius: 10,
@@ -219,7 +226,9 @@ class approveLeaves extends Component {
             showsHorizontalScrollIndicator={false}
             data={this.state.LeaveRecord}
             keyExxtractor={(item, index) => index.toString}
-            renderItem={({item, index}) => this.renderItem(item, index)}
+            renderItem={({item, index}) =>
+              this.renderItem(item, index, this.props.isDark)
+            }
           />
         )}
 
@@ -469,7 +478,7 @@ class approveLeaves extends Component {
     );
   }
 
-  renderItem(item, index) {
+  renderItem(item, index, isDark) {
     return (
       <View
         style={{
@@ -480,7 +489,13 @@ class approveLeaves extends Component {
           justifyContent: 'center',
           alignSelf: 'center',
         }}>
-        <View style={styles.shadowView}>
+        <View
+          style={[
+            styles.shadowView,
+            {
+              backgroundColor: isDark ? 'lightgrey' : '#fff',
+            },
+          ]}>
           {this.state.approvedIndex == index ? (
             <View>
               <TouchableOpacity
@@ -536,7 +551,10 @@ class approveLeaves extends Component {
                       {item.Status == 'Rejected' ? (
                         <Image
                           source={utils.icons.Rted}
-                          style={{alignSelf: 'center', marginRight: 10}}
+                          style={{
+                            alignSelf: 'center',
+                            marginRight: 10,
+                          }}
                         />
                       ) : (
                         <View style={{}}>
@@ -571,7 +589,7 @@ class approveLeaves extends Component {
                 <View
                   style={{
                     borderTopWidth: 1,
-                    borderTopColor: '#cacaca',
+                    borderTopColor: isDark ? '#000' : '#cacaca',
                     flexDirection: 'row',
                   }}>
                   <Image

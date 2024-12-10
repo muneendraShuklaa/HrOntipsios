@@ -211,12 +211,15 @@ class newTask extends Component {
     }
   };
   render() {
+    console.log('upcomeing props is ---------->', this.props);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
         <View
           style={{
             flex: 1,
-            backgroundColor: utils.color.BackPagecolor,
+            backgroundColor: this.props.isDark
+              ? '#000'
+              : utils.color.BackPagecolor,
             padding: 10,
           }}>
           {/* <StatusBar
@@ -229,6 +232,7 @@ class newTask extends Component {
             leftFunction={() => {
               this.props.navigation.goBack();
             }}
+            isDark={this.props.isDark}
             // rightIcon={utils.icons.splashLogo} rightFunctionality={() => { this.props.navigation.navigate("Profile") }}
           />
           <View
@@ -240,7 +244,16 @@ class newTask extends Component {
               justifyContent: 'center',
               alignSelf: 'center',
             }}>
-            <View style={[styles.shadowView, {height: 'auto'}]}>
+            <View
+              style={[
+                styles.shadowView,
+                {
+                  height: 'auto',
+                  backgroundColor: this.props.isDark ? '#000' : '#fff',
+                  borderWidth: this.props.isDark ? 1 : 0,
+                  borderColor: this.props.isDark ? '#fff' : 'white',
+                },
+              ]}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -254,14 +267,16 @@ class newTask extends Component {
                   borderWidth: 0.4,
                   bordercolor: 'grey',
                   width: '95%',
-                  backgroundColor: '#fff',
+                  backgroundColor: this.props.isDark ? '#0000' : '#fff',
                   borderRadius: 10,
                   marginTop: 10,
                   marginLeft: 10,
+                  borderWidth: 1,
+                  borderColor: this.props.isDark ? '#fff' : 'grey',
                 }}>
                 <TextInput
                   placeholder="Add Your Task"
-                  placeholderTextColor={'#000'}
+                  placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
                   value={this.state.Task}
                   allowFontScaling={false}
                   onChangeText={text => {
@@ -269,7 +284,10 @@ class newTask extends Component {
                   }}
                   multiline={true}
                   maxLength={500}
-                  style={{marginLeft: 10, color: '#000'}}></TextInput>
+                  style={{
+                    marginLeft: 10,
+                    color: this.props.isDark ? '#fff' : '#000',
+                  }}></TextInput>
               </View>
               <View
                 style={{
@@ -277,7 +295,9 @@ class newTask extends Component {
                   borderWidth: 0.4,
                   bordercolor: 'grey',
                   width: '95%',
-                  backgroundColor: '#fff',
+                  backgroundColor: this.props.isDark ? '#000' : '#fff',
+                  borderWidth: 1,
+                  borderColor: this.props.isDark ? '#fff' : 'grey',
                   borderRadius: 10,
                   marginTop: 20,
                   marginLeft: 10,
@@ -291,8 +311,11 @@ class newTask extends Component {
                   multiline={true}
                   value={this.state.discribe}
                   maxLength={500}
-                  placeholderTextColor={'#000'}
-                  style={{marginLeft: 10, color: '#000'}}></TextInput>
+                  placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
+                  style={{
+                    marginLeft: 10,
+                    color: this.props.isDark ? '#fff' : '#000',
+                  }}></TextInput>
               </View>
 
               <View
@@ -307,9 +330,12 @@ class newTask extends Component {
                     borderWidth: 0.4,
                     bordercolor: 'grey',
                     width: '45%',
-                    backgroundColor: '#fff',
+                    // backgroundColor: '#fff',
                     borderRadius: 10,
                     marginTop: 10,
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
+                    borderWidth: 1,
+                    borderColor: this.props.isDark ? '#fff' : 'grey',
                   }}>
                   <SelectDropdown
                     data={this.state.Category}
@@ -334,20 +360,20 @@ class newTask extends Component {
                     buttonStyle={{
                       width: '90%',
                       height: 40,
-                      backgroundColor: '#FFF',
+                      backgroundColor: this.props.isDark ? '#000' : '#FFF',
                       borderRadius: 20,
                     }}
                     renderDropdownIcon={isOpened => {
                       return (
                         <FontAwesome
                           name={isOpened ? 'chevron-up' : 'chevron-down'}
-                          color={'#444'}
+                          color={this.props.isDark ? '#fff' : '#444'}
                           size={18}
                         />
                       );
                     }}
                     buttonTextStyle={{
-                      color: '#444',
+                      color: this.props.isDark ? '#fff' : '#444',
                       // paddingLeft: 10,
                       textAlign: 'left',
                     }}
@@ -368,10 +394,12 @@ class newTask extends Component {
                 <View
                   style={{
                     height: 'auto',
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
+
                     borderWidth: 0.4,
-                    bordercolor: 'grey',
+                    bordercolor: this.props.isDark ? '#fff' : 'grey',
                     width: '45%',
-                    backgroundColor: '#fff',
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
                     borderRadius: 10,
                     marginTop: 10,
                   }}>
@@ -398,20 +426,20 @@ class newTask extends Component {
                     buttonStyle={{
                       width: '90%',
                       height: 40,
-                      backgroundColor: '#FFF',
+                      backgroundColor: this.props.isDark ? '#000' : '#FFF',
                       borderRadius: 20,
                     }}
                     renderDropdownIcon={isOpened => {
                       return (
                         <FontAwesome
                           name={isOpened ? 'chevron-up' : 'chevron-down'}
-                          color={'#444'}
+                          color={this.props.isDark ? '#fff' : '#444'}
                           size={18}
                         />
                       );
                     }}
                     buttonTextStyle={{
-                      color: '#444',
+                      color: this.props.isDark ? '#fff' : '#444',
                       // paddingLeft: 10,
                       textAlign: 'left',
                     }}
@@ -442,6 +470,8 @@ class newTask extends Component {
                     flexDirection: 'row',
                     borderRadius: 10,
                     height: 'auto',
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
+                    borderColor: this.props.isDark ? '#fff' : '#000',
                   },
                 ]}>
                 <Icon
@@ -474,20 +504,20 @@ class newTask extends Component {
                   buttonStyle={{
                     width: '90%',
                     height: 40,
-                    backgroundColor: '#FFF',
+                    backgroundColor: this.props.isDark ? '#000' : '#FFF',
                     borderRadius: 8,
                   }}
                   renderDropdownIcon={isOpened => {
                     return (
                       <FontAwesome
                         name={isOpened ? 'chevron-up' : 'chevron-down'}
-                        color={'#444'}
+                        color={this.props.isDark ? '#fff' : '#444'}
                         size={18}
                       />
                     );
                   }}
                   buttonTextStyle={{
-                    color: '#444',
+                    color: this.props.isDark ? '#fff' : '#444',
                     // paddingLeft: 10,
                     textAlign: 'left',
                   }}
@@ -526,14 +556,15 @@ class newTask extends Component {
                 }}
                 style={{
                   height: 40,
-                  borderWidth: 0.4,
+                  borderWidth: 1,
                   bordercolor: 'grey',
                   width: '95%',
-                  backgroundColor: '#fff',
+                  backgroundColor: this.props.isDark ? '#000' : '#fff',
                   flexDirection: 'row',
                   borderRadius: 10,
                   marginTop: 20,
                   marginLeft: 10,
+                  borderColor: this.props.isDark ? '#fff' : '#000',
                 }}>
                 <Icon
                   name="calendar"
@@ -544,8 +575,11 @@ class newTask extends Component {
                 <TextInput
                   placeholder=""
                   editable={false}
-                  placeholderTextColor={'#000'}
-                  style={{marginLeft: 10, color: '#000'}}>
+                  placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
+                  style={{
+                    marginLeft: 10,
+                    color: this.props.isDark ? '#fff' : '#000',
+                  }}>
                   {moment(this.state.selectedDate?.dateString).format('ll')}
                 </TextInput>
               </TouchableOpacity>

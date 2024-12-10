@@ -93,7 +93,7 @@ class dailylog extends Component {
           <View
             style={{
               marginTop: 30,
-              backgroundColor: '#fff',
+              backgroundColor: this.props.isDark ? 'lightgrey' : '#fff',
               margin: 20,
               borderRadius: 30,
               padding: 10,
@@ -110,7 +110,7 @@ class dailylog extends Component {
                 header: {height: 0},
                 backgroundColor: '#00adf5',
                 calendarBackground: this.props.themeColor.DarkBackground,
-                textSectionTitleColor: '#b6c1cd',
+                textSectionTitleColor: this.props.isDark ? 'black' : 'grey',
                 textSectionTitleDisabledColor: '#d9e1e8',
                 // selectedDayBackgroundColor: 'red',
                 // selectedDayBackgroundColor: '#00adf5',
@@ -181,7 +181,7 @@ class dailylog extends Component {
               style={{
                 height: 'auto',
                 width: '30%',
-                backgroundColor: '#fff',
+                backgroundColor: this.props.isDark ? 'lightgrey' : '#fff',
                 borderRadius: 10,
                 flexDirection: 'row',
               }}>
@@ -207,7 +207,7 @@ class dailylog extends Component {
                 height: 'auto',
                 width: '30%',
                 // marginTop: 10,
-                backgroundColor: '#fff',
+                backgroundColor: this.props.isDark ? 'lightgrey' : '#fff',
                 borderRadius: 10,
                 flexDirection: 'row',
               }}>
@@ -233,7 +233,7 @@ class dailylog extends Component {
                 height: 'auto',
                 width: '30%',
                 // marginTop: 10,
-                backgroundColor: '#fff',
+                backgroundColor: this.props.isDark ? 'lightgrey' : '#fff',
                 borderRadius: 10,
                 flexDirection: 'row',
               }}>

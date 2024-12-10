@@ -30,13 +30,15 @@ export default class RequestHelper {
         },
       )
       .then(async response => {
-        // console.log('get_data...vendor', response.data.Table);
+        console.log('get_data...vendor======>>>>>>>', response.data);
         let tmpArr = response.data.Table.map(val => {
           return val.LeaveName;
         });
         this.self.setState({
           DropdownVendorList: tmpArr,
           LeaveSplit: response.data.Table,
+          validation: response.data.Table[1].MaxLeaveAllowed,
+          // validation: 2,
         });
       })
       .catch(function (error) {
@@ -49,7 +51,7 @@ export default class RequestHelper {
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
 
-    console.log('LeaveApprovall');
+    console.log('Leave Approval');
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.LeaveBalance,
@@ -66,7 +68,7 @@ export default class RequestHelper {
         },
       )
       .then(async response => {
-        console.log('get_data...vendor', response.data.Table);
+        console.log('get_data...vendor========>', response.data.Table);
         let tmpArr = response.data.Table.map(val => {
           return val.Balance;
         });
@@ -121,7 +123,7 @@ export default class RequestHelper {
       },
     })
       .then(async response => {
-        console.log('ClockIn...', response);
+        console.log('Leave apply res====>', response);
         this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
       })
       .catch(function (error) {

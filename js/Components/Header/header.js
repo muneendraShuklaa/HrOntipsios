@@ -17,16 +17,28 @@ class header extends PureComponent {
   }
 
   render() {
+    console.log('Props value is --------->', this.props);
     return (
       <View>
         {Platform.OS === 'ios' ? (
-          <View style={styles.container}>
-            <View style={styles.titleContainer}>
+          <View
+            style={[
+              styles.container,
+              {
+                backgroundColor: this.props.isDark
+                  ? '#000'
+                  : utils.color.BackPagecolor,
+              },
+            ]}>
+            <View style={[styles.titleContainer, {backgroundColor: 'red'}]}>
               <TouchableOpacity onPress={this.props.leftFunction}>
                 <Image
                   // source={utils.icons.splashLogo}
                   source={this.props.lefticon}
-                  style={styles.backIcon}
+                  style={[
+                    styles.backIcon,
+                    {tintColor: this.props.isDark ? '#FFF' : '#000'},
+                  ]}
                 />
               </TouchableOpacity>
               {/* <Text style={[utils.fontStyle.TextTitle,{justifyContent:'center',alignSelf:'center',textAlign:'justify',alignContent:'center'}]}>
@@ -40,7 +52,7 @@ class header extends PureComponent {
                   marginTop: vh(0),
                   textAlign: 'justify',
                   fontWeight: 'bold',
-                  color: '#000',
+                  // color: this.props.isDark ? '#FFF' : '#000',
                 },
               ]}>
               {this.props.title}
@@ -60,7 +72,13 @@ class header extends PureComponent {
           <View style={[styles.container, {height: vh(60)}]}>
             <View style={[styles.titleContainer, {marginTop: 0}]}>
               <TouchableOpacity onPress={this.props.leftFunction}>
-                <Image source={this.props.lefticon} style={styles.backIcon} />
+                <Image
+                  source={this.props.lefticon}
+                  style={[
+                    styles.backIcon,
+                    {tintColor: this.props.isDark ? '#fff' : 'grey'},
+                  ]}
+                />
               </TouchableOpacity>
             </View>
             <Text
@@ -69,8 +87,9 @@ class header extends PureComponent {
                 {
                   marginTop: vh(5),
                   textAlign: 'justify',
-                  color: '#000',
+                  // color: '#000',
                   fontSize: 18,
+                  color: this.props.isDark ? '#ffff' : '#000',
                 },
               ]}>
               {this.props.title}

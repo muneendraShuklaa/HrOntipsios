@@ -221,6 +221,8 @@ Payslip:  */}
             marginTop: -20,
             borderRadius: 10,
             marginBottom: -50,
+            borderWidth: this.props.isDark ? 1 : 0,
+            borderColor: this.props.isDark ? '#fff' : 'white',
           }}>
           <View
             style={{
@@ -734,6 +736,8 @@ Payslip:  */}
             borderRadius: 20,
             marginTop: 80,
             backgroundColor: this.props.themeColor.theameColor,
+            borderWidth: this.props.isDark ? 1 : 0,
+            borderColor: this.props.isDark ? '#fff' : 'white',
           }}>
           <View style={{flexDirection: 'row'}}>
             <Image source={utils.icons.Lock} style={{alignSelf: 'center'}} />

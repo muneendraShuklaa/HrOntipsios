@@ -10,7 +10,6 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import {WebView} from 'react-native-webview';
 import utils from '../../../Utils';
 import {Header} from '../../../Components/Header';
 import {withMyHook} from '../../../Utils/Dark';
@@ -61,11 +60,74 @@ class team extends Component {
       InLong: InLong,
     });
   }
+
   render() {
+    const darkMapStyle = [
+      {
+        elementType: 'geometry',
+        stylers: [{color: '#212121'}],
+      },
+      {
+        elementType: 'labels.icon',
+        stylers: [{visibility: 'off'}],
+      },
+      {
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#e0e0e0'}],
+      },
+      {
+        elementType: 'labels.text.stroke',
+        stylers: [{color: '#212121'}],
+      },
+      {
+        featureType: 'administrative',
+        elementType: 'geometry',
+        stylers: [{color: '#757575'}],
+      },
+      {
+        featureType: 'administrative.country',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#9e9e9e'}],
+      },
+    ];
+
+    const lightMapStyle = [
+      {
+        elementType: 'geometry',
+        stylers: [{color: '#ffffff'}],
+      },
+      {
+        elementType: 'labels.icon',
+        stylers: [{visibility: 'on'}],
+      },
+      {
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#000000'}],
+      },
+      {
+        elementType: 'labels.text.stroke',
+        stylers: [{color: '#ffffff'}],
+      },
+      {
+        featureType: 'administrative',
+        elementType: 'geometry',
+        stylers: [{color: '#e0e0e0'}],
+      },
+      {
+        featureType: 'administrative.country',
+        elementType: 'labels.text.fill',
+        stylers: [{color: '#333333'}],
+      },
+    ];
+
     // alert(this.state.TeamTrack);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
-        <View style={{flex: 1, backgroundColor: '#fff'}}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: this.props.isDark ? '#000' : '#fff',
+          }}>
           {/* <StatusBar
                 hidden={false}
                 backgroundColor={utils.color.HeaderColor}
@@ -76,6 +138,7 @@ class team extends Component {
             leftFunction={() => {
               this.props.navigation.goBack();
             }}
+            isDark={this.props.isDark}
             // rightIcon={utils.icons.splashLogo} rightFunctionality={() => { this.props.navigation.navigate("Profile") }}
           />
 
@@ -86,6 +149,7 @@ class team extends Component {
             <MapView
               // style={styles.map}
               scrollEnabled={true}
+              customMapStyle={this.props.isDark ? darkMapStyle : lightMapStyle}
               // zoomEnabled={true}
               pitchEnabled={true}
               rotateEnabled={true}
@@ -98,10 +162,10 @@ class team extends Component {
               provider={
                 Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE
               }
-              style={styles.map}
+              style={[styles.map, {shadowColor: '#000'}]}
               region={{
-                latitude: 28.618888228344087,
-                longitude: 77.3792218967474,
+                latitude: 28.62269,
+                longitude: 77.381699,
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
               }}>
@@ -115,7 +179,9 @@ class team extends Component {
                 flexDirection: 'row',
                 alignSelf: 'center',
                 padding: 10,
-                backgroundColor: this.props.themeColor.HeaderColor,
+                backgroundColor: this.props.isDark
+                  ? '#000'
+                  : this.props.themeColor.HeaderColor,
                 borderRadius: 20,
                 margin: 10,
                 justifyContent: 'flex-end',
@@ -177,7 +243,7 @@ class team extends Component {
                     {
                       alignSelf: 'center',
                       textAlign: 'center',
-                      color: utils.color.blackText,
+                      color: this.props.isDark ? '#fff' : utils.color.blackText,
                       fontSize: normalize(20),
                     },
                   ]}>

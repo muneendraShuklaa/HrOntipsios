@@ -9,7 +9,7 @@ export default class NotificationHelper {
     this.self = self;
   }
   NotificationData = async () => {
-    console.log('Comment');
+    console.log('Comment on notification ');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const EmpId = await AsyncStorage.getItem('EmpId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
@@ -28,7 +28,7 @@ export default class NotificationHelper {
         },
       )
       .then(async response => {
-        console.log('notificationn', response.data);
+        console.log('notificationn  =========>>', response.data);
         this.self.setState({
           notification: response.data.Table,
         });

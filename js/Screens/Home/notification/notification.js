@@ -32,7 +32,7 @@ class notification extends Component {
     setTimeout(() => {
       // alert('hhh');
       this.helper.NotificationData();
-    }, 3000);
+    }, 1000);
   }
 
   render() {
@@ -49,6 +49,7 @@ class notification extends Component {
             // leftFunction={() => {
             //   this.props.navigation.goBack();
             // }}
+            isDark={this.props.isDark}
           />
 
           {this.state.notification == '' ? (
@@ -138,8 +139,8 @@ class notification extends Component {
                   utils.fontStyle.TextSemiBold,
                   {
                     fontSize: 14,
-                    backgroundColor: '#fff',
-                    color: utils.color.HeaderColor,
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
+                    color: this.props.isDark ? '#fff' : utils.color.HeaderColor,
                     marginTop: 10,
                     padding: 10,
                     borderRadius: 5,

@@ -1,9 +1,22 @@
 export default {
-  baseUrl: 'https://prodapi.hrontips.com/',
-  baseUrlTask: 'https://prodapi2.hrontips.com/',
-  // baseUrl: 'http://prodapinew.hrontips.com/',
-  // baseUrlTask: 'http://prodapinew.hrontips.com/',
-  //loginApi
+  // ---------------------------- Production Url -----------------------
+
+  // baseUrl: 'https://prodapi.hrontips.com/',
+  // baseUrlTask: 'https://prodapi.hrontips.com/',
+
+  //  ----------------------------------------------------------------------------
+
+  // -------------------------Stage Url ------------------------------------------
+
+  baseUrl: 'https://stageapi.hrontips.com/',
+
+  baseUrlTask: 'https://stageapi.hrontips.com/',
+
+  // -------------------------------------------------------------------
+
+  // baseUrlTask: 'https://prodapi2.hrontips.com/',
+  // baseUrl: 'https://prodapinew.hrontips.com/',
+
   Login: 'API/Account/AuthenticateUser',
   PersonalDetail: 'API/Home/GetDataPesionaldetails',
   ClockInOut: 'API/Home/InsertUpdateClockInAndOut ',
@@ -53,5 +66,7 @@ export default {
   imageView: '/API/home/GetBase64Document?filePath=',
   CancelLeave: 'API/home/AprrovalCancel',
   Announcement: 'API/home/AnnouncementMasterDataGet',
+  AddAnnoucement: 'API/home/SaveAnnouncement',
+  AnnoucementType: 'API/Home/GetTemplateDropDown',
   LogDetails: 'API/home/GetDataforpresentorabsent',
 };

@@ -13,6 +13,9 @@ export const color = {
   theameColorEjoin: '#f2f2f2',
   EjoinText: '#003982',
   IconColor: '#3083EF',
+  themeBackground: '#fff',
+  themeText: '#3083EF',
+  iconColor: 'grey',
 };
 export const darkColor = {
   theameColor: '#000', ////if change whole app theame
@@ -29,4 +32,7 @@ export const darkColor = {
   theameColorEjoin: '#000',
   EjoinText: '#fff',
   IconColor: '#3083EF',
+  themeBackground: '#000',
+  themeText: '#fff',
+  iconColor: '#fff',
 };

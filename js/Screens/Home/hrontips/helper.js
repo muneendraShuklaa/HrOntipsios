@@ -149,7 +149,7 @@ export default class DashboardHelper {
           TrackDateTime: new Date().toISOString(),
           UserId: jsonValue,
           GPSStatus: 'abc',
-          Battery: '108',
+          Battery: this.self.batteryLevel,
           ClientId: JSON.parse(jsonValueClientID),
         },
 
@@ -161,7 +161,7 @@ export default class DashboardHelper {
         },
       )
       .then(async response => {
-        console.log('ClockIn..location bbase.', response.data);
+        console.log('ClockIn location base data ==========>', response.data);
         this.self.toggleStopwatch();
         this.self.setState({play: true});
         // await AsyncStorage.setItem('Name', response.data.FirstName)
@@ -197,7 +197,7 @@ export default class DashboardHelper {
         },
       )
       .then(async response => {
-        console.log('ClockIn.allready data..', response.data);
+        // console.log('ClockIn.allready data..', response.data);
         // await AsyncStorage.setItem(
         //   'allreadyLogin',
         //   moment(String(response.data[0].StartTime)).unix().toString(),
@@ -262,6 +262,7 @@ export default class DashboardHelper {
       )
       .then(async response => {
         // console.log('imagegegege..,gg.', response.data.DocumentUrlBase64);
+        // console.log('Remark date is ----->', response.data);
         await AsyncStorage.setItem(
           'ImagePicUrl',
           response.data.DocumentUrlBase64,
@@ -269,13 +270,17 @@ export default class DashboardHelper {
 
         this.self.setState({
           ImagePicUrl: response.data.DocumentUrlBase64,
+          count: response.data.Remarks.Count,
+          Birthday: response.data.Remarks.Birthday,
+          Anniversary: response.data.Remarks.Anniversary,
           RemarkDate: response.data.remarks,
+          Quote: response.data.Remarks.MotivaltionalQuote,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
         alert(response.data.message);
-        // console.warn("guggsgggdsy", error);
+        console.log('Remarks date error=======>', error);
       });
   };
 }

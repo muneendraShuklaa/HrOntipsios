@@ -27,6 +27,7 @@ import CountryPicker, {DARK_THEME} from 'react-native-country-picker-modal';
 import RNLocation from 'react-native-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Utils from '../../../Utils';
+import {color} from '../../../Utils/color';
 // navigator.geolocation = require('@react-native-community/geolocation');
 
 Icon.loadFont();
@@ -43,6 +44,7 @@ class login extends Component {
       secureTextEntry: true,
       address: '',
       AuthToken: '',
+      message: '',
       // Title:this.props.route.params.Title
     };
     this.helper = new SignInHelper(this);
@@ -89,6 +91,7 @@ class login extends Component {
           Geocoder.geocodePosition(NY)
             .then(res => {
               this.setState({address: res[0].locality});
+              console.log('geolocation =====>', res);
             })
             .catch(err => console.log(err));
 
@@ -115,6 +118,7 @@ class login extends Component {
     }
   };
   render() {
+    console.log('Msg is ------->', this.state.message);
     return (
       <View style={{flex: 1, backgroundColor: '#ffff', height: '100%'}}>
         <StatusBar
@@ -125,17 +129,19 @@ class login extends Component {
         />
         <ScrollView>
           <ImageBackground
-            // imageStyle={{resizeMode: 'contain'}}
+            // mageStyle={{resizeMode: 'contain'}
             style={{
               height: vh(500),
               width: '100%',
               alignSelf: 'center',
               marginTop: -20,
+              resizeMode: 'contain',
             }}
-            source={utils.icons.loginback}>
-            {/* <View  style={{backgroundColor:'#3083EF',opacity:0.5,height:480}}>
-        </View> */}
-          </ImageBackground>
+            source={
+              this.props.isDark
+                ? utils.icons.darkBackGround
+                : utils.icons.loginback
+            }></ImageBackground>
 
           {/* <ImageBackground source={utils.icons.backImage} style={{ height: "70%", width: '100%',  }} >
              </ImageBackground> */}
@@ -150,6 +156,8 @@ class login extends Component {
               paddingLeft: 30,
               paddingRight: 30,
               justifyContent: 'center',
+              borderWidth: this.props.isDark ? 1 : 0,
+              borderColor: this.props.isDark ? '#fff' : 'white',
             }}>
             {/* <Image style={{ height: vh(130), width: vw(320), alignSelf: 'center', marginTop: 140 }} source={utils.icons.Logo}></Image> */}
             <Image
@@ -158,8 +166,12 @@ class login extends Component {
                 width: 250,
                 alignSelf: 'center',
                 marginTop: vw(20),
+                resizeMode: 'contain',
+                // tintColor: 'white',
               }}
-              source={utils.icons.Logo}></Image>
+              source={
+                this.props.isDark ? utils.icons.hrontips : utils.icons.Logo
+              }></Image>
             {/* <Text>{this.state.Title}</Text> */}
             <View
               style={[
@@ -168,7 +180,10 @@ class login extends Component {
                   flexDirection: 'row',
                   alignItems: 'center',
                   marginTop: vh(40),
-                  borderColor: this.props.themeColor.bordercolor,
+                  // borderColor: this.props.themeColor.bordercolor,
+                  borderWidth: this.props.isDark ? 1 : 0,
+                  borderColor: this.props.isDark ? 'white' : 'grey',
+                  backgroundColor: this.props.isDark ? 'black' : '#e9efff',
                 },
               ]}>
               <Image
@@ -183,7 +198,7 @@ class login extends Component {
                 source={utils.icons.email}></Image>
               <TextInput
                 placeholder={utils.Strings.EnterNumber}
-                placeholderTextColor="grey"
+                placeholderTextColor={this.props.isDark ? '#fff' : 'grey'}
                 returnKeyType="done"
                 keyboardType="email-address"
                 allowFontScaling={false}
@@ -194,7 +209,7 @@ class login extends Component {
                 style={[
                   styles.mobileTextInput,
                   utils.fontStyle.FontFamilyRegular,
-                  {color: '#000'},
+                  {color: this.props.isDark ? '#fff' : '#000'},
                 ]}></TextInput>
             </View>
             <View
@@ -204,7 +219,10 @@ class login extends Component {
                   flexDirection: 'row',
                   alignItems: 'center',
                   marginTop: vh(20),
-                  borderColor: this.props.themeColor.bordercolor,
+                  // borderColor: this.props.themeColor.bordercolor,
+                  borderWidth: this.props.isDark ? 1 : 1,
+                  borderColor: this.props.isDark ? '#fff' : 'white',
+                  backgroundColor: this.props.isDark ? 'black' : '#e9efff',
                 },
               ]}>
               <Image
@@ -220,7 +238,7 @@ class login extends Component {
                 source={utils.icons.padlock}></Image>
               <TextInput
                 placeholder={utils.Strings.password}
-                placeholderTextColor="grey"
+                placeholderTextColor={this.props.isDark ? '#fff' : 'grey'}
                 returnKeyType="done"
                 secureTextEntry={this.state.secureTextEntry}
                 allowFontScaling={false}
@@ -231,7 +249,7 @@ class login extends Component {
                 style={[
                   styles.mobileTextInput,
                   utils.fontStyle.FontFamilyRegular,
-                  {color: '#000'},
+                  {color: this.props.isDark ? '#fff' : '#000'},
                 ]}></TextInput>
               {this.state.secureTextEntry === true ? (
                 <TouchableOpacity
@@ -274,6 +292,15 @@ class login extends Component {
           : */}
             {/* null}
           <Text>{this.state.AuthToken}</Text> */}
+            {this.state.message == 'incorrect password' ? (
+              <Text
+                style={[
+                  utils.fontStyle.FontFamilyBold,
+                  {color: 'red', marginTop: 5, marginLeft: 5},
+                ]}>
+                Email Id or Password is incorrect
+              </Text>
+            ) : null}
             <View
               style={{
                 flexDirection: 'row',

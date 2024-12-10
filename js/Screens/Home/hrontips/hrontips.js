@@ -67,7 +67,7 @@ class hrontips extends Component {
       startTimeinSec: 0,
       StatusClockin: '',
       imageArray2: [],
-      taskLocation: [28.619202239130537, 77.37922096635252],
+      taskLocation: [28.62756, 77.38059],
       imageselect: false,
       showMsg: false,
       allreadyLogin: 0,
@@ -85,6 +85,10 @@ class hrontips extends Component {
       Department: '',
       batteryLevel: null,
       RemarkDate: '',
+      count: 0,
+      Birthday: [],
+      Anniversary: [],
+      Quote: '',
     };
     this.toggleTimer = this.toggleTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
@@ -94,7 +98,7 @@ class hrontips extends Component {
   }
 
   pollGeolocation() {
-    console.log('POLLING');
+    console.log('POLLING..................');
     RNLocation.getLatestLocation({timeout: 60000}).then(latestLocation => {
       var NY = {
         lat: latestLocation.latitude,
@@ -136,8 +140,7 @@ class hrontips extends Component {
     // setTimeout(() => {
     //   this.pollingInterval = setInterval(() => {
     //     this.pollGeolocation();
-    //   }, 30 * 1000);
-    // }, 10000);
+    //   }, 30 * 1000); // Poll every 30 seconds
     // }, 1 * 60 * 1000);
     this.helper.GetImageProfile();
 
@@ -341,11 +344,21 @@ class hrontips extends Component {
       allreadyLogin,
     } = this.state;
 
+    // console.log('battery level is =====>', this.state.batteryLevel);
+    // console.log('Birthday--->', this.state.Birthday);
+    // console.log('Anniversay------>', this.state.Anniversary);
+
     return (
       <ImageBackground
-        imageStyle={{tintColor: this.props.themeColor.Darkk}}
+        imageStyle={{
+          tintColor: this.props.isDark ? '#000' : '',
+        }}
         source={utils.icons.backImage}
-        style={{flex: 1, height: '100%', width: '100%'}}>
+        style={{
+          flex: 1,
+          height: '100%',
+          width: '100%',
+        }}>
         <StatusBar
           hidden={false}
           backgroundColor={utils.color.HeaderColor}
@@ -361,7 +374,8 @@ class hrontips extends Component {
                 height: 'auto',
                 width: '90%',
                 alignSelf: 'center',
-                backgroundColor: '#fff',
+                backgroundColor: this.props.themeColor.themeBackground,
+                // backgroundColor: 'black',
                 shadowColor: '#000',
                 shadowOffset: {
                   width: 0,
@@ -372,6 +386,8 @@ class hrontips extends Component {
                 elevation: 4,
                 borderTopEndRadius: 30,
                 borderTopStartRadius: 30,
+                borderWidth: this.props.isDark ? 1 : 0,
+                borderColor: this.props.isDark ? '#fff' : 'white',
               }}>
               <View
                 style={{height: 'auto', width: '100%', marginBottom: vh(10)}}>
@@ -387,7 +403,7 @@ class hrontips extends Component {
                       style={[
                         utils.fontStyle.FontFamilymachoB,
                         {
-                          color: '#000',
+                          color: this.props.themeColor.textColor,
                           fontSize: 32,
                           fontWeight: 'bold',
                         },
@@ -454,6 +470,7 @@ class hrontips extends Component {
                         reset={this.state.stopwatchReset}
                         startTime={this.state.stopwatchStartTime}
                         options={options}
+                        isDark={this.props.isDark}
                       />
                     </View>
                   ) : null}
@@ -473,7 +490,10 @@ class hrontips extends Component {
                       <Text
                         style={[
                           utils.fontStyle.FontFamilymachoB,
-                          {color: '#3083EF', fontSize: 20},
+                          {
+                            color: this.props.themeColor.themeText,
+                            fontSize: 20,
+                          },
                         ]}>
                         {address}
                       </Text>
@@ -687,14 +707,15 @@ class hrontips extends Component {
               <View
                 style={{
                   flexDirection: 'row',
-                  // marginTop: 5,
+                  marginTop: 5,
                   justifyContent: 'space-between',
                   height: 'auto',
                   width: '100%',
-                  padding: 10,
+                  padding: 12,
                   borderRadius: 5,
                   alignSelf: 'center',
-                  backgroundColor: '#fff',
+                  backgroundColor: this.props.themeColor.themeBackground,
+                  // backgroundColor: 'black',
                   shadowColor: '#000',
                   shadowOffset: {
                     width: 0,
@@ -703,9 +724,11 @@ class hrontips extends Component {
                   shadowOpacity: 0.23,
                   shadowRadius: 2.62,
                   elevation: 4,
+                  borderWidth: this.props.isDark ? 1 : 0,
+                  borderColor: this.props.isDark ? '#fff' : 'white',
                 }}>
                 <View style={{flexDirection: 'row'}}>
-                  <Image
+                  {/* <Image
                     source={utils.icons.Cake}
                     style={{
                       height: vh(30),
@@ -715,51 +738,105 @@ class hrontips extends Component {
 
                       marginLeft: 10,
                     }}
-                  />
-                  {this.state.RemarkDate == '' ? (
+                  /> */}
+                  {this.state.count == 0 && (
                     <Text
                       style={[
                         utils.fontStyle.FontFamilyRegular,
                         {
                           alignSelf: 'center',
-                          marginLeft: 10,
-                          width: '77%',
-                          // backgroundColor: 'red',
-                          color: '#000',
-                          fontSize: 17,
+                          // marginLeft: 10,
+                          color: this.props.themeColor.themeText,
+                          fontSize: 16,
+                          fontWeight: 'bold',
+                          // fontStyle: 'italic',
+                          // width: '90%',
                         },
                       ]}>
-                      Welcome Back {this.state.Name}
-                    </Text>
-                  ) : (
-                    <Text
-                      style={[
-                        utils.fontStyle.FontFamilyRegular,
-                        {
-                          alignSelf: 'center',
-                          marginLeft: 10,
-                          width: '77%',
-                          // backgroundColor: 'red',
-                          color: '#000',
-                          fontSize: 17,
-                        },
-                      ]}>
-                      Happy {this.state.RemarkDate.split('#').join(' ')}
-                      {/* Welcome Back {this.state.Name} */}
+                      {this.state.Quote}
+                      {/* " Keep up! Great work and have a fantastic day! " */}
                     </Text>
                   )}
+                  <View>
+                    {this.state.Anniversary.length !== 0 && (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          marginBottom: 5,
+                        }}>
+                        <Image
+                          source={utils.icons.fireWork}
+                          style={{height: 25, width: 25, resizeMode: 'contain'}}
+                        />
+                        <View style={{marginLeft: 10}}>
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              color: '#3083EF',
+                              fontWeight: '900',
+                            }}>
+                            Work Anniversary's Today!
+                          </Text>
+                          {this.state.Anniversary.map((item, index) => {
+                            return (
+                              <>
+                                <Text
+                                  style={[
+                                    styles.remarkText,
+                                    {color: this.props.themeColor.textColor},
+                                  ]}>
+                                  {item}
+                                </Text>
+                              </>
+                            );
+                          })}
+                        </View>
+                      </View>
+                    )}
+                    {this.state.Birthday.length !== 0 && (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                        }}>
+                        <Image
+                          source={utils.icons.Cake}
+                          style={{height: 24, width: 24, resizeMode: 'contain'}}
+                        />
+                        <View style={{marginLeft: 10}}>
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              color: '#3083EF',
+                              fontWeight: '900',
+                            }}>
+                            Birthday's Today!
+                          </Text>
+                          {this.state.Birthday.map((item, index) => {
+                            return (
+                              <>
+                                <Text
+                                  style={[
+                                    styles.remarkText,
+                                    {color: this.props.themeColor.textColor},
+                                  ]}>
+                                  {item}
+                                </Text>
+                              </>
+                            );
+                          })}
+                        </View>
+                      </View>
+                    )}
+                  </View>
 
-                  <Image
+                  {/* <Image
                     source={utils.icons.Balloons}
                     style={{
                       height: 30,
                       width: 30,
-                      // alignSelf: 'center',
                       resizeMode: 'contain',
-
-                      // marginRight: 20,
                     }}
-                  />
+                  /> */}
                 </View>
                 <View style={{alignSelf: 'center'}}>
                   {/* <Image
@@ -783,7 +860,14 @@ class hrontips extends Component {
                   onPress={() => {
                     this.props.navigation.navigate('MyTask');
                   }}
-                  style={[styles.Card, {}]}>
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
                   <Image
                     source={utils.icons.Primetime}
                     style={{
@@ -798,7 +882,8 @@ class hrontips extends Component {
                       utils.fontStyle.FontFamilyRegular,
                       {
                         alignSelf: 'center',
-                        color: '#000',
+                        color: this.props.themeColor.textColor,
+                        // color: '#ffff',
                         fontSize: 16,
                         marginTop: 7,
                       },
@@ -812,7 +897,14 @@ class hrontips extends Component {
                     this.props.navigation.navigate('DSR');
                     // alert('We are launching soon.');
                   }}
-                  style={[styles.Card, {}]}>
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
                   <Image
                     source={utils.icons.DDSSRR}
                     style={{
@@ -828,7 +920,7 @@ class hrontips extends Component {
                       utils.fontStyle.FontFamilyRegular,
                       {
                         alignSelf: 'center',
-                        color: '#000',
+                        color: this.props.themeColor.textColor,
                         fontSize: 16,
                         marginTop: 7,
                       },
@@ -849,7 +941,14 @@ class hrontips extends Component {
                   onPress={() => {
                     this.props.navigation.navigate('LeaveBalance');
                   }}
-                  style={[styles.Card, {}]}>
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
                   <Image
                     source={utils.icons.Research}
                     style={{
@@ -864,7 +963,9 @@ class hrontips extends Component {
                       utils.fontStyle.FontFamilyRegular,
                       {
                         alignSelf: 'center',
-                        color: '#000',
+                        color: this.props.themeColor.textColor,
+
+                        // color: '#ffff',
                         fontSize: 16,
                         marginTop: 7,
                       },
@@ -877,7 +978,14 @@ class hrontips extends Component {
                   onPress={() => {
                     this.props.navigation.navigate('RequestLeave');
                   }}
-                  style={[styles.Card]}>
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
                   <Image
                     source={utils.icons.Leavee}
                     style={{
@@ -893,7 +1001,7 @@ class hrontips extends Component {
                       {
                         alignSelf: 'center',
                         textAlign: 'center',
-                        color: '#000',
+                        color: this.props.themeColor.textColor,
                         fontSize: 16,
                         marginTop: 7,
                       },
@@ -914,7 +1022,14 @@ class hrontips extends Component {
                     this.props.navigation.navigate('DailyLogs');
                     // alert('We are launching soon..');
                   }}
-                  style={[styles.Card, {}]}>
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
                   <Image
                     source={utils.icons.Clipboard}
                     style={{
@@ -929,7 +1044,7 @@ class hrontips extends Component {
                       utils.fontStyle.FontFamilyRegular,
                       {
                         alignSelf: 'center',
-                        color: '#000',
+                        color: this.props.themeColor.textColor,
                         fontSize: 16,
                         marginTop: 7,
                       },
@@ -940,9 +1055,18 @@ class hrontips extends Component {
                 {/* {this.state.RoleName !== 'End User' ? ( */}
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.navigation.navigate('Announcement');
+                    this.props.navigation.navigate('Announcement', {
+                      role: this.state.RoleName,
+                    });
                   }}
-                  style={[styles.Card, {}]}>
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
                   <Image
                     source={utils.icons.promoter}
                     style={{alignSelf: 'center', height: 40, width: 40}}
@@ -952,7 +1076,7 @@ class hrontips extends Component {
                       utils.fontStyle.FontFamilyRegular,
                       {
                         alignSelf: 'center',
-                        color: '#000',
+                        color: this.props.themeColor.textColor,
                         fontSize: 16,
                         marginTop: 7,
                       },
@@ -974,7 +1098,14 @@ class hrontips extends Component {
                     onPress={() => {
                       this.props.navigation.navigate('Team');
                     }}
-                    style={[styles.Card, {}]}>
+                    style={[
+                      styles.Card,
+                      {
+                        backgroundColor: this.props.themeColor.themeBackground,
+                        borderWidth: this.props.isDark ? 1 : 0,
+                        borderColor: this.props.isDark ? '#fff' : 'white',
+                      },
+                    ]}>
                     <Image
                       source={utils.icons.teamtracker}
                       style={{alignSelf: 'center', height: 35, width: 35}}
@@ -984,7 +1115,7 @@ class hrontips extends Component {
                         utils.fontStyle.FontFamilyRegular,
                         {
                           alignSelf: 'center',
-                          color: '#000',
+                          color: this.props.themeColor.textColor,
                           fontSize: 16,
                           marginTop: 7,
                         },
@@ -998,7 +1129,14 @@ class hrontips extends Component {
                     onPress={() => {
                       this.props.navigation.navigate('ApproveLeaves');
                     }}
-                    style={[styles.Card]}>
+                    style={[
+                      styles.Card,
+                      {
+                        backgroundColor: this.props.themeColor.themeBackground,
+                        borderWidth: this.props.isDark ? 1 : 0,
+                        borderColor: this.props.isDark ? '#fff' : 'white',
+                      },
+                    ]}>
                     <Image
                       source={utils.icons.Leaveapproval}
                       style={{
@@ -1014,7 +1152,7 @@ class hrontips extends Component {
                         utils.fontStyle.FontFamilyRegular,
                         {
                           alignSelf: 'center',
-                          color: '#000',
+                          color: this.props.themeColor.textColor,
                           fontSize: 16,
                           marginTop: 7,
                         },
@@ -1822,7 +1960,8 @@ var styles = StyleSheet.create({
     paddingBottom: 16,
     width: '47%',
     alignSelf: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
+    // backgroundColor: 'black',
     justifyContent: 'center',
     borderRadius: 10,
     shadowColor: '#000',
@@ -1833,5 +1972,12 @@ var styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 4,
+    // borderWidth: 2,
+    // borderColor: '#fff',
+  },
+  remarkText: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: 'black',
   },
 });

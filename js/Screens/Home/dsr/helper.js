@@ -9,10 +9,14 @@ export default class DSRHelper {
     this.self = self;
   }
   dsrData = async () => {
-    console.log('DDDSSSRR');
+    // console.log('DDDSSSRR');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const jsonValue = await AsyncStorage.getItem('UserId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+
+    console.log('Authtoken is ---->', AuthToken);
+    console.log('client id is ------>', jsonValueClientID);
+
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.DSRList,
@@ -28,7 +32,7 @@ export default class DSRHelper {
         },
       )
       .then(async response => {
-        console.log('gdfgdfhdfhdf', response.data);
+        // console.log('gdfgdfhdfhdf=====>', response.data);
         this.self.setState({
           DSR: response.data.Table,
         });
@@ -36,7 +40,7 @@ export default class DSRHelper {
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
         // alert(response.data.message);
-        // console.warn("guggsgggdsy", error);
+        console.log('error of  DSR', error);
       });
   };
 }

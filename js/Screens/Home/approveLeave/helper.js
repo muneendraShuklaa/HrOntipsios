@@ -16,7 +16,9 @@ export default class ApproveLeaveHelper {
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const jsonValueUserType = await AsyncStorage.getItem('UserType');
 
-    console.log('LeaveApprovall');
+    // console.log('LeaveApprovall');
+
+    // console.log('userType----->', jsonValueClientID );
 
     await axios
       .post(
@@ -34,7 +36,7 @@ export default class ApproveLeaveHelper {
         },
       )
       .then(async response => {
-        console.log('gdfgdfhdfhdf', response.data);
+        console.log('approve leave ****  ---------->', response.data.Table);
         this.self.setState({
           LeaveRecord: response.data.Table,
           Pending: response.data.Table1[0].ApprovalPending,
@@ -56,13 +58,13 @@ export default class ApproveLeaveHelper {
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const jsonValueUserType = await AsyncStorage.getItem('UserType');
-    console.log(
-      'Apppprovved',
-      EmpId,
-      jsonValueClientID,
-      AuthToken,
-      this.self.state.TTransid,
-    );
+    // console.log(
+    //   'Apppprovved',
+    //   EmpId,
+    //   jsonValueClientID,
+    //   AuthToken,
+    //   this.self.state.TTransid,
+    // );
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.statusLeave,
@@ -92,7 +94,7 @@ export default class ApproveLeaveHelper {
           Comments,
         );
 
-        console.log('leave startsu', response.data);
+        // console.log('leave startsu', response.data);
       })
       .catch(function (error) {
         // alert('worng data');

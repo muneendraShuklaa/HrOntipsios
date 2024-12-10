@@ -50,14 +50,13 @@ const BottomTabs = createBottomTabNavigator();
 import {EditDSR} from './js/Screens/Home/editDsr';
 import {createStackNavigator} from '@react-navigation/stack';
 import {fcmService} from './js/notification/FCMNotification';
-
 import {localNotificationService} from './js/notification/localNotification';
 
 fcmService.registerAppWithFCM();
 fcmService.register(onRegister, onNotification, onOpenNotification);
 localNotificationService.configure(onOpenNotification);
-const onRegister = token => {
-  console.log('[App] Token', token);
+const onRegister = async token => {
+  console.log('s Token=======>', token);
 };
 
 const onNotification = notify => {
@@ -110,6 +109,11 @@ OneSignal.setNotificationOpenedHandler(notification => {
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 const bottomTabBarr = () => {
+  const colorScheme = useColorScheme();
+
+  const isDarkMode = colorScheme === 'dark';
+
+  console.log('Activeee modeeee---------->', isDarkMode);
   return (
     <BottomTabs.Navigator
       initialRouteName="HrOnTipsRequestLeave"
@@ -118,7 +122,8 @@ const bottomTabBarr = () => {
         tabBarStyle: {
           height: vh(75),
 
-          backgroundColor: '#fff',
+          backgroundColor: isDarkMode ? '#000' : '#fff',
+          // backgroundColor: 'black',
         },
       }}>
       <BottomTabs.Screen
@@ -135,11 +140,11 @@ const bottomTabBarr = () => {
               }}>
               {/* <View
                 style={{
-                  height: 20,
-                  width: 20,
+                  // height: 20,
+                  // width: 20,
                   backgroundColor: 'red',
                   borderRadius: 20,
-                  marginLeft: -20,
+                  // marginLeft: -20,
                   alignSelf: 'center',
                 }}>
                 <Text

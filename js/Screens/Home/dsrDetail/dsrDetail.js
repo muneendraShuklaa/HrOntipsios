@@ -102,9 +102,21 @@ class dsrDetail extends Component {
               </Text>
             </ImageBackground>
           </TouchableOpacity>
-          <View style={{flex: 1, backgroundColor: utils.color.BackPagecolor}}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: this.props.isDark
+                ? '#000'
+                : utils.color.BackPagecolor,
+            }}>
             <View
-              style={{backgroundColor: '#fff', margin: 10, borderRadius: 20}}>
+              style={{
+                backgroundColor: this.props.isDark ? '#000' : '#fff',
+                margin: 10,
+                borderRadius: 20,
+                borderWidth: 1,
+                borderColor: this.props.isDark ? '#fff' : '#FFF',
+              }}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -129,6 +141,7 @@ class dsrDetail extends Component {
                       marginLeft: 10,
                       fontSize: 11,
                       alignSelf: 'center',
+                      color: this.props.isDark ? '#fff' : '#000',
                     },
                   ]}>
                   {this.state.ProjectDescription.replace(/<(?:.|\n)*?>/gm, '')}
@@ -155,7 +168,12 @@ class dsrDetail extends Component {
                 style={[
                   styles.Title,
                   utils.fontStyle.TextSemiBold,
-                  {width: '100%', marginTop: 10, padding: 20},
+                  {
+                    width: '100%',
+                    marginTop: 10,
+                    padding: 20,
+                    color: this.props.isDark ? '#fff' : '#000',
+                  },
                 ]}>
                 {this.state.Comments}
               </Text>
@@ -199,7 +217,7 @@ class dsrDetail extends Component {
                       alignSelf: 'center',
                       fontSize: 16,
                       fontWeight: 'bold',
-                      color: '#000',
+                      color: this.props.isDark ? '#fff' : '#000',
                       margin: 10,
                     }}>
                     Already Submitted
@@ -215,7 +233,7 @@ class dsrDetail extends Component {
                         alignSelf: 'center',
                         fontSize: 16,
                         fontWeight: 'bold',
-                        color: '#000',
+                        color: this.props.isDark ? '#fff' : '#000',
                         margin: 10,
                       }}>
                       Submit DSR

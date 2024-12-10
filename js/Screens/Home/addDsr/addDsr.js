@@ -107,7 +107,9 @@ class adddsr extends Component {
         <View
           style={{
             flex: 1,
-            backgroundColor: utils.color.BackPagecolor,
+            backgroundColor: this.props.isDark
+              ? '#000'
+              : utils.color.BackPagecolor,
             padding: 10,
           }}>
           <View
@@ -127,13 +129,17 @@ class adddsr extends Component {
                     alignSelf: 'center',
                     marginRight: 10,
                     marginLeft: 5,
-                    tintColor: '#000',
+                    tintColor: this.props.isDark ? '#ffff' : '#000',
                   }}
                 />
                 <Text
                   style={[
                     utils.fontStyle.FontFamilymachoB,
-                    {color: '#000', fontSize: 18, alignSelf: 'center'},
+                    {
+                      color: this.props.isDark ? '#ffff' : '#000',
+                      fontSize: 18,
+                      alignSelf: 'center',
+                    },
                   ]}>
                   Add New
                 </Text>
@@ -156,7 +162,7 @@ class adddsr extends Component {
                   style={[
                     utils.fontStyle.FontFamilyRegular,
                     {
-                      color: '#000',
+                      color: this.props.isDark ? '#fff' : '#000',
                       textAlign: 'center',
                       // width: '80%',
                       fontSize: 18,
@@ -180,7 +186,16 @@ class adddsr extends Component {
               justifyContent: 'center',
               alignSelf: 'center',
             }}>
-            <View style={[styles.shadowView, {height: 'auto'}]}>
+            <View
+              style={[
+                styles.shadowView,
+                {
+                  backgroundColor: this.props.isDark ? '#000' : '#fff',
+                  borderWidth: 1,
+                  borderColor: this.props.isDark ? '#fff' : '#ffff',
+                  height: 'auto',
+                },
+              ]}>
               <View
                 style={{
                   flexDirection: 'row',
@@ -199,6 +214,7 @@ class adddsr extends Component {
                     flexDirection: 'row',
                     borderRadius: 10,
                     height: 'auto',
+                    borderColor: this.props.isDark ? '#fff' : 'grey',
                   },
                 ]}>
                 <Icon
@@ -242,20 +258,20 @@ class adddsr extends Component {
                   buttonStyle={{
                     width: '90%',
                     height: 40,
-                    backgroundColor: '#FFF',
+                    backgroundColor: this.props.isDark ? '#000' : '#FFF',
                     borderRadius: 8,
                   }}
                   renderDropdownIcon={isOpened => {
                     return (
                       <FontAwesome
                         name={isOpened ? 'chevron-up' : 'chevron-down'}
-                        color={'#444'}
+                        color={this.props.isDark ? '#fff' : '#444'}
                         size={18}
                       />
                     );
                   }}
                   buttonTextStyle={{
-                    color: '#444',
+                    color: this.props.isDark ? '#ffff' : '#444',
                     // paddingLeft: 10,
                     textAlign: 'left',
                   }}
@@ -264,6 +280,7 @@ class adddsr extends Component {
                     marginTop: -25,
                     borderBottomLeftRadius: 15,
                     borderBottomRightRadius: 15,
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
                   }}
                   search
                   searchInputStyle={{
@@ -273,13 +290,18 @@ class adddsr extends Component {
                     borderBottomColor: '#444',
                   }}
                   searchPlaceHolder={'Search here'}
+                  searchInputTxtColor={'#444'}
                   searchPlaceHolderColor={'darkgrey'}
                   renderSearchInputLeftIcon={() => {
                     return (
                       <FontAwesome name={'search'} color={'#444'} size={18} />
                     );
                   }}
-                  rowStyle={{}}
+                  rowStyle={{
+                    backgroundColor: '#ffff',
+                    borderWidth: 1,
+                    borderColor: '#444',
+                  }}
                   rowTextStyle={{
                     color: '#444',
                     textAlign: 'left',
@@ -299,6 +321,7 @@ class adddsr extends Component {
                   alignSelf: 'center',
                   borderRadius: 10,
                   paddingLeft: 10,
+                  borderColor: this.props.isDark ? '#fff' : 'grey',
                   // height: 'auto',
                 }}>
                 <Icon
@@ -315,13 +338,17 @@ class adddsr extends Component {
                     this.setState({hours: text});
                   }}
                   keyboardType="numeric"
-                  placeholderTextColor={'#000'}
-                  style={{marginLeft: 10, color: '#000'}}></TextInput>
+                  placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
+                  style={{
+                    marginLeft: 10,
+                    color: this.props.isDark ? '#fff' : '#000',
+                  }}></TextInput>
               </View>
               <View
                 style={[
                   {
-                    backgroundColor: '#fff',
+                    backgroundColor: this.props.isDark ? '#000' : '#fff',
+                    borderColor: this.props.isDark ? '#fff' : '#000',
                     flexDirection: 'row',
                     borderWidth: 1,
                     width: '95%',
@@ -361,20 +388,20 @@ class adddsr extends Component {
                   buttonStyle={{
                     width: '90%',
                     height: 40,
-                    backgroundColor: '#FFF',
+                    backgroundColor: this.props.isDark ? '#000' : '#FFF',
                     borderRadius: 8,
                   }}
                   renderDropdownIcon={isOpened => {
                     return (
                       <FontAwesome
                         name={isOpened ? 'chevron-up' : 'chevron-down'}
-                        color={'#444'}
+                        color={this.props.isDark ? '#fff' : '#444'}
                         size={18}
                       />
                     );
                   }}
                   buttonTextStyle={{
-                    color: '#444',
+                    color: this.props.isDark ? '#fff' : '#444',
                     // paddingLeft: 10,
                     textAlign: 'left',
                   }}
@@ -383,6 +410,9 @@ class adddsr extends Component {
                     marginTop: -25,
                     borderBottomLeftRadius: 15,
                     borderBottomRightRadius: 15,
+                    backgroundColor: '#fff',
+                    borderColor: '#fff',
+                    borderWidth: 1,
                   }}
                   rowStyle={{}}
                   rowTextStyle={{
@@ -396,11 +426,12 @@ class adddsr extends Component {
               <View
                 style={{
                   height: vh(280),
-                  borderWidth: 0.4,
+                  borderWidth: 1,
                   bordercolor: 'grey',
                   width: '95%',
                   flexDirection: 'row',
-                  backgroundColor: '#fff',
+                  backgroundColor: this.props.isDark ? '#000' : '#fff',
+                  borderColor: this.props.isDark ? '#ffff' : 'grey',
                   borderRadius: 10,
                   marginTop: 10,
                   marginLeft: 10,
@@ -419,11 +450,11 @@ class adddsr extends Component {
                   }}
                   multiline={true}
                   maxLength={500}
-                  placeholderTextColor={'#000'}
+                  placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
                   style={{
                     // marginLeft: 10,
                     textAlignVertical: 'top',
-                    color: '#000',
+                    color: this.props.isDark ? '#fff' : '#000',
                     width: '85%',
                   }}></TextInput>
               </View>
@@ -467,6 +498,8 @@ class adddsr extends Component {
             container: {
               borderTopLeftRadius: normalize(26),
               borderTopRightRadius: normalize(26),
+              // backgroundColor: this.props.isDark ? 'lightgrey' : '#fff',
+              // backgroundColor: '#fff',
             },
           }}>
           <View
@@ -492,7 +525,7 @@ class adddsr extends Component {
                   {
                     alignSelf: 'center',
                     textAlign: 'center',
-                    color: utils.color.blackText,
+                    color: this.props.isDark ? '#000' : utils.color.blackText,
                     fontSize: 16,
                   },
                 ]}>

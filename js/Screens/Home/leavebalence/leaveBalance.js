@@ -97,7 +97,9 @@ class leavebalance extends Component {
               showsHorizontalScrollIndicator={false}
               data={this.state.LeaveDeatilsss}
               keyExxtractor={(item, index) => index.toString}
-              renderItem={({item, index}) => this.renderItemLeave(item, index)}
+              renderItem={({item, index}) =>
+                this.renderItemLeave(item, index, this.props.isDark)
+              }
             />
           </View>
           {this.state.LeaveRecord == '' ? (
@@ -121,7 +123,9 @@ class leavebalance extends Component {
               showsHorizontalScrollIndicator={false}
               data={this.state.LeaveRecord}
               keyExxtractor={(item, index) => index.toString}
-              renderItem={({item, index}) => this.renderItem(item, index)}
+              renderItem={({item, index}) =>
+                this.renderItem(item, index, this.props.isDark)
+              }
             />
           )}
         </ImageBackground>
@@ -231,9 +235,13 @@ class leavebalance extends Component {
     );
   }
 
-  renderItem(item, index) {
+  renderItem(item, index, isDark) {
     return (
-      <View style={styles.shadowView}>
+      <View
+        style={[
+          styles.shadowView,
+          {backgroundColor: isDark ? 'lightgrey' : '#fff'},
+        ]}>
         {this.state.approvedIndex == index ? (
           <TouchableOpacity
             style={{alignSelf: 'center'}}
@@ -333,7 +341,11 @@ class leavebalance extends Component {
               )}
             </View>
             <View>
-              <View style={{borderTopWidth: 1, borderTopColor: '#cacaca'}}>
+              <View
+                style={{
+                  borderTopWidth: 1,
+                  borderTopColor: isDark ? '#000' : '#cacaca',
+                }}>
                 <Text
                   style={[
                     styles.Title,
@@ -483,19 +495,21 @@ class leavebalance extends Component {
       </View>
     );
   }
-  renderItemLeave(item, index) {
+  renderItemLeave(item, index, isDark) {
     return (
       <View style={{height: 'auto', width: 'auto'}}>
         <View style={{flexDirection: 'row'}}>
           <View style={{height: 100, width: 100}}>
             <View
               style={{
-                backgroundColor: '#fff',
+                backgroundColor: isDark ? '#000' : '#fff',
                 height: 60,
                 width: 60,
                 borderRadius: 10,
                 justifyContent: 'center',
                 alignSelf: 'center',
+                borderWidth: 1,
+                borderColor: isDark ? '#fff' : '#fff',
               }}>
               <Text
                 style={{

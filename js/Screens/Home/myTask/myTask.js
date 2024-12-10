@@ -188,12 +188,15 @@ class Mytask extends Component {
   }
   render() {
     const {Age, Gender, PhoneNumber, DateOfbirth} = this.state;
+    console.log('color name is --------->', this.props.isdark);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
         <View
           style={{
             flex: 1,
-            backgroundColor: utils.color.HeaderColor,
+            backgroundColor: this.props.isDark
+              ? '#000'
+              : utils.color.HeaderColor,
             marginTop: 20,
           }}>
           <View
@@ -201,7 +204,11 @@ class Mytask extends Component {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <View style={{height: 50, justifyContent: 'center'}}>
+            <View
+              style={{
+                height: 50,
+                justifyContent: 'center',
+              }}>
               <TouchableOpacity
                 onPress={() => {
                   this.props.navigation.goBack();
@@ -247,7 +254,7 @@ class Mytask extends Component {
                 style={{
                   height: 'auto',
                   width: 'auto',
-                  borderBottomWidth: this.state.MyTask == '1' ? 1 : 0,
+                  borderBottomWidth: this.state.MyTask == '1' ? 2 : 0,
                   borderBottomColor: this.state.MyTask == '1' ? '#fff' : null,
                 }}>
                 <Text
@@ -275,7 +282,7 @@ class Mytask extends Component {
                 style={{
                   height: 'auto',
                   width: 'auto',
-                  borderBottomWidth: this.state.Assignedbyme == '1' ? 1 : 0,
+                  borderBottomWidth: this.state.Assignedbyme == '1' ? 2 : 0,
                   borderBottomColor:
                     this.state.Assignedbyme == '1' ? '#fff' : null,
                 }}>
@@ -304,7 +311,7 @@ class Mytask extends Component {
                 style={{
                   height: 'auto',
                   width: 'auto',
-                  borderBottomWidth: this.state.Overdue == '1' ? 1 : 0,
+                  borderBottomWidth: this.state.Overdue == '1' ? 2 : 0,
                   borderBottomColor: this.state.Overdue == '1' ? '#fff' : null,
                 }}>
                 <Text
@@ -332,7 +339,7 @@ class Mytask extends Component {
                 style={{
                   height: 'auto',
                   width: 'auto',
-                  borderBottomWidth: this.state.Completed == '1' ? 1 : 0,
+                  borderBottomWidth: this.state.Completed == '1' ? 2 : 0,
                   borderBottomColor:
                     this.state.Completed == '1' ? '#fff' : null,
                 }}>
@@ -350,7 +357,12 @@ class Mytask extends Component {
             </ScrollView>
           </View>
           {this.state.DSR == '' ? (
-            <View style={{flex: 1, paddingTop: 200, backgroundColor: '#fff'}}>
+            <View
+              style={{
+                flex: 1,
+                paddingTop: 200,
+                backgroundColor: this.props.isDark ? '#000' : '#fff',
+              }}>
               <Icon
                 name="calendar-times-o"
                 size={100}
@@ -359,7 +371,7 @@ class Mytask extends Component {
               />
               <Text
                 style={{
-                  color: '#000',
+                  color: this.props.isDark ? '#fff' : '#000',
                   textAlign: 'center',
                   fontSize: 22,
                   padding: 10,
@@ -375,7 +387,7 @@ class Mytask extends Component {
                 height: '100%',
                 paddingLeft: 20,
                 paddingRight: 20,
-                backgroundColor: '#fff',
+                backgroundColor: this.props.isDark ? '#000' : '#fff',
               }}
               extraData={this.state.DSR || this.state.Down}
               showsHorizontalScrollIndicator={false}
@@ -383,7 +395,9 @@ class Mytask extends Component {
               data={this.state.DSR}
               maxToRenderPerBatch={3}
               keyExxtractor={(item, index) => index.toString}
-              renderItem={({item, index}) => this.renderItem(item, index)}
+              renderItem={({item, index}) =>
+                this.renderItem(item, index, this.props.isDark)
+              }
             />
           )}
 
@@ -1081,7 +1095,7 @@ class Mytask extends Component {
       </SafeAreaView>
     );
   }
-  renderItem(item, index) {
+  renderItem(item, index, isDark) {
     return (
       <View
         style={{
@@ -1089,7 +1103,8 @@ class Mytask extends Component {
           width: '100%',
           marginTop: vh(10),
           alignSelf: 'center',
-          borderWidth: 0.5,
+          borderWidth: isDark ? 1 : 0.5,
+          borderColor: isDark ? '#fff' : '#000',
           borderRadius: 15,
           paddingBottom: 10,
           marginBottom: 10,
@@ -1142,7 +1157,9 @@ class Mytask extends Component {
                   name="check-circle-o"
                   size={30}
                   color="green"
-                  style={{alignSelf: 'center'}}
+                  style={{
+                    alignSelf: 'center',
+                  }}
                 />
               </TouchableOpacity>
             ) : (
@@ -1161,7 +1178,7 @@ class Mytask extends Component {
                 <Icon
                   name="circle-o"
                   size={30}
-                  color="grey"
+                  color={isDark ? '#fff' : 'grey'}
                   style={{alignSelf: 'center'}}
                 />
               </TouchableOpacity>
@@ -1185,7 +1202,7 @@ class Mytask extends Component {
                 marginTop: 10,
                 fontSize: 10,
                 fontWeight: 'bold',
-                color: '#000',
+                color: isDark ? '#fff' : '#000',
               }}>
               {moment(item.DueDate).format('ll')}
             </Text>
@@ -1209,7 +1226,7 @@ class Mytask extends Component {
                   width: 'auto',
                   // padding: 5,
                   fontSize: 14,
-                  color: '#000',
+                  color: isDark ? '#fff' : '#000',
                 },
               ]}>
               {item.TaskName}
@@ -1458,7 +1475,7 @@ class Mytask extends Component {
               <Text
                 style={[
                   utils.fontStyle.TextTitleBold,
-                  {width: 100, fontSize: 14, color: '#000'},
+                  {width: 100, fontSize: 14, color: isDark ? '#fff' : '#000'},
                 ]}>
                 Category
               </Text>
@@ -1469,7 +1486,7 @@ class Mytask extends Component {
                   {
                     width: 'auto',
                     fontSize: 14,
-                    color: '#000',
+                    color: isDark ? '#fff' : '#000',
                     marginLeft: 20,
                   },
                 ]}>
@@ -1480,9 +1497,9 @@ class Mytask extends Component {
               <Text
                 style={[
                   utils.fontStyle.TextTitleBold,
-                  {width: 100, fontSize: 14, color: '#000'},
+                  {width: 100, fontSize: 14, color: isDark ? '#fff' : '#000'},
                 ]}>
-                Assigned By
+                Assigned by
               </Text>
               <Text>:</Text>
               <Text
@@ -1491,7 +1508,7 @@ class Mytask extends Component {
                   {
                     width: 'auto',
                     fontSize: 14,
-                    color: '#000',
+                    color: isDark ? '#fff' : '#000',
                     marginLeft: 20,
                   },
                 ]}>
@@ -1502,7 +1519,7 @@ class Mytask extends Component {
               <Text
                 style={[
                   utils.fontStyle.TextTitleBold,
-                  {width: 100, fontSize: 14, color: '#000'},
+                  {width: 100, fontSize: 14, color: isDark ? '#fff' : '#000'},
                 ]}>
                 Assigned to
               </Text>
@@ -1513,7 +1530,7 @@ class Mytask extends Component {
                   {
                     width: 'auto',
                     fontSize: 14,
-                    color: '#000',
+                    color: isDark ? '#fff' : '#000',
                     marginLeft: 20,
                   },
                 ]}>
@@ -1524,9 +1541,9 @@ class Mytask extends Component {
               <Text
                 style={[
                   utils.fontStyle.TextTitleBold,
-                  {width: 100, fontSize: 14, color: '#000'},
+                  {width: 100, fontSize: 14, color: isDark ? '#fff' : '#000'},
                 ]}>
-                Assigned On
+                Assigned on
               </Text>
               <Text>:</Text>
               <Text
@@ -1535,7 +1552,7 @@ class Mytask extends Component {
                   {
                     width: 'auto',
                     fontSize: 14,
-                    color: '#000',
+                    color: isDark ? '#fff' : '#000',
                     marginLeft: 20,
                   },
                 ]}>
@@ -1549,10 +1566,10 @@ class Mytask extends Component {
                   {
                     width: 100,
                     fontSize: 14,
-                    color: '#000',
+                    color: isDark ? '#fff' : '#000',
                   },
                 ]}>
-                Due On
+                Due on
               </Text>
               <Text>:</Text>
               <Text
@@ -1561,7 +1578,7 @@ class Mytask extends Component {
                   {
                     width: 'auto',
                     fontSize: 14,
-                    color: '#000',
+                    color: isDark ? '#fff' : '#000',
                     marginLeft: 20,
                   },
                 ]}>

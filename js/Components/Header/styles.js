@@ -11,8 +11,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 0,
     flexDirection: 'row',
-    backgroundColor: utils.color.BackPagecolor,
-    // backgroundColor:"red"
+    // backgroundColor: utils.color.BackPagecolor,
   },
   titleContainer: {
     // marginTop:vh(10),

@@ -31,7 +31,7 @@ export default class LeavedHelper {
         },
       )
       .then(async response => {
-        console.log('leaavevevdatata', response.data);
+        // console.log('leaavevevdatata', response.data);
         this.self.setState({
           LeaveRecord: response.data.Table,
         });
@@ -66,7 +66,7 @@ export default class LeavedHelper {
         },
       )
       .then(async response => {
-        console.log('leavvevevevevev', response.data);
+        console.log('leave avaialable <------------>>>', response.data);
         this.self.setState({
           LeaveDeatilsss: response.data.Table1,
         });

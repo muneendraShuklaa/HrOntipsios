@@ -97,7 +97,7 @@ export default class adddsrHelper {
     const jsonValue = await AsyncStorage.getItem('UserId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
-    console.log('select projecttt..', AuthToken, JSON.parse(jsonValueClientID));
+    // console.log('select projecttt..', AuthToken, JSON.parse(jsonValueClientID));
 
     await axios
       .post(
@@ -132,12 +132,12 @@ export default class adddsrHelper {
   };
 
   Dropdowntaskcate = async () => {
-    // this.self.setState({ isloading: true })
+    // this.self.setState({ isloading: true})
     // console.log("Leave",EmpId,AuthToken)
     const jsonValue = await AsyncStorage.getItem('UserId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
-    console.log('DSR', AuthToken, JSON.parse(jsonValueClientID));
+    // console.log('DSR', AuthToken, JSON.parse(jsonValueClientID));
 
     await axios
       .post(
