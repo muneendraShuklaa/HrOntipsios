@@ -78,7 +78,7 @@ class announcement extends Component {
   render() {
     const {route} = this.props;
     const {role} = route.params;
-    console.log('type  ----->', this.state.Type);
+   console.log('type  ----->', this.state.Announcementtype);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
         <View
@@ -184,11 +184,11 @@ class announcement extends Component {
               <Icon
                 name="paste"
                 size={20}
-                color="#3083EF"
+                color={this.props.isDark?"#fff":"#darkgrey"}
                 style={{alignSelf: 'center', marginLeft: 10}}
               />
               <SelectDropdown
-                data={this.state.Announcementtype}
+                data={this.state.dropcategory}
                 // defaultValueByIndex={1}
                 defaultValue={'Egypt'}
                 onSelect={(selectedItem, index) => {

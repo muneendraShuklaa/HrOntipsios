@@ -11,10 +11,11 @@ export default class signInHelper {
   AuthCheck = async () => {
     console.log('CALLLED');
     let Active = await AsyncStorage.getItem('IsAuthenticated');
-    let Answer1 = await AsyncStorage.getItem('Answer1');
+    // let Answer1 = await AsyncStorage.getItem('Answer1');
     // console.log('CALLLED--->', Active, Answer1);
+    let Answer1 = '';
 
-    if (Active == 'true' && Answer1 == 'hrontips') {
+    if (Active == 'true' && Answer1 == '') {
       // this.self.props.navigation.navigate('bottomTabBarr');
       this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
     }
@@ -49,11 +50,12 @@ export default class signInHelper {
       )
 
       .then(async response => {
-        console.log('dataaaaassdsfs =======>', response.data);
+        console.log('Login responce =======>', response.data);
         console.log('loginTokennnnn', response.data.AuthToken);
         this.self.setState({message: response.data.Message});
 
         await AsyncStorage.setItem('Name', response.data.FirstName);
+        await AsyncStorage.setItem('LastName', response.data.LastName);
         await AsyncStorage.setItem('Department', response.data.DesignationId);
         await AsyncStorage.setItem('AuthToken', response.data.AuthToken);
         await AsyncStorage.setItem('Answer1', response.data.Answer1);
@@ -91,6 +93,35 @@ export default class signInHelper {
         // alert('Please Enter Valid Credentials');
         alert(response.data.message);
         // console.warn("guggsgggdsy", error);
+      });
+  };
+
+  registerDevice = async () => {
+    console.log('Register device called ---->');
+    let token = await AsyncStorage.getItem('NotiToken');
+    let empid = await AsyncStorage.getItem('EmpId');
+    const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+    console.log('data of register--->', empid, token, 'and', jsonValueClientID);
+    await axios
+      .post(
+        Endpoint.baseUrl + Endpoint.RegisterDevice,
+        {
+          EmpId: empid,
+          Clientid: JSON.parse(jsonValueClientID),
+          DeviceToken: token,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Clientid: JSON.parse(jsonValueClientID),
+          },
+        },
+      )
+      .then(async response => {
+        console.log('register device responce -------->', response);
+      })
+      .catch(function (error) {
+        console.log('Device not registered---->', error);
       });
   };
 }

@@ -13,6 +13,7 @@ export default class DSRHelper {
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const jsonValue = await AsyncStorage.getItem('UserId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+    // console.log('key id is ------->', this.self.state.list);
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.TaskList,
@@ -29,7 +30,7 @@ export default class DSRHelper {
         },
       )
       .then(async response => {
-        console.log('gdfgdfhdfhdf', response.data.Table);
+        console.log('Task dsr data ----------->', response.data.Table);
         this.self.setState({
           DSR: response.data.Table,
         });

@@ -54,6 +54,7 @@ class requestleave extends Component {
       LeaveSplit: '',
       Leavevalue: '',
       Balance: '0',
+      validation: '',
     };
 
     this.helper = new RequestHelper(this);
@@ -135,6 +136,7 @@ class requestleave extends Component {
       });
   }
   applyLeave(daysDiff) {
+    console.log('parameter value --->', daysDiff);
     if (this.state.LeaveType == '') {
       alert('Please Select Leave Type');
     } else {
@@ -149,6 +151,15 @@ class requestleave extends Component {
           } else {
             if (this.state.avalavleType == '') {
               alert('Please select Availability Type');
+            } else if (this.state.selectedEndDate == 'Invalid') {
+              alert('Enter Valid End Date');
+            } else if (
+              this.state.LeaveType == 'Casual Leave' &&
+              daysDiff > this.state.validation - 1
+            ) {
+              alert(
+                `you can't take more than ${this.state.validation} Casual Leave at a time.`,
+              );
             } else {
               // alert('hello');
               this.helper.uploadLeaveDoc();
@@ -188,8 +199,6 @@ class requestleave extends Component {
     const differenceMs = endDate - startDate;
     const differenceDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
 
-    console.log('Validation is ------>', this.state.validation);
-
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
         <View
@@ -218,11 +227,7 @@ class requestleave extends Component {
             }}
             style={{flexDirection: 'row'}}>
             <ImageBackground
-              style={{
-                flexDirection: 'row',
-                height: 60,
-                width: '100%',
-              }}
+              style={{flexDirection: 'row', height: 60, width: '100%'}}
               source={utils.icons.buttonnBacl}>
               <Image
                 source={utils.icons.Back}
@@ -242,12 +247,7 @@ class requestleave extends Component {
               </Text>
             </ImageBackground>
           </TouchableOpacity>
-          <View
-            style={{
-              paddingLeft: 20,
-              paddingRight: 20,
-              marginTop: 40,
-            }}>
+          <View style={{paddingLeft: 20, paddingRight: 20, marginTop: 40}}>
             <SelectDropdown
               data={this.state.DropdownVendorList}
               // defaultValueByIndex={1}
@@ -270,24 +270,22 @@ class requestleave extends Component {
               buttonStyle={{
                 width: '100%',
                 height: 50,
-                backgroundColor: this.props.isDark ? '#000' : '#FFF',
+                backgroundColor: '#FFF',
                 borderWidth: 1,
-                borderColor: this.props.isDark
-                  ? '#fff'
-                  : utils.color.bordercolor,
+                borderColor: utils.color.bordercolor,
                 borderRadius: 8,
               }}
               renderDropdownIcon={isOpened => {
                 return (
                   <FontAwesome
                     name={isOpened ? 'chevron-up' : 'chevron-down'}
-                    color={this.props.isDark ? '#fff' : '#444'}
+                    color={'#444'}
                     size={18}
                   />
                 );
               }}
               buttonTextStyle={{
-                color: this.props.isDark ? '#fff' : '#444',
+                color: '#444',
                 paddingLeft: 10,
                 textAlign: 'left',
               }}
@@ -341,7 +339,7 @@ class requestleave extends Component {
                   height: 50,
                   borderWidth: 1,
                   borderColor: utils.color.bordercolor,
-                  backgroundColor: this.props.isDark ? '#000' : '#fff',
+                  backgroundColor: '#fff',
                   borderRadius: 10,
                   width: '47%',
                 }}>
@@ -359,16 +357,16 @@ class requestleave extends Component {
                   style={[
                     utils.fontStyle.FontFamilyRegular,
                     {
-                      color: this.props.isDark ? '#fff' : '#000',
+                      color: '#000',
                       textAlign: 'center',
-                      backgroundColor: this.props.isDark ? '#000' : '#fff',
+                      backgroundColor: '#fff',
                       width: '80%',
                       fontSize: 18,
                       borderRadius: 10,
                     },
                   ]}
                   placeholder="Start Date"
-                  placeholderTextColor={this.props.isDark ? '#fff' : 'grey'}
+                  placeholderTextColor="grey"
                   editable={false}>
                   {/* {moment(this.state.selectedEndDate?.dateString).format('ll')} */}
                   {this.state.selectedDate?.dateString}
@@ -387,7 +385,7 @@ class requestleave extends Component {
                   height: 50,
                   borderWidth: 1,
                   borderColor: utils.color.bordercolor,
-                  backgroundColor: this.props.isDark ? '#000' : '#fff',
+                  backgroundColor: '#fff',
                   borderRadius: 10,
                   width: '47%',
                 }}>
@@ -405,23 +403,33 @@ class requestleave extends Component {
                   style={[
                     utils.fontStyle.FontFamilyRegular,
                     {
-                      color: this.props.isDark ? '#fff' : '#000',
+                      color: '#000',
                       textAlign: 'center',
-                      backgroundColor: this.props.isDark ? '#000' : '#fff',
+                      backgroundColor: '#fff',
                       width: '80%',
                       borderRadius: 10,
                       fontSize: 18,
                     },
                   ]}
                   placeholder="End Date"
-                  placeholderTextColor={this.props.isDark ? '#fff' : 'grey'}
+                  placeholderTextColor="grey"
                   editable={false}>
                   {/* {moment(this.state.selectedDate).format('ll')} */}
                   {/* {moment(this.state.selectedDate?.dateString).format('ll')} */}
-                  {this.state.selectedEndDate?.dateString}
+                  {/* {this.state.selectedEndDate?.dateString} */}
+                  {this.state.Balance <= differenceDays
+                    ? this.setState({selectedEndDate: 'Invalid'})
+                    : this.state.selectedEndDate?.dateString}
                 </TextInput>
               </TouchableOpacity>
             </View>
+            {this.state.selectedEndDate == 'Invalid' ? (
+              <Text style={{color: 'red', marginTop: 10}}>
+                Please enter valid end date.
+              </Text>
+            ) : (
+              <></>
+            )}
             <View
               style={{
                 height: 50,
@@ -445,8 +453,6 @@ class requestleave extends Component {
                   backgroundColor:
                     this.state.Full === 'full'
                       ? utils.color.HeaderColor
-                      : this.props.isDark
-                      ? '#000'
                       : '#fff',
                   borderBottomLeftRadius: 5,
                   borderTopLeftRadius: 5,
@@ -457,12 +463,7 @@ class requestleave extends Component {
                     {
                       textAlign: 'center',
                       fontSize: 18,
-                      color:
-                        this.state.Full === 'full'
-                          ? '#fff'
-                          : this.props.isDark
-                          ? '#fff'
-                          : '#000',
+                      color: this.state.Full === 'full' ? '#fff' : '#000',
                     },
                   ]}>
                   Full day
@@ -478,9 +479,7 @@ class requestleave extends Component {
                   justifyContent: 'center',
                   backgroundColor:
                     this.state.Full === 'full'
-                      ? this.props.isDark
-                        ? '#000'
-                        : '#fff'
+                      ? '#fff'
                       : utils.color.HeaderColor,
                   borderBottomRightRadius: 5,
                   borderTopRightRadius: 5,
@@ -491,12 +490,7 @@ class requestleave extends Component {
                     {
                       textAlign: 'center',
                       fontSize: 18,
-                      color:
-                        this.state.Full === 'full'
-                          ? this.props.isDark
-                            ? '#fff'
-                            : '#000'
-                          : '#fff',
+                      color: this.state.Full === 'full' ? '#000' : '#fff',
                     },
                   ]}>
                   Half day
@@ -506,13 +500,13 @@ class requestleave extends Component {
 
             <View
               style={{
-                backgroundColor: this.props.isDark ? '#000' : '#fff',
+                backgroundColor: '#fff',
                 marginTop: 20,
                 borderRadius: 10,
               }}>
               <TextInput
                 placeholder={utils.Strings.enternote}
-                placeholderTextColor={this.props.isDark ? '#fff' : 'grey'}
+                placeholderTextColor="grey"
                 returnKeyType="done"
                 // keyboardType='email-address'
                 // value={this.state.notesadd}
@@ -528,7 +522,7 @@ class requestleave extends Component {
                   utils.fontStyle.FontFamilyRegular,
                   {
                     textAlignVertical: 'top',
-                    color: this.props.isDark ? '#fff' : '#000',
+                    color: '#000',
                     height: vh(150),
                     paddingRight: 10,
                   },
@@ -555,7 +549,7 @@ class requestleave extends Component {
               buttonStyle={{
                 width: '100%',
                 height: 50,
-                backgroundColor: this.props.isDark ? '#000' : '#FFF',
+                backgroundColor: '#FFF',
                 borderWidth: 1,
                 borderColor: utils.color.bordercolor,
                 borderRadius: 8,
@@ -564,13 +558,13 @@ class requestleave extends Component {
                 return (
                   <FontAwesome
                     name={isOpened ? 'chevron-up' : 'chevron-down'}
-                    color={this.props.isDark ? '#fff' : '#444'}
+                    color={'#444'}
                     size={18}
                   />
                 );
               }}
               buttonTextStyle={{
-                color: this.props.isDark ? '#fff' : '#444',
+                color: '#444',
                 paddingLeft: 10,
                 textAlign: 'left',
               }}
@@ -611,7 +605,7 @@ class requestleave extends Component {
                 height: 50,
                 width: '100%',
                 justifyContent: 'center',
-                backgroundColor: this.props.isDark ? '#000' : '#fff',
+                backgroundColor: '#fff',
                 borderRadius: 10,
                 marginTop: 20,
                 borderWidth: 1,
@@ -620,11 +614,7 @@ class requestleave extends Component {
               <Text
                 style={[
                   utils.fontStyle.FontFamilyRegular,
-                  {
-                    alignSelf: 'center',
-                    fontSize: 20,
-                    color: this.props.isDark ? '#fff' : '#000',
-                  },
+                  {alignSelf: 'center', fontSize: 20, color: '#000'},
                 ]}>
                 Upload Documents
               </Text>
@@ -648,7 +638,7 @@ class requestleave extends Component {
 
             <TouchableOpacity
               onPress={() => {
-                this.applyLeave();
+                this.applyLeave(differenceDays);
               }}
               style={{
                 height: 50,

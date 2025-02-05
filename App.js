@@ -78,7 +78,7 @@ const onNotification = notify => {
 };
 
 const onOpenNotification = async notify => {
-  console.log('notify', notify);
+  console.log('notify----->', notify);
   if (notify && notify.data && notify.data.page == 'home') {
     navigate('Home', notify.data);
   } else if (notify && notify.data && notify.data.page == 'today') {

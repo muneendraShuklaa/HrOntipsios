@@ -81,6 +81,7 @@ export default class AnnouncementHelper {
   };
 
   AnnoucementType = async () => {
+    console.log("*******Announcement type ******");
     const AuthToken = await AsyncStorage.getItem('AuthToken');
 
     const EmpId = await AsyncStorage.getItem('EmpId');
@@ -100,11 +101,11 @@ export default class AnnouncementHelper {
         },
       )
       .then(async response => {
-        // console.log('Announcement Type ------->>', response.data);
+       console.log('Announcement Type >>------->>', response);
         let ClientDescription2 = response.data.Table.map(val => {
           return val.Fieldvalue;
         });
-        // console.log('Announcement Type ------->>', ClientDescription2);
+         console.log('Announcement Type ***------->>', ClientDescription2);
 
         this.self.setState({
           Announcementtype: ClientDescription2,

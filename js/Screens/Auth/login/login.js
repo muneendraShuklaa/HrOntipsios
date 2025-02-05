@@ -114,11 +114,11 @@ class login extends Component {
       } else {
         // this.props.navigation.navigate("Dashboard")
         this.helper.signIN();
+        this.helper.registerDevice();
       }
     }
   };
   render() {
-    console.log('Msg is ------->', this.state.message);
     return (
       <View style={{flex: 1, backgroundColor: '#ffff', height: '100%'}}>
         <StatusBar

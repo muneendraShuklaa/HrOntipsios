@@ -1,16 +1,16 @@
 export default {
   // ---------------------------- Production Url -----------------------
 
-  // baseUrl: 'https://prodapi.hrontips.com/',
-  // baseUrlTask: 'https://prodapi.hrontips.com/',
+  baseUrl: 'https://prodapi.hrontips.com/',
+  baseUrlTask: 'https://prodapi.hrontips.com/',
 
   //  ----------------------------------------------------------------------------
 
   // -------------------------Stage Url ------------------------------------------
 
-  baseUrl: 'https://stageapi.hrontips.com/',
+  // baseUrl: 'https://stageapi.hrontips.com/',
 
-  baseUrlTask: 'https://stageapi.hrontips.com/',
+  // baseUrlTask: 'https://stageapi.hrontips.com/',
 
   // -------------------------------------------------------------------
 
@@ -69,4 +69,6 @@ export default {
   AddAnnoucement: 'API/home/SaveAnnouncement',
   AnnoucementType: 'API/Home/GetTemplateDropDown',
   LogDetails: 'API/home/GetDataforpresentorabsent',
+  RegisterDevice: 'API/UploadPicture/SaveDeviceToken',
+  RegisterAddress: 'API/TaskManager/InsertGeoAdress',
 };

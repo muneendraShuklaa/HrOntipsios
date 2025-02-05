@@ -68,7 +68,7 @@ export default class ProfiledHelper {
         },
       )
       .then(async response => {
-        console.log('oooooooo', response.data);
+        console.log('Personal data is======>', response.data);
         this.self.setState({
           Department: response.data.Table[0].Department,
           Email: response.data.Table[0].Email,
@@ -95,7 +95,7 @@ export default class ProfiledHelper {
         ClientId: JSON.parse(jsonValueClientID),
       })
       .then(async response => {
-        console.log('oooooooo', response.data);
+        console.log('oooooooo----->', response.data);
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")

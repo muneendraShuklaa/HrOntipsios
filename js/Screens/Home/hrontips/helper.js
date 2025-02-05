@@ -98,7 +98,7 @@ export default class DashboardHelper {
     );
     let formData = new FormData();
     formData.append('longtitude', this.self.state.longitude);
-    formData.append('Comment', 'test mayank clockout using hrontips 2.0');
+    formData.append('Comment', '');
     formData.append('lattitude', this.self.state.latitude); // this.self.state.avalavleType);
     formData.append('EmpId', EmpId);
     formData.append('UserId', JSON.parse(jsonValue));
@@ -161,7 +161,7 @@ export default class DashboardHelper {
         },
       )
       .then(async response => {
-        console.log('ClockIn location base data ==========>', response.data);
+        console.log('tracking data  ==========>', response.data);
         this.self.toggleStopwatch();
         this.self.setState({play: true});
         // await AsyncStorage.setItem('Name', response.data.FirstName)
@@ -281,6 +281,34 @@ export default class DashboardHelper {
         // alert("Please Enter Valid Credentials")
         alert(response.data.message);
         console.log('Remarks date error=======>', error);
+      });
+  };
+
+  registerAddress = async () => {
+    console.log('Register device called ---->');
+    const AuthToken = await AsyncStorage.getItem('AuthToken');
+    const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+    console.log('reg data is --------->', this.self.state.latitude);
+    await axios
+      .post(
+        Endpoint.baseUrl + Endpoint.RegisterAddress,
+        {
+          latitude: this.self.state.latitude,
+          longitude: this.self.state.longitude,
+          address: this.self.state.formattedAddress,
+        },
+        {
+          headers: {
+            token: AuthToken,
+            ClientId: JSON.parse(jsonValueClientID),
+          },
+        },
+      )
+      .then(async response => {
+        console.log(' address responce -------->', response.data);
+      })
+      .catch(function (error) {
+        console.log('Address is not registered----->', error);
       });
   };
 }

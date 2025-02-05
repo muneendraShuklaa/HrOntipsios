@@ -30,7 +30,7 @@ export default class RequestHelper {
         },
       )
       .then(async response => {
-        console.log('get_data...vendor======>>>>>>>', response.data);
+        console.log('get_data...vendor======>>>>>>>', response.data.Table);
         let tmpArr = response.data.Table.map(val => {
           return val.LeaveName;
         });
@@ -128,7 +128,7 @@ export default class RequestHelper {
       })
       .catch(function (error) {
         alert(response.data.message);
-        console.warn('guggsgggdsy', error);
+        console.warn('apply leave error----->', error);
       });
   };
 }

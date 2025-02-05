@@ -2,7 +2,7 @@ import axios from 'axios';
 import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Endpoint from '../../../Utils/Endpoint';
-import RNFetchBlob from 'react-native-fetch-blob';
+// import RNFetchBlob from 'react-native-fetch-blob';
 import moment from 'moment';
 
 export default class EjoinHelper {

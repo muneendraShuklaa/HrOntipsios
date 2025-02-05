@@ -89,6 +89,8 @@ class hrontips extends Component {
       Birthday: [],
       Anniversary: [],
       Quote: '',
+      LastName: '',
+      formattedAddress: '',
     };
     this.toggleTimer = this.toggleTimer.bind(this);
     this.resetTimer = this.resetTimer.bind(this);
@@ -106,6 +108,7 @@ class hrontips extends Component {
       };
       const {latitude, longitude} = latestLocation;
       const {taskLocation} = this.state;
+      console.log('Track data is ---->', this.state.batteryLevel);
       // alert(ActiveStatus)
       let text = 'Waiting..';
       if (this.state.location) {
@@ -123,10 +126,10 @@ class hrontips extends Component {
       );
       console.log('disttanceee', dist);
       if (dist <= 12410197) {
-        // this.helper.track();
+        this.helper.track();
         setTimeout(() => {
           this.helper.track();
-          this.helper.ClockInOut();
+          // this.helper.ClockInOut();      //--------->Saurabh cmnt clockin
 
           this.setState({play: true, StatusClockin: 1});
         }, 1000);
@@ -137,6 +140,8 @@ class hrontips extends Component {
     });
   }
   async componentDidMount() {
+    this.getBatteryLevel();
+
     // setTimeout(() => {
     //   this.pollingInterval = setInterval(() => {
     //     this.pollGeolocation();
@@ -148,7 +153,6 @@ class hrontips extends Component {
       this.helper.GetImageProfile();
     }, 3000);
 
-    this.getBatteryLevel();
     this.helper.UserData();
     timer.clearTimeout(this);
     let Name = await AsyncStorage.getItem('Name');
@@ -157,6 +161,7 @@ class hrontips extends Component {
     let allreadyLogin = await AsyncStorage.getItem('allreadyLogin');
     let NotiToken = await AsyncStorage.getItem('NotiToken');
     let RoleName = await AsyncStorage.getItem('RoleName');
+    let LastName = await AsyncStorage.getItem('LastName');
     this.helper.TimeTracker();
     this.getLocationUser();
     setTimeout(() => {
@@ -164,6 +169,7 @@ class hrontips extends Component {
     }, 2000);
     this.setState({
       Name: Name,
+      LastName: LastName,
       NotiToken: NotiToken,
       RoleName: RoleName,
       allreadyLogin: allreadyLogin,
@@ -316,6 +322,7 @@ class hrontips extends Component {
           Geocoder.geocodePosition(NY)
             .then(res => {
               this.setState({address: res[0].locality});
+              this.setState({formattedAddress: res[0].formattedAddress});
               setTimeout(() => {
                 this.setState({address: res[0].locality});
               }, 1000);
@@ -346,7 +353,7 @@ class hrontips extends Component {
 
     // console.log('battery level is =====>', this.state.batteryLevel);
     // console.log('Birthday--->', this.state.Birthday);
-    // console.log('Anniversay------>', this.state.Anniversary);
+    // console.log('last name is ------>', this.state.formattedAddress);
 
     return (
       <ImageBackground
@@ -404,18 +411,18 @@ class hrontips extends Component {
                         utils.fontStyle.FontFamilymachoB,
                         {
                           color: this.props.themeColor.textColor,
-                          fontSize: 32,
+                          fontSize: 26,
                           fontWeight: 'bold',
                         },
                       ]}>
-                      {this.state.Name}
+                      {this.state.Name} {this.state.LastName}
                     </Text>
                     <Text
                       style={[
                         utils.fontStyle.FontFamilymachoB,
                         {color: '#afafaf', fontSize: 16},
                       ]}>
-                      {this.state.Department}
+                    {this.state.Department}
                     </Text>
                   </View>
                   <View style={{flexDirection: 'column', marginLeft: -10}}>
@@ -571,6 +578,7 @@ class hrontips extends Component {
                         // }, 5000);
 
                         this.helper.ClockInOut();
+                        this.helper.registerAddress();
                       }}>
                       <ImageBackground
                         source={utils.icons.Rectangl}
@@ -603,6 +611,7 @@ class hrontips extends Component {
                       style={{marginTop: 15}}
                       onPress={() => {
                         setTimeout(() => {
+                          this.helper.registerAddress();
                           this.helper.ClockOut();
                           this.resetStopwatch();
                         }, 1000);

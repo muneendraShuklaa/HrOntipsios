@@ -36,7 +36,7 @@ export default class ApproveLeaveHelper {
         },
       )
       .then(async response => {
-        console.log('approve leave ****  ---------->', response.data.Table);
+        // console.log('approve leave ****  ---------->', response.data.Table);
         this.self.setState({
           LeaveRecord: response.data.Table,
           Pending: response.data.Table1[0].ApprovalPending,

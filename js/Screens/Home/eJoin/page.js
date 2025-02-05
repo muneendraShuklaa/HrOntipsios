@@ -22,8 +22,8 @@ import DocumentPicker from 'react-native-document-picker';
 import SignatureCanvas from 'react-native-signature-canvas';
 import {EjoinPageHelper} from './helper';
 import moment from 'moment';
-import RNFetchBlob from 'react-native-fetch-blob';
-const base64 = RNFetchBlob.base64;
+// import RNFetchBlob from 'react-native-fetch-blob';
+// const base64 = RNFetchBlob.base64;
 
 const handleClear = () => {
   console.log('clear success!');
