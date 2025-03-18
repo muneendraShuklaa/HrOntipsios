@@ -291,7 +291,7 @@ class team extends Component {
                 showsVerticalScrollIndicator={false}
                 style={{marginTop: vh(10)}}
                 // showsHorizontalScrollIndicator={false}
-                data={this.state.TeamTrack}
+                data={this.state.TeamTrack?.length>0?this.state.TeamTrack:[]}
                 keyExxtractor={(item, index) => index.toString}
                 renderItem={({item, index}) => this.renderItem(item, index)}
               />

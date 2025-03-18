@@ -40,7 +40,7 @@ export default class adddsrHelper {
         },
       )
       .then(async response => {
-        console.log('DDSSRRfill', response.data);
+        console.log('DDSSRRfill', response?.data);
         this.props.navigation.navigate('Login');
       })
       .catch(function (error) {
@@ -81,7 +81,7 @@ export default class adddsrHelper {
       body: formdata,
     };
     fetch(Endpoint.baseUrl + Endpoint.AddDsr, requestOptions)
-      .then(response => response.text())
+      .then(response => response?.text())
       //   .then(result => console.log(result,"...."))
       .then(result => {
         console.log('get Add data...adddtata', result);
@@ -115,18 +115,18 @@ export default class adddsrHelper {
         },
       )
       .then(async response => {
-        console.log('dsr project', response.data);
-        let tmpArr = response.data.Table.map(val => {
+        console.log('dsr project', response?.data);
+        let tmpArr = response?.data?.Table.map(val => {
           return val.Text;
         });
         this.self.setState({
-          Dropdownproject: response.data.Table,
+          Dropdownproject: response?.data.Table,
           Search: tmpArr,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data.message);
         // console.warn("guggsgggdsy", error);
       });
   };
@@ -154,20 +154,20 @@ export default class adddsrHelper {
         },
       )
       .then(async response => {
-        console.log('Dropdowntaskcate', response.data);
-        let category = response.data.map(val => {
+        console.log('Dropdowntaskcate', response?.data);
+        let category = response?.data.map(val => {
           return val.Category;
         });
 
         this.self.setState({
           //   Dropdowntaskcate: response.data.Table,
           dropcategory: category,
-          dropcategoryData: response.data,
+          dropcategoryData: response?.data,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };

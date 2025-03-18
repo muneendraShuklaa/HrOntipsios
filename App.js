@@ -52,6 +52,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {fcmService} from './js/notification/FCMNotification';
 import {localNotificationService} from './js/notification/localNotification';
 
+if (__DEV__) {
+  require("./ReactotronConfig.js");
+}
+// AppRegistry.registerHeadlessTask('myapp',()=>{console.log("testing 123")})
+// AppRegistry.run
+
 fcmService.registerAppWithFCM();
 fcmService.register(onRegister, onNotification, onOpenNotification);
 localNotificationService.configure(onOpenNotification);
@@ -77,10 +83,13 @@ const onNotification = notify => {
   );
 };
 
+
+
+
 const onOpenNotification = async notify => {
-  console.log('notify----->', notify);
-  if (notify && notify.data && notify.data.page == 'home') {
-    navigate('Home', notify.data);
+  // console.log('************ Is notify----->', notify);
+  if (notify ) {
+    NavigationContainer.navigate('Home', notify.data);
   } else if (notify && notify.data && notify.data.page == 'today') {
     navigate('Today', notify.data);
   }
@@ -89,14 +98,14 @@ import OneSignal from 'react-native-onesignal';
 // OneSignal.init("f7924110-6e36-4b81-a8d0-83eac5d15f63");
 OneSignal.setNotificationWillShowInForegroundHandler(
   notificationReceivedEvent => {
-    console.log(
-      'OneSignal: notification will show in foreground:',
-      notificationReceivedEvent,
-    );
+    // console.log(
+    //   'OneSignal: notification will show in foreground:',
+    //   notificationReceivedEvent,
+    // );
     let notification = notificationReceivedEvent.getNotification();
-    console.log('notification: ', notification);
+    // console.log('notification: ', notification);
     const data = notification.additionalData;
-    console.log('additionalData: ', data);
+    // console.log('additionalData: ', data);
     // Complete with null means don't show a notification.
     notificationReceivedEvent.complete(notification);
   },
@@ -104,16 +113,15 @@ OneSignal.setNotificationWillShowInForegroundHandler(
 
 // // //Method for handling notifications opened
 OneSignal.setNotificationOpenedHandler(notification => {
-  console.log('OneSignal: notification opened:', notification);
+  // console.log('OneSignal: notification opened:', notification);
 });
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
-const bottomTabBarr = () => {
+const BottomTabBarr = () => {
   const colorScheme = useColorScheme();
 
   const isDarkMode = colorScheme === 'dark';
 
-  console.log('Activeee modeeee---------->', isDarkMode);
   return (
     <BottomTabs.Navigator
       initialRouteName="HrOnTipsRequestLeave"
@@ -327,8 +335,8 @@ function HomeStack() {
         options={{headerShown: false}}
       /> */}
       <Stack.Screen
-        name="bottomTabBarr"
-        component={bottomTabBarr}
+        name="BottomTabBarr"
+        component={BottomTabBarr}
         options={{headerShown: false}}
       />
       {/* <Stack.Screen

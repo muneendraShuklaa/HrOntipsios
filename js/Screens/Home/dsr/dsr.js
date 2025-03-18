@@ -81,7 +81,7 @@ class dsr extends Component {
                     //   backgroundColor: 'red',
                   }}
                   showsHorizontalScrollIndicator={false}
-                  data={this.state.DSR}
+                  data={this.state.DSR?.length>0??[]}
                   // data={this.state.DSR?.sort((a, b) => {
                   //   return a.SubmittedOn - b.SubmittedOn;
                   // })}

@@ -77,7 +77,7 @@ class notification extends Component {
                 //   backgroundColor: 'red',
               }}
               showsHorizontalScrollIndicator={false}
-              data={this.state.notification}
+              data={this.state.notification?.length>0?this.state.notification:[]}
               contentContainerStyle={{paddingBottom: vh(100)}}
               keyExxtractor={(item, index) => index.toString}
               renderItem={({item, index}) => this.renderItem(item, index)}

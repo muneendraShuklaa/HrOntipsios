@@ -86,7 +86,7 @@ class profile extends Component {
       .then(imageUrl => {
         // let tmpArr = this.state.imageArray2
         // tmpArr.push(imageUrl.path)
-        console.warn(imageUrl.path);
+        // console.warn(imageUrl.path);
         // this.setState({ imageArray2: tmpArr })
         this.setState({ImagePicUrl: imageUrl.path});
         // this.img_ipdate()
@@ -117,7 +117,7 @@ class profile extends Component {
       });
   }
   render() {
-    console.warn(ClockIn_datetime, 'hhhhhhhhh');
+    // console.warn(ClockIn_datetime, 'hhhhhhhhh');
     const {
       play,
       user_name,
@@ -802,6 +802,7 @@ Payslip:  */}
                 onPress={async () => {
                   AsyncStorage.removeItem('Answer1');
                   AsyncStorage.removeItem('IsAuthenticated');
+                  AsyncStorage.removeItem('EmpId');
                   setTimeout(() => {
                     // this.props.navigation.navigate('Login'),
                     this.props.navigation.dispatch(

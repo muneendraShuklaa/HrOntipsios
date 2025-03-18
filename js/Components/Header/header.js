@@ -17,7 +17,7 @@ class header extends PureComponent {
   }
 
   render() {
-    console.log('Props value is --------->', this.props);
+    // console.log('Props value is --------->', this.props);
     return (
       <View>
         {Platform.OS === 'ios' ? (

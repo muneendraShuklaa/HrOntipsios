@@ -7,5 +7,5 @@ import App from './App';
 import {name as appName} from './app.json';
 // console.warn =()=>{}
 // console.error =()=>{}
-
+   
 AppRegistry.registerComponent(appName, () => App);

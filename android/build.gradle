@@ -7,8 +7,8 @@ buildscript {
         buildToolsVersion = "31.0.0"
         minSdkVersion = 21
         compileSdkVersion = 33
-        targetSdkVersion = 33
-\
+        targetSdkVersion = 34
+
         if (System.properties['os.arch'] == "aarch64") {
             // For M1 Users we n3ed to use the NDK 24 which added support for aarch64
             ndkVersion = "24.0.8215888"
@@ -66,4 +66,15 @@ allprojects {
         // ADD THIS
         maven { url 'https://maven.google.com' }
     }
+}
+
+subprojects {
+afterEvaluate {project ->
+    if (project.hasProperty("android")) {
+        android {
+            compileSdkVersion rootProject.ext.compileSdkVersion
+            buildToolsVersion rootProject.ext.buildToolsVersion
+        }
+    }
+}
 }

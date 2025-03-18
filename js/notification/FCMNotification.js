@@ -2,6 +2,8 @@ import messaging from '@react-native-firebase/messaging';
 import {Platform} from 'react-native';
 import {localNotificationService} from '../notification/localNotification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+
 
 class FCMService {
   register = (onRegister, onNotification, onOpenNotification) => {
@@ -88,9 +90,11 @@ class FCMService {
         '[FCMService] OnNotificationOpenedApp getInitialNotification',
         remoteMessage,
       );
+  
       if (remoteMessage) {
         const notification = remoteMessage;
         onOpenNotification(notification);
+
       }
     });
 
@@ -138,7 +142,7 @@ class FCMService {
   stopAlarmRing = async () => {
     if (Platform.OS != 'ios') {
       await messaging().stopAlarmRing();
-      console.log('sdfghjkldfgh', 'stopAlarmRing');
+      // console.log('sdfghjkldfgh', 'stopAlarmRing');
     }
   };
 }

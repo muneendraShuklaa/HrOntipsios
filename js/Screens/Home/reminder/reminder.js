@@ -211,7 +211,7 @@ class reminder extends Component {
               //   backgroundColor: 'red',
             }}
             showsHorizontalScrollIndicator={false}
-            data={this.state.reminder}
+            data={this.state.reminder?.length>0?this.state.reminder:[]}
             keyExxtractor={(item, index) => index.toString}
             renderItem={({item, index}) => this.renderItem(item, index)}
           />

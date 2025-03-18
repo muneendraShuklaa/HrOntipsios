@@ -95,7 +95,7 @@ export default class ProfiledHelper {
         ClientId: JSON.parse(jsonValueClientID),
       })
       .then(async response => {
-        console.log('oooooooo----->', response.data);
+        console.log('logooooooo----->', response.data);
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")

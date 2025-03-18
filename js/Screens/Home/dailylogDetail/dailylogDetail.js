@@ -166,7 +166,7 @@ class dailylogDetail extends Component {
               <FlatList
                 style={{height: 'auto', padding: 10}}
                 showsHorizontalScrollIndicator={false}
-                data={this.state.LogDetails}
+                data={this.state.LogDetails?.length>0??[]}
                 keyExxtractor={(item, index) => index.toString}
                 renderItem={({item, index}) => this.renderItem(item, index)}
               />

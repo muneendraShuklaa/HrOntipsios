@@ -95,7 +95,7 @@ class leavebalance extends Component {
                 // marginLeft: '10%',
               }}
               showsHorizontalScrollIndicator={false}
-              data={this.state.LeaveDeatilsss}
+              data={this.state.LeaveDeatilsss?.length>0?this.state.LeaveDeatilsss:[]}
               keyExxtractor={(item, index) => index.toString}
               renderItem={({item, index}) =>
                 this.renderItemLeave(item, index, this.props.isDark)
@@ -121,7 +121,7 @@ class leavebalance extends Component {
               extraData={this.state.approvedIndex}
               style={{padding: 20, marginTop: 10}}
               showsHorizontalScrollIndicator={false}
-              data={this.state.LeaveRecord}
+              data={this.state.LeaveRecord?this.state.LeaveRecord:[]}
               keyExxtractor={(item, index) => index.toString}
               renderItem={({item, index}) =>
                 this.renderItem(item, index, this.props.isDark)

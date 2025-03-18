@@ -262,7 +262,7 @@ export default class DashboardHelper {
       )
       .then(async response => {
         // console.log('imagegegege..,gg.', response.data.DocumentUrlBase64);
-        // console.log('Remark date is ----->', response.data);
+         console.log('Remark date is ----->', response.data);
         await AsyncStorage.setItem(
           'ImagePicUrl',
           response.data.DocumentUrlBase64,

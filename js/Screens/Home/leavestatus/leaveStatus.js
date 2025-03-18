@@ -52,7 +52,7 @@ class leavestatus extends Component {
  <FlatList
                                 style={{ marginTop: vh(20), height:"100%" ,padding:20}}
                                 showsHorizontalScrollIndicator={false}
-                                data={this.state.cardDeatils}
+                                data={this.state.cardDeatils?.length>0?this.state.cardDeatils:[]}
                                 keyExxtractor={(item, index) => index.toString}
                                 renderItem={({ item, index }) => this.renderItem(item, index)}
                             />

@@ -36,12 +36,14 @@ export default class ApproveLeaveHelper {
         },
       )
       .then(async response => {
-        // console.log('approve leave ****  ---------->', response.data.Table);
+
+        //  console.log(JSON.stringify(response.data.Table, null, 2));
         this.self.setState({
           LeaveRecord: response.data.Table,
           Pending: response.data.Table1[0].ApprovalPending,
           Reject: response.data.Table1[0].Reject,
           Approved: response.data.Table1[0].Approved,
+          leaveduration:response.data.Table
         });
       })
       .catch(function (error) {
@@ -60,9 +62,9 @@ export default class ApproveLeaveHelper {
     const jsonValueUserType = await AsyncStorage.getItem('UserType');
     // console.log(
     //   'Apppprovved',
-    //   EmpId,
-    //   jsonValueClientID,
-    //   AuthToken,
+    //   // EmpId,
+    //   // jsonValueClientID,
+    //   // AuthToken,
     //   this.self.state.TTransid,
     // );
     await axios
@@ -76,25 +78,25 @@ export default class ApproveLeaveHelper {
           ClientId: JSON.parse(jsonValueClientID),
         },
         {
-          // headers: {
-          //   token: AuthToken,
-          //   ClientId: JSON.parse(jsonValueClientID),
-          // },
+          headers: {
+            token: AuthToken,
+            ClientId: JSON.parse(jsonValueClientID),
+          },
         },
       )
       // console.log("Leave",EmpId,AuthToken,TransId)
 
       .then(async response => {
-        console.log(
-          'dataapproved',
-          EmpId,
-          jsonValueClientID,
-          AuthToken,
-          TransId,
-          Comments,
-        );
+        // console.log(
+        //   'dataapproved',
+        //   EmpId,
+        //   jsonValueClientID,
+        //   AuthToken,
+        //   TransId,
+        //   Comments,
+        // );
 
-        // console.log('leave startsu', response.data);
+      //  console.log('leave startsu', response.data);
       })
       .catch(function (error) {
         // alert('worng data');
@@ -105,13 +107,13 @@ export default class ApproveLeaveHelper {
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const jsonValueUserType = await AsyncStorage.getItem('UserType');
-    console.log(
-      'rejectedd',
-      EmpId,
-      jsonValueClientID,
-      AuthToken,
-      this.self.state.RejectTransid,
-    );
+    // console.log(
+    //   'rejectedd',
+    //   EmpId,
+    //   jsonValueClientID,
+    //   AuthToken,
+    //   this.self.state.RejectTransid,
+    // );
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.statusLeave,
@@ -131,23 +133,23 @@ export default class ApproveLeaveHelper {
       )
 
       .then(async response => {
-        console.log(
-          'LeaveApprovall',
-          EmpId,
-          jsonValueClientID,
-          AuthToken,
-          TransId,
-          Comments,
-        );
+        // console.log(
+        //   'LeaveApprovall',
+        //   EmpId,
+        //   jsonValueClientID,
+        //   AuthToken,
+        //   TransId,
+        //   Comments,
+        // );
 
-        console.log(
-          'hhghghghghghgh',
-          EmpId,
-          TransId,
-          ClientId,
-          Status,
-          Comments,
-        );
+        // console.log(
+        //   'hhghghghghghgh',
+        //   EmpId,
+        //   TransId,
+        //   ClientId,
+        //   Status,
+        //   Comments,
+        // );
       })
       .catch(function (error) {
         // alert(response.data.message)

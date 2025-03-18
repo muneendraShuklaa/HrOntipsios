@@ -30,7 +30,7 @@ class LocalNotificationService {
       // },
 
       onNotification: function (notification) {
-        console.log('** NOTIFICATION: **', notification);
+        // console.log('** NOTIFICATION: **', notification);
 
         if (Platform.OS === 'ios') {
           if (notification.alert.length !== 0) {
@@ -102,10 +102,10 @@ class LocalNotificationService {
   };
 
   removeDeliveredNotificationByID = notificationId => {
-    console.log(
-      '[LocalNotificationService] removeDeliveredNotificationByID:',
-      notificationId,
-    );
+    // console.log(
+    //   '[LocalNotificationService] removeDeliveredNotificationByID:',
+    //   notificationId,
+    // );
     PushNotification.cancelLocalNotifications({
       id: `${notificationId}`,
     });

@@ -85,21 +85,21 @@ class login extends Component {
       if (granted) {
         RNLocation.getLatestLocation({timeout: 60000}).then(latestLocation => {
           var NY = {
-            lat: latestLocation.latitude,
-            lng: latestLocation.longitude,
+            lat: latestLocation?.latitude,
+            lng: latestLocation?.longitude,
           };
           Geocoder.geocodePosition(NY)
             .then(res => {
               this.setState({address: res[0].locality});
-              console.log('geolocation =====>', res);
+              // console.log('geolocation =====>', res);
             })
             .catch(err => console.log(err));
 
           this.setState({
-            latitude: latestLocation.latitude,
-            longitude: latestLocation.longitude,
-            current_latitude: latestLocation.latitude,
-            current_longitude: latestLocation.longitude,
+            latitude: latestLocation?.latitude,
+            longitude: latestLocation?.longitude,
+            current_latitude: latestLocation?.latitude,
+            current_longitude: latestLocation?.longitude,
           });
         });
       }
@@ -114,7 +114,9 @@ class login extends Component {
       } else {
         // this.props.navigation.navigate("Dashboard")
         this.helper.signIN();
-        this.helper.registerDevice();
+        setTimeout(() => {
+          this.helper.registerDevice();
+        }, 5000);
       }
     }
   };

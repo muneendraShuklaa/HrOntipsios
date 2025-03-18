@@ -79,6 +79,7 @@ class announcement extends Component {
     const {route} = this.props;
     const {role} = route.params;
    console.log('type  ----->', this.state.Announcementtype);
+ 
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
         <View
@@ -117,7 +118,7 @@ class announcement extends Component {
                 //   backgroundColor: 'red',
               }}
               showsHorizontalScrollIndicator={false}
-              data={this.state.Announcement}
+              data={this.state.Announcement?.length>0?this.state.Announcement:[]}
               contentContainerStyle={{paddingBottom: vh(100)}}
               keyExxtractor={(item, index) => index.toString}
               renderItem={({item, index}) =>

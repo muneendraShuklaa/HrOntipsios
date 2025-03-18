@@ -126,7 +126,7 @@ class wejoin extends Component {
                   height: vh(385),
                 }}
                 showsHorizontalScrollIndicator={false}
-                data={this.state.data}
+                data={this.state.data?.length>0?this.state.data:[]}
                 keyExxtractor={(item, index) => index.toString}
                 renderItem={({item, index}) => this.renderItem(item, index)}
               />

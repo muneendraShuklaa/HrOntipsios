@@ -30,9 +30,9 @@ export default class EjoinHelper {
         // }
       )
       .then(async response => {
-        console.log('leavvevevevevev', response.data);
+        // console.log('leavvevevevevev', response?.data);
         this.self.setState({
-          data: response.data.Table,
+          data: response?.data?.Table,
           // TaskName:response.data.Table[0].TaskName,
           // EmployeeUpload:response.data.Table[0].EmployeeUpload,
           // ViewDocument:response.data.Table[0].ViewDocument,
@@ -42,7 +42,7 @@ export default class EjoinHelper {
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };

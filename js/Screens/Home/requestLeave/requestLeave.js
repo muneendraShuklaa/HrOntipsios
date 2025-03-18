@@ -867,7 +867,7 @@ class requestleave extends Component {
                 textMonthFontSize: 22,
                 textDayHeaderFontSize: 16,
               }}
-              minDate={new Date()}
+              // minDate={new Date()}
               maxDate={'2099-09-22'}
               onDayPress={day => {
                 console.log('selected day', day);
@@ -972,10 +972,10 @@ class requestleave extends Component {
                 textMonthFontSize: 22,
                 textDayHeaderFontSize: 16,
               }}
-              minDate={new Date()}
+              // minDate={new Date()}
               maxDate={'2099-09-22'}
               onDayPress={day => {
-                console.log('selected day', day);
+                // console.log('selected day', day);
                 // console.log('nnnnnnnnn', this, this.helper);
                 // this.helper.FilterTask();
                 this.setState({

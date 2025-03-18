@@ -1,16 +1,16 @@
 export default {
   // ---------------------------- Production Url -----------------------
 
-  baseUrl: 'https://prodapi.hrontips.com/',
-  baseUrlTask: 'https://prodapi.hrontips.com/',
+  // baseUrl: 'https://prodapi.hrontips.com/',
+  // baseUrlTask: 'https://prodapi.hrontips.com/',
 
   //  ----------------------------------------------------------------------------
 
   // -------------------------Stage Url ------------------------------------------
 
-  // baseUrl: 'https://stageapi.hrontips.com/',
+  baseUrl: 'https://stageapi.hrontips.com/',
 
-  // baseUrlTask: 'https://stageapi.hrontips.com/',
+  baseUrlTask: 'https://stageapi.hrontips.com/',
 
   // -------------------------------------------------------------------
 
@@ -23,7 +23,9 @@ export default {
   track: 'API/Home/InsertEmpGeoTrack',
   leaveStatus: 'API/Home/GetEmployeePendingLeaveApproval',
   UserPersonalDetail: 'API/Home/GetDatajobdetails',
-  LeaveApproval: 'API/Home/GetPendingLeaveApproval_V2',
+//  LeaveApproval: 'API/Home/GetPendingLeaveApproval_newapi',
+   LeaveApproval: 'API/Home/GetPendingLeaveApproval_V2',
+
   statusLeave: 'API/Home/ApproveRejectLeave',
   GetLeaveBalance: 'API/Home/GetLeaveBalance',
   GetLeaveType: 'API/Home/GetLeaveType',

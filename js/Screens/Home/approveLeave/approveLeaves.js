@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -8,16 +8,18 @@ import {
   Image,
   ImageBackground,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 import utils from '../../../Utils';
-import {Header} from '../../../Components/Header';
+import { Header } from '../../../Components/Header';
 import Modal from 'react-native-modal';
-import {withMyHook} from '../../../Utils/Dark';
-import {vh, vw, normalize} from '../../../Utils/dimentions';
+import { withMyHook } from '../../../Utils/Dark';
+import { vh, vw, normalize } from '../../../Utils/dimentions';
 import ApproveLeaveHelper from './helper';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment';
+import { FractionEnum } from '../../../Utils/constant';
 class approveLeaves extends Component {
   constructor(props) {
     super(props);
@@ -31,9 +33,9 @@ class approveLeaves extends Component {
       rejetnotesadd: '',
       Approvalbutton: false,
       approvedIndex: '-1',
+      leaveduration: '',
       TTransid: '',
       RejectTransid: '',
-
       sideModalcomment: false,
       cardDeatils: [],
       LeaveStatus: [],
@@ -42,12 +44,27 @@ class approveLeaves extends Component {
   }
   componentDidMount() {
     this.helper.LeaveApprove();
+
+
   }
+
+  getLeaveDescription = (LeaveDuration) => {
+
+    return parseFloat(FractionEnum.QUARTER) === parseFloat(LeaveDuration)
+      ? "Short Day"
+      : parseFloat(FractionEnum.HALF) === parseFloat(LeaveDuration)
+        ? "Half Day"
+        : "Full Day";
+  };
+
+
   render() {
-    console.log('Leave Record------->', this.state.LeaveRecord);
+    //     console.log('Leave Record------->', JSON.stringify(this.state.LeaveRecord, null, 2));
+    // console.log(utils.icons.backImage,'utils.icons.backImage===');
+
     return (
-      <ImageBackground
-        imageStyle={{tintColor: this.props.themeColor.Darkk}}
+      utils.icons.backImage && <ImageBackground
+        imageStyle={{ tintColor: this.props.themeColor.Darkk }}
         source={utils.icons.backImage}
         style={{
           flex: 1,
@@ -59,20 +76,20 @@ class approveLeaves extends Component {
           onPress={() => {
             this.props.navigation.goBack();
           }}
-          style={{flexDirection: 'row', padding: 20, marginTop: 20}}>
+          style={{ flexDirection: 'row', padding: 20, marginTop: 20 }}>
           <Image
             source={utils.icons.Back}
             style={{
               alignSelf: 'center',
               marginRight: 10,
-              tintColor: '#fff',
+              // tintColor: '#fff',
               resizeMode: 'contain',
             }}
           />
           <Text
             style={[
               utils.fontStyle.FontFamilymachoB,
-              {color: '#fff', fontSize: 20},
+              { color: '#fff', fontSize: 20 },
             ]}>
             Approve Leave
           </Text>
@@ -99,9 +116,9 @@ class approveLeaves extends Component {
             renderItem={({item, index}) => this.renderItemLeave(item, index)}
           /> */}
 
-          <View style={{height: 'auto', width: 'auto'}}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={{height: 100, width: 100}}>
+          <View style={{ height: 'auto', width: 'auto' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ height: 100, width: 100 }}>
                 <View
                   style={{
                     backgroundColor: this.props.isDark ? '#000' : '#fff',
@@ -135,7 +152,7 @@ class approveLeaves extends Component {
                 </Text>
               </View>
 
-              <View style={{height: 100, width: 100}}>
+              <View style={{ height: 100, width: 100 }}>
                 <View
                   style={{
                     backgroundColor: this.props.isDark ? '#000' : '#fff',
@@ -169,7 +186,7 @@ class approveLeaves extends Component {
                 </Text>
               </View>
 
-              <View style={{height: 100, width: 100}}>
+              <View style={{ height: 100, width: 100 }}>
                 <View
                   style={{
                     backgroundColor: this.props.isDark ? '#000' : '#fff',
@@ -206,27 +223,32 @@ class approveLeaves extends Component {
           </View>
         </View>
         {this.state.LeaveRecord == '' ? (
-          <View style={{flex: 1, marginTop: 50}}>
+          <View style={{ flex: 1, marginTop: 50 }}>
             {/* <LottieView style={{ height: 100, width: 100, alignSelf: 'center',  }} source={require('../../../Components/Lottie/98288-loading.json')} autoPlay loop /> */}
-            <Text
+            {/* <Text
               style={{
                 color: this.props.themeColor.textColor,
                 textAlign: 'center',
                 fontSize: 16,
                 fontWeight: 'bold',
                 marginTop: 200,
-              }}>
-              No leave for approval
-            </Text>
+              }}> */}
+            <ActivityIndicator
+              size="large"
+              color="#3083EF"
+              animating={true}
+              style={[{ marginTop: 320 }]}
+            />
+            {/* </Text> */}
           </View>
         ) : (
           <FlatList
             extraData={this.state.approvedIndex}
-            style={{padding: 20, marginTop: 30}}
+            style={{ padding: 20, marginTop: 30 }}
             showsHorizontalScrollIndicator={false}
-            data={this.state.LeaveRecord}
+            data={this.state.LeaveRecord?.length>0??[]}
             keyExxtractor={(item, index) => index.toString}
-            renderItem={({item, index}) =>
+            renderItem={({ item, index }) =>
               this.renderItem(item, index, this.props.isDark)
             }
           />
@@ -237,9 +259,9 @@ class approveLeaves extends Component {
           // animationType="fade",
           transparent={true}
 
-          // animationIn="slideInLeft"
-          // animationOut="slideOutLeft"
-          // style={{ margin: 0 }}
+        // animationIn="slideInLeft"
+        // animationOut="slideOutLeft"
+        // style={{ margin: 0 }}
         >
           <View
             style={{
@@ -259,14 +281,14 @@ class approveLeaves extends Component {
               }}>
               <Image
                 source={utils.icons.Page}
-                style={{alignSelf: 'center', marginTop: 20}}
+                style={{ alignSelf: 'center', marginTop: 20 }}
               />
             </View>
-            <View style={{margin: 15}}>
+            <View style={{ margin: 15 }}>
               <Text
                 style={[
                   utils.fontStyle.FontFamilyExtraBold,
-                  {color: '#000', marginBottom: 10},
+                  { color: '#000', marginBottom: 10 },
                 ]}>
                 Comments
               </Text>
@@ -280,7 +302,7 @@ class approveLeaves extends Component {
                 // type={'custom'}
                 allowFontScaling={false}
                 onChangeText={text => {
-                  this.setState({rejetnotesadd: text});
+                  this.setState({ rejetnotesadd: text });
                 }}
                 multiline={true}
                 maxLength={330}
@@ -295,11 +317,11 @@ class approveLeaves extends Component {
                   },
                 ]}></TextInput>
               <TouchableOpacity
-                style={[styles.ButtonView, {marginTop: 20}]}
+                style={[styles.ButtonView, { marginTop: 20 }]}
                 onPress={async () => {
                   await this.helper.AddCommentsReject();
                   setTimeout(async () => {
-                    this.setState({sideModalcomment: false});
+                    this.setState({ sideModalcomment: false });
                     this.helper.LeaveApprove();
                   }, 1000);
                   // if (this.state.notesadd.length > 10) {
@@ -322,8 +344,8 @@ class approveLeaves extends Component {
                   <Text
                     style={[
                       utils.fontStyle.TextSemiBold,
-                      {color: '#fff'},
-                      {textAlign: 'center'},
+                      { color: '#fff' },
+                      { textAlign: 'center' },
                     ]}>
                     Reject
                   </Text>
@@ -331,11 +353,11 @@ class approveLeaves extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({sideModalcomment: false});
+                  this.setState({ sideModalcomment: false });
                 }}
                 style={[styles.ButtonView, {}]}>
                 <ImageBackground
-                  imageStyle={{tintColor: '#A3A3A3', borderRadius: 5}}
+                  imageStyle={{ tintColor: '#A3A3A3', borderRadius: 5 }}
                   style={{
                     height: 37,
                     width: '100%',
@@ -346,8 +368,8 @@ class approveLeaves extends Component {
                   <Text
                     style={[
                       utils.fontStyle.TextSemiBold,
-                      {color: '#fff'},
-                      {textAlign: 'center', fontSize: 16},
+                      { color: '#fff' },
+                      { textAlign: 'center', fontSize: 16 },
                     ]}>
                     Cancel
                   </Text>
@@ -356,7 +378,7 @@ class approveLeaves extends Component {
             </View>
           </View>
         </Modal>
-        <Modal isVisible={this.state.Approvalbutton} style={{margin: 20}}>
+        <Modal isVisible={this.state.Approvalbutton} style={{ margin: 20 }}>
           <View
             style={{
               height: 'auto',
@@ -375,14 +397,14 @@ class approveLeaves extends Component {
               }}>
               <Image
                 source={utils.icons.Page}
-                style={{alignSelf: 'center', marginTop: 20}}
+                style={{ alignSelf: 'center', marginTop: 20 }}
               />
             </View>
-            <View style={{margin: 15}}>
+            <View style={{ margin: 15 }}>
               <Text
                 style={[
                   utils.fontStyle.FontFamilyExtraBold,
-                  {color: '#000', marginBottom: 10},
+                  { color: '#000', marginBottom: 10 },
                 ]}>
                 Comments
               </Text>
@@ -396,7 +418,7 @@ class approveLeaves extends Component {
                 // type={'custom'}
                 allowFontScaling={false}
                 onChangeText={text => {
-                  this.setState({notesadd: text});
+                  this.setState({ notesadd: text });
                 }}
                 multiline={true}
                 maxLength={330}
@@ -411,12 +433,12 @@ class approveLeaves extends Component {
                   },
                 ]}></TextInput>
               <TouchableOpacity
-                style={[styles.ButtonView, {marginTop: 20}]}
+                style={[styles.ButtonView, { marginTop: 20 }]}
                 onPress={async () => {
                   // alert(item.TransId);
                   await this.helper.AddComments();
                   setTimeout(async () => {
-                    this.setState({Approvalbutton: false});
+                    this.setState({ Approvalbutton: false });
                     this.helper.LeaveApprove();
                   }, 1000);
                   // if (this.state.notesadd.length > 10) {
@@ -429,7 +451,7 @@ class approveLeaves extends Component {
                   // }
                 }}>
                 <ImageBackground
-                  imageStyle={{borderRadius: 5}}
+                  imageStyle={{ borderRadius: 5 }}
                   style={{
                     height: 37,
                     width: '100%',
@@ -440,8 +462,8 @@ class approveLeaves extends Component {
                   <Text
                     style={[
                       utils.fontStyle.TextSemiBold,
-                      {color: '#fff'},
-                      {textAlign: 'center'},
+                      { color: '#fff' },
+                      { textAlign: 'center' },
                     ]}>
                     Approve
                   </Text>
@@ -449,11 +471,11 @@ class approveLeaves extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({Approvalbutton: false});
+                  this.setState({ Approvalbutton: false });
                 }}
                 style={[styles.ButtonView, {}]}>
                 <ImageBackground
-                  imageStyle={{tintColor: '#A3A3A3', borderRadius: 5}}
+                  imageStyle={{ tintColor: '#A3A3A3', borderRadius: 5 }}
                   style={{
                     height: 37,
                     width: '100%',
@@ -464,8 +486,8 @@ class approveLeaves extends Component {
                   <Text
                     style={[
                       utils.fontStyle.TextSemiBold,
-                      {color: '#fff'},
-                      {textAlign: 'center', fontSize: 16},
+                      { color: '#fff' },
+                      { textAlign: 'center', fontSize: 16 },
                     ]}>
                     Cancel
                   </Text>
@@ -501,7 +523,7 @@ class approveLeaves extends Component {
               <TouchableOpacity
                 style={{}}
                 onPress={() => {
-                  this.setState({ViewCard: false, approvedIndex: index});
+                  this.setState({ ViewCard: false, approvedIndex: index });
                 }}>
                 <View
                   style={{
@@ -509,7 +531,7 @@ class approveLeaves extends Component {
                     marginTop: 10,
                     paddingBottom: 10,
                   }}>
-                  <View style={{alignSelf: 'center'}}>
+                  <View style={{ alignSelf: 'center' }}>
                     <Text
                       style={[
                         styles.Title,
@@ -534,17 +556,17 @@ class approveLeaves extends Component {
                           fontSize: 12,
                         },
                       ]}>
-                      {item.LeaveName}
+                      {item.LeaveName}-{this.getLeaveDescription(item?.LeaveDuration)}
                     </Text>
                   </View>
                   <Image
-                    source={item.Status}
-                    style={{alignSelf: 'center', marginRight: 10}}
+                    source={item?.Status ?? ""}
+                    style={{ alignSelf: 'center', marginRight: 10 }}
                   />
                   {item.Status == 'Approved' ? (
                     <Image
                       source={utils.icons.gted}
-                      style={{alignSelf: 'center', marginRight: 10}}
+                      style={{ alignSelf: 'center', marginRight: 10 }}
                     />
                   ) : (
                     <View>
@@ -558,7 +580,7 @@ class approveLeaves extends Component {
                         />
                       ) : (
                         <View style={{}}>
-                          {item.Status == 'Cancel' ? (
+                          {item?.Status == 'Cancel' ? (
                             <Image
                               source={utils.icons.Canle}
                               style={{
@@ -568,7 +590,7 @@ class approveLeaves extends Component {
                               }}
                             />
                           ) : (
-                            <View style={{flexDirection: 'row'}}>
+                            <View style={{ flexDirection: 'row' }}>
                               <Image
                                 source={utils.icons.Vectoyellooo}
                                 style={{
@@ -585,7 +607,7 @@ class approveLeaves extends Component {
                 </View>
               </TouchableOpacity>
 
-              <View style={{height: 'auto'}}>
+              <View style={{ height: 'auto' }}>
                 <View
                   style={{
                     borderTopWidth: 1,
@@ -605,7 +627,7 @@ class approveLeaves extends Component {
                     style={[
                       styles.Title,
                       utils.fontStyle.TextSemiBold,
-                      {width: vw(230), fontSize: 14, marginTop: 10},
+                      { width: vw(230), fontSize: 14, marginTop: 10 },
                     ]}>
                     {moment(item.FromDate).format('ll')}-
                     {moment(item.ToDate).format('ll')}
@@ -623,12 +645,13 @@ class approveLeaves extends Component {
                       fontSize: 12,
                       marginTop: 10,
                       marginBottom: 10,
+                      fontWeight: "bold"
                     },
                   ]}>
-                  {item.Comments}
+                  Reason: {item.Comments}
                 </Text>
 
-                {item.Support_Document == '' ? null : (
+                {/* {item.Support_Document == '' ? null : (
                   <TouchableOpacity
                     onPress={() => {
                       this.props.navigation.navigate('ImageView', {
@@ -651,11 +674,11 @@ class approveLeaves extends Component {
                       View Document
                     </Text>
                   </TouchableOpacity>
-                )}
+                )} */}
               </View>
               {item.Status !== 'Rejected' &&
-              item.Status !== 'Approved' &&
-              item.Status !== 'Cancel' ? (
+                item.Status !== 'Approved' &&
+                item.Status !== 'Cancel' ? (
                 <View
                   style={{
                     marginTop: 10,
@@ -671,7 +694,7 @@ class approveLeaves extends Component {
                     }>
                     <Image
                       source={utils.icons.Reject}
-                      style={{marginLeft: 10}}
+                      style={{ marginLeft: 10 }}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -689,9 +712,9 @@ class approveLeaves extends Component {
             </View>
           ) : (
             <TouchableOpacity
-              style={{alignSelf: 'center'}}
+              style={{ alignSelf: 'center' }}
               onPress={() => {
-                this.setState({ViewCard: true, approvedIndex: index});
+                this.setState({ ViewCard: true, approvedIndex: index });
               }}>
               <View
                 style={{
@@ -703,7 +726,7 @@ class approveLeaves extends Component {
                 {/* <View style={{ alignSelf: 'center' }}>
                             <Image source={item.Icon} style={{ height: vh(30), width: vw(30), marginLeft: 10 }} />
                         </View> */}
-                <View style={{alignSelf: 'center'}}>
+                <View style={{ alignSelf: 'center' }}>
                   <Text
                     style={[
                       styles.Title,
@@ -717,6 +740,17 @@ class approveLeaves extends Component {
                     ]}>
                     {item.Name}
                   </Text>
+                  <View style={{ alignSelf: "center", marginLeft: 12 }}>
+                    <Text
+                      style={[
+                        styles.Title,
+                        utils.fontStyle.TextSemiBold,
+                        { width: vw(230), fontSize: 12, marginTop: 10 },
+                      ]}>
+                      {moment(item.FromDate).format('ll')}-
+                      {moment(item.ToDate).format('ll')}
+                    </Text>
+                  </View>
                   <Text
                     style={[
                       styles.Title,
@@ -728,12 +762,12 @@ class approveLeaves extends Component {
                         fontSize: 12,
                       },
                     ]}>
-                    {item.LeaveName}
+                    {item.LeaveName}-{this.getLeaveDescription(item?.LeaveDuration)}
                   </Text>
                 </View>
                 <Image
-                  source={item.Status}
-                  style={{alignSelf: 'center', marginRight: 10}}
+                  source={""}
+                  style={{ alignSelf: 'center', marginRight: 10 }}
                 />
                 {/* {item.Status == 'Approved' ? (
                   <Image
@@ -758,14 +792,14 @@ class approveLeaves extends Component {
                 {item.Status == 'Approved' ? (
                   <Image
                     source={utils.icons.gted}
-                    style={{alignSelf: 'center', marginRight: 10}}
+                    style={{ alignSelf: 'center', marginRight: 10 }}
                   />
                 ) : (
                   <View>
                     {item.Status == 'Rejected' ? (
                       <Image
                         source={utils.icons.Rted}
-                        style={{alignSelf: 'center', marginRight: 10}}
+                        style={{ alignSelf: 'center', marginRight: 10 }}
                       />
                     ) : (
                       <View style={{}}>
@@ -779,7 +813,7 @@ class approveLeaves extends Component {
                             }}
                           />
                         ) : (
-                          <View style={{flexDirection: 'row'}}>
+                          <View style={{ flexDirection: 'row' }}>
                             <Image
                               source={utils.icons.Vectoyellooo}
                               style={{
@@ -802,9 +836,9 @@ class approveLeaves extends Component {
   }
   renderItemLeave(item, index) {
     return (
-      <View style={{height: 'auto', width: 'auto'}}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{height: 100, width: 100}}>
+      <View style={{ height: 'auto', width: 'auto' }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ height: 100, width: 100 }}>
             <View
               style={{
                 backgroundColor: '#fff',

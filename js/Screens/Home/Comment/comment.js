@@ -83,7 +83,7 @@ class commenting extends Component {
                 //   backgroundColor: 'red',
               }}
               showsHorizontalScrollIndicator={false}
-              data={this.state.Comment}
+              data={this.state.Comment?.length>0??[]}
               contentContainerStyle={{paddingBottom: vh(100)}}
               keyExxtractor={(item, index) => index.toString}
               renderItem={({item, index}) => this.renderItem(item, index)}

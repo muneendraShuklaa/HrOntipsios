@@ -101,7 +101,7 @@ export default class AnnouncementHelper {
         },
       )
       .then(async response => {
-       console.log('Announcement Type >>------->>', response);
+       console.log('Announcement Type >>------->>', response.data);
         let ClientDescription2 = response.data.Table.map(val => {
           return val.Fieldvalue;
         });

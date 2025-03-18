@@ -392,7 +392,7 @@ class Mytask extends Component {
               extraData={this.state.DSR || this.state.Down}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{paddingBottom: vh(100)}}
-              data={this.state.DSR}
+              data={this.state.DSR?.length>0?this.state.DSR:[]}
               maxToRenderPerBatch={3}
               keyExxtractor={(item, index) => index.toString}
               renderItem={({item, index}) =>
@@ -801,7 +801,7 @@ class Mytask extends Component {
                   width: '100%',
                 }}
                 showsHorizontalScrollIndicator={false}
-                data={this.state.TaskPic}
+                data={this.state.TaskPic.length>0?this.state.TaskPic:[]}
                 keyExxtractor={(item, index) => index.toString}
                 renderItem={({item, index}) =>
                   this.renderItemImage(item, index)
