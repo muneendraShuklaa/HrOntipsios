@@ -169,8 +169,8 @@ class team extends Component {
                 latitudeDelta: 0.015,
                 longitudeDelta: 0.0121,
               }}>
-              {this.state.markers.map(marker => (
-                <Marker coordinate={marker.coordinates} title={marker.title} />
+              {this.state.markers.map((marker,idx) => (
+                <Marker key={`body-${idx}`} coordinate={marker.coordinates} title={marker.title} />
               ))}
             </MapView>
             <TouchableOpacity

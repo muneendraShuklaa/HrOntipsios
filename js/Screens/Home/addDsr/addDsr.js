@@ -246,7 +246,7 @@ class adddsr extends Component {
                         )[0].trim() || '',
                     });
 
-                    console.log(selectedItem, index);
+                    // console.log(selectedItem, index);
                   }}
                   defaultButtonText={'Select project'}
                   buttonTextAfterSelection={(selectedItem, index) => {
@@ -376,7 +376,7 @@ class adddsr extends Component {
                       projectCategoryCodeid:
                         this.state.dropcategoryData[index].CategoryId,
                     });
-                    console.log(selectedItem, index);
+                    // console.log(selectedItem, index);
                   }}
                   defaultButtonText={'Select Category'}
                   buttonTextAfterSelection={(selectedItem, index) => {
@@ -575,7 +575,7 @@ class adddsr extends Component {
               // minDate={new Date()}
               maxDate={'2099-09-22'}
               onDayPress={day => {
-                console.log('selected day', day);
+                // console.log('selected day', day);
                 // console.log('nnnnnnnnn', this, this.helper);
                 // this.helper.FilterTask();
                 this.setState({

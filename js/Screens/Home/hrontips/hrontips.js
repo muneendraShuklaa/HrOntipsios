@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -11,13 +11,13 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native';
-import {withMyHook} from '../../../Utils/Dark';
-import {vh, vw, normalize} from '../../../Utils/dimentions';
+import { withMyHook } from '../../../Utils/Dark';
+import { vh, vw, normalize } from '../../../Utils/dimentions';
 import Modal from 'react-native-modal';
-import {Header} from '../../../Components/Header';
+import { Header } from '../../../Components/Header';
 // import { Timer, FlipNumber } from 'react-native-flip-timer';
 import ImagePicker from 'react-native-image-crop-picker';
-import {Stopwatch, Timer} from 'react-native-stopwatch-timer';
+import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import utils from '../../../Utils';
@@ -28,6 +28,7 @@ const timer = require('react-native-timer');
 import * as geolib from 'geolib';
 import DeviceInfo from 'react-native-device-info';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import moment from 'moment';
 
 // import {Camera, CameraZoomPinch} from 'react-native-vision-camera';
 // import { RNCamera } from 'react-native-camera';
@@ -80,8 +81,8 @@ class hrontips extends Component {
       isModalVisible: false,
       Name: '',
       address: '',
-      latitude: '',
-      longitude: '',
+      latitude: 0,
+      longitude: 0,
       Department: '',
       batteryLevel: null,
       RemarkDate: '',
@@ -100,15 +101,16 @@ class hrontips extends Component {
   }
 
   pollGeolocation() {
-    console.log('POLLING..................');
-    RNLocation.getLatestLocation({timeout: 60000}).then(latestLocation => {
+    // console.log('POLLING..................');
+    RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
       var NY = {
-        lat: latestLocation.latitude,
-        lng: latestLocation.longitude,
+        lat: latestLocation.latitude ?? 0,
+        lng: latestLocation.longitude ?? 0,
       };
-      const {latitude, longitude} = latestLocation;
-      const {taskLocation} = this.state;
-      console.log('Track data is ---->', this.state.batteryLevel);
+      const { latitude, longitude } = latestLocation;
+      const { taskLocation } = this.state;
+      // console.log('Track data is ---->', this.state.batteryLevel);
+
       // alert(ActiveStatus)
       let text = 'Waiting..';
       if (this.state.location) {
@@ -116,7 +118,7 @@ class hrontips extends Component {
       }
 
       const dist = geolib.getDistance(
-        {latitude, longitude},
+        { latitude, longitude },
         {
           latitude:
             taskLocation.length > 0 ? parseFloat(taskLocation[0]) : 28.34567,
@@ -124,14 +126,14 @@ class hrontips extends Component {
             taskLocation.length > 0 ? parseFloat(taskLocation[1]) : 81.34567,
         },
       );
-      console.log('disttanceee', dist);
+      // console.log('disttanceee', dist);
       if (dist <= 12410197) {
         this.helper.track();
         setTimeout(() => {
           this.helper.track();
           // this.helper.ClockInOut();      //--------->Saurabh cmnt clockin
 
-          this.setState({play: true, StatusClockin: 1});
+          this.setState({ play: true, StatusClockin: 1 });
         }, 1000);
 
         // alert('Automatic Clocked In Based On your Location');
@@ -149,22 +151,33 @@ class hrontips extends Component {
     // }, 1 * 60 * 1000);
     this.helper.GetImageProfile();
 
-    setTimeout(() => {
+
+
+    this.imageProfileTimeout = setTimeout(() => {
       this.helper.GetImageProfile();
     }, 3000);
+    // setTimeout(() => {
+    //   this.helper.GetImageProfile();
+    // }, 3000);
 
-    this.helper.UserData();
+
+    // this.helper.UserData();
+    // this.helper.ClockInOut();
     timer.clearTimeout(this);
     let Name = await AsyncStorage.getItem('Name');
-
     let Department = await AsyncStorage.getItem('Department');
     let allreadyLogin = await AsyncStorage.getItem('allreadyLogin');
+
     let NotiToken = await AsyncStorage.getItem('NotiToken');
     let RoleName = await AsyncStorage.getItem('RoleName');
     let LastName = await AsyncStorage.getItem('LastName');
     this.helper.TimeTracker();
     this.getLocationUser();
-    setTimeout(() => {
+    // setTimeout(() => {
+    //   this.getLocationUser();
+    // }, 2000);
+
+    this.locationTimeout = setTimeout(() => {
       this.getLocationUser();
     }, 2000);
     this.setState({
@@ -176,6 +189,19 @@ class hrontips extends Component {
       Department: Department,
     });
   }
+  componentWillUnmount() {
+    // Clear all subscriptions
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
+    if (this.imageProfileTimeout) {
+      clearTimeout(this.imageProfileTimeout);
+    }
+    if (this.locationTimeout) {
+      clearTimeout(this.locationTimeout);
+    }
+  }
+
   getFormattedTime(time) {
     this.currentTime = time;
   }
@@ -196,22 +222,22 @@ class hrontips extends Component {
   // };
 
   toggleTimer() {
-    this.setState({timerStart: !this.state.timerStart, timerReset: false});
+    this.setState({ timerStart: !this.state.timerStart, timerReset: false });
   }
 
   resetTimer() {
-    this.setState({timerStart: false, timerReset: true});
+    this.setState({ timerStart: false, timerReset: true });
   }
 
   toggleStopwatch() {
-    this.setState({stopwatchStart: true, stopwatchReset: false});
+    this.setState({ stopwatchStart: true, stopwatchReset: false });
   }
   //   toggleStopwatch() {
   //     this.setState({stopwatchStart: !this.state.stopwatchStart, stopwatchReset: false});
   //   }
 
   resetStopwatch() {
-    this.setState({stopwatchStart: false, stopwatchReset: true});
+    this.setState({ stopwatchStart: false, stopwatchReset: true });
   }
 
   getFormattedTime(time) {
@@ -219,11 +245,11 @@ class hrontips extends Component {
   }
 
   showMsg() {
-    this.setState({showMsg: true}, () =>
+    this.setState({ showMsg: true }, () =>
       timer.setTimeout(
         this,
         'hideMsg',
-        () => this.setState({showMsg: false}),
+        () => this.setState({ showMsg: false }),
         2000,
       ),
     );
@@ -239,13 +265,13 @@ class hrontips extends Component {
         text: 'Yes',
         // onPress: () => this.props.navigation.navigate("Login")
         onPress: () => {
-          this.setState({play: false});
+          this.setState({ play: false });
         },
       },
     ]);
   }
   play = () => {
-    this.setState(({play}) => ({play: !play}));
+    this.setState(({ play }) => ({ play: !play }));
   };
   img_ipdate() {
     // console.warn("done")
@@ -263,20 +289,20 @@ class hrontips extends Component {
       .then(imageUrl => {
         let tmpArr = this.state.imageArray2;
         tmpArr.push(imageUrl.path);
-        console.warn(imageUrl.path);
-        this.setState({imageArray2: tmpArr});
+        // console.warn(imageUrl.path);
+        this.setState({ imageArray2: tmpArr });
         this.img_ipdate();
         // console.warn(this.state.imageArray.path)
       })
       .catch(e => {
-        console.log(e);
+        // console.log(e);
         Alert.alert(e.message ? e.message : e);
       });
   };
   getBatteryLevel = async () => {
     try {
       const batteryLevel = await DeviceInfo.getBatteryLevel();
-      this.setState({batteryLevel: batteryLevel * 100}); // Convert to percentage
+      this.setState({ batteryLevel: batteryLevel * 100 }); // Convert to percentage
     } catch (error) {
       console.log('Battery level could not be retrieved', error);
     }
@@ -293,7 +319,7 @@ class hrontips extends Component {
         // let tmpArr = this.state.imageArray2
         // tmpArr.push(imageUrl.path)
         // console.warn(imageUrl.path)
-        this.setState({imageArray2: imageUrl.path});
+        this.setState({ imageArray2: imageUrl.path });
         this.img_ipdate();
         // console.warn(this.state.imageArray.path)
       })
@@ -314,25 +340,25 @@ class hrontips extends Component {
       },
     }).then(granted => {
       if (granted) {
-        RNLocation.getLatestLocation({timeout: 60000}).then(latestLocation => {
+        RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
           var NY = {
-            lat: latestLocation.latitude,
-            lng: latestLocation.longitude,
+            lat: latestLocation?.latitude ?? 0,
+            lng: latestLocation?.longitude ?? 0,
           };
           Geocoder.geocodePosition(NY)
             .then(res => {
-              this.setState({address: res[0].locality});
-              this.setState({formattedAddress: res[0].formattedAddress});
+              this.setState({ address: res[0].locality });
+              this.setState({ formattedAddress: res[0].formattedAddress });
               setTimeout(() => {
-                this.setState({address: res[0].locality});
+                this.setState({ address: res[0].locality });
               }, 1000);
             })
             .catch(err => console.log(err));
           this.setState({
-            latitude: latestLocation.latitude,
-            longitude: latestLocation.longitude,
-            current_latitude: latestLocation.latitude,
-            current_longitude: latestLocation.longitude,
+            latitude: latestLocation?.latitude,
+            longitude: latestLocation?.longitude,
+            current_latitude: latestLocation?.latitude,
+            current_longitude: latestLocation?.longitude,
           });
         });
       }
@@ -354,11 +380,13 @@ class hrontips extends Component {
     // console.log('battery level is =====>', this.state.batteryLevel);
     // console.log('Birthday--->', this.state.Birthday);
     // console.log('last name is ------>', this.state.formattedAddress);
+    // console.log(this.state.RoleName, 'rolename----');
 
     return (
       <ImageBackground
         imageStyle={{
-          tintColor: this.props.isDark ? '#000' : '',
+          tintColor: this.props.isDark && '#000',
+          // tintColor: this.props.isDark && '#000' : '',
         }}
         source={utils.icons.backImage}
         style={{
@@ -397,14 +425,14 @@ class hrontips extends Component {
                 borderColor: this.props.isDark ? '#fff' : 'white',
               }}>
               <View
-                style={{height: 'auto', width: '100%', marginBottom: vh(10)}}>
+                style={{ height: 'auto', width: '100%', marginBottom: vh(10) }}>
                 <View
                   style={{
                     flexDirection: 'row',
                     marginTop: vh(20),
                     paddingHorizontal: vw(20),
                   }}>
-                  <View style={{width: vw(290)}}>
+                  <View style={{ width: vw(290) }}>
                     {/* <Text>{this.state.ImagePicUrl}</Text> */}
                     <Text
                       style={[
@@ -420,14 +448,14 @@ class hrontips extends Component {
                     <Text
                       style={[
                         utils.fontStyle.FontFamilymachoB,
-                        {color: '#afafaf', fontSize: 16},
+                        { color: '#afafaf', fontSize: 16 },
                       ]}>
-                    {this.state.Department}
+                      {this.state.Department}
                     </Text>
                   </View>
-                  <View style={{flexDirection: 'column', marginLeft: -10}}>
+                  <View style={{ flexDirection: 'column', marginLeft: -10 }}>
                     <ImageBackground
-                      imageStyle={{resizeMode: 'contain'}}
+                      imageStyle={{ resizeMode: 'contain' }}
                       source={utils.icons.User}
                       style={{
                         height: 90,
@@ -457,9 +485,9 @@ class hrontips extends Component {
                     </ImageBackground>
                   </View>
                 </View>
-                <View style={{marginLeft: 20, marginTop: 0}}>
+                <View style={{ marginLeft: 20, marginTop: 0 }}>
                   {this.state.play == true && this.state.StatusClockin == 1 ? (
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{ flexDirection: 'row' }}>
                       <Image
                         source={utils.icons.Clock}
                         style={{
@@ -483,7 +511,7 @@ class hrontips extends Component {
                   ) : null}
                   {/* <Text>{this.state.stopwatchStartTime}</Text> */}
                   {this.state.play == true && this.state.StatusClockin == 1 ? (
-                    <View style={{flexDirection: 'row', marginTop: 5}}>
+                    <View style={{ flexDirection: 'row', marginTop: 5 }}>
                       <Image
                         source={utils.icons.Location}
                         style={{
@@ -535,7 +563,7 @@ class hrontips extends Component {
                     }}> */}
                   {play == true && StatusClockin == 1 ? (
                     <ImageBackground
-                      imageStyle={{tintColor: '#cacaca'}}
+                      imageStyle={{ tintColor: '#cacaca' }}
                       source={utils.icons.Rectangl}
                       style={{
                         height: vh(40),
@@ -554,7 +582,10 @@ class hrontips extends Component {
                             textAlign: 'center',
                           },
                         ]}>
-                        Clocked In({allreadyLogin}){' '}
+                        {/* Clocked In({allreadyLogin}){' '} */}
+                        {/* Clocked In({moment(allreadyLogin, 'h:mm').subtract(30, 'm').format('h:mm')}){' '} */}
+                        Clocked In({allreadyLogin ? moment(allreadyLogin, 'h:mm').subtract(30, 's').format('h:mm') : ''}){' '}
+
                       </Text>
                       {/* <Text
                           style={{
@@ -567,17 +598,23 @@ class hrontips extends Component {
                     </ImageBackground>
                   ) : (
                     <TouchableOpacity
-                      style={{marginTop: 15}}
+                      style={{ marginTop: 15 }}
                       onPress={() => {
                         setTimeout(() => {
                           this.helper.track();
-                          this.setState({play: true, StatusClockin: 1});
+                          this.setState({
+                            play: true,
+                            stopwatchStartTime: 0,
+                            StatusClockin: 1
+                          });
                         }, 1000);
-                        // setTimeout(() => {
-                        //   this.helper.TimeTracker();
-                        // }, 5000);
 
                         this.helper.ClockInOut();
+
+                        setTimeout(() => {
+                          this.helper.TimeTracker();
+                        }, 1100);
+
                         this.helper.registerAddress();
                       }}>
                       <ImageBackground
@@ -608,7 +645,7 @@ class hrontips extends Component {
 
                   {play == true && StatusClockin == 1 ? (
                     <TouchableOpacity
-                      style={{marginTop: 15}}
+                      style={{ marginTop: 15 }}
                       onPress={() => {
                         setTimeout(() => {
                           this.helper.registerAddress();
@@ -616,7 +653,7 @@ class hrontips extends Component {
                           this.resetStopwatch();
                         }, 1000);
 
-                        this.setState({play: false});
+                        this.setState({ play: false });
                       }}>
                       <ImageBackground
                         // imageStyle={{tintColor: '#cacaca'}}
@@ -644,7 +681,7 @@ class hrontips extends Component {
                     </TouchableOpacity>
                   ) : (
                     <ImageBackground
-                      imageStyle={{tintColor: '#cacaca'}}
+                      imageStyle={{ tintColor: '#cacaca' }}
                       source={utils.icons.Rectangl}
                       style={{
                         height: vh(40),
@@ -675,26 +712,8 @@ class hrontips extends Component {
               </View>
             </View>
 
-            <View style={{paddingLeft: 20, paddingRight: 20}}>
-              {/* <View
-                style={{
-                  width: '40%',
-                  borderTopLeftRadius: 5,
-                  borderTopRightRadius: 10,
-                  padding: 5,
-                  marginTop: 10,
-                  marginBottom: -3,
-                  backgroundColor: '#fff',
-                  shadowColor: '#000',
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
+            <View style={{ paddingLeft: 20, paddingRight: 20 }}>
 
-                  shadowOpacity: 0.23,
-                  shadowRadius: 2.62,
-                  elevation: 4,
-                }}> */}
               <Text
                 style={[
                   utils.fontStyle.TextSemiBold,
@@ -707,12 +726,7 @@ class hrontips extends Component {
                 ]}>
                 What's New
               </Text>
-              {/* </View> */}
 
-              {/* <Text>
-                {this.state.latitude}@@@
-                {this.state.longitude}
-              </Text> */}
               <View
                 style={{
                   flexDirection: 'row',
@@ -736,34 +750,22 @@ class hrontips extends Component {
                   borderWidth: this.props.isDark ? 1 : 0,
                   borderColor: this.props.isDark ? '#fff' : 'white',
                 }}>
-                <View style={{flexDirection: 'row'}}>
-                  {/* <Image
-                    source={utils.icons.Cake}
-                    style={{
-                      height: vh(30),
-                      width: vw(30),
-                      // alignSelf: 'center',
-                      resizeMode: 'contain',
+                <View style={{ flexDirection: 'row' }}>
 
-                      marginLeft: 10,
-                    }}
-                  /> */}
                   {this.state.count == 0 && (
                     <Text
                       style={[
                         utils.fontStyle.FontFamilyRegular,
                         {
                           alignSelf: 'center',
-                          // marginLeft: 10,
                           color: this.props.themeColor.themeText,
                           fontSize: 16,
                           fontWeight: 'bold',
-                          // fontStyle: 'italic',
-                          // width: '90%',
+
                         },
                       ]}>
                       {this.state.Quote}
-                      {/* " Keep up! Great work and have a fantastic day! " */}
+
                     </Text>
                   )}
                   <View>
@@ -775,9 +777,9 @@ class hrontips extends Component {
                         }}>
                         <Image
                           source={utils.icons.fireWork}
-                          style={{height: 25, width: 25, resizeMode: 'contain'}}
+                          style={{ height: 25, width: 25, resizeMode: 'contain' }}
                         />
-                        <View style={{marginLeft: 10}}>
+                        <View style={{ marginLeft: 10 }}>
                           <Text
                             style={{
                               fontSize: 16,
@@ -788,15 +790,15 @@ class hrontips extends Component {
                           </Text>
                           {this.state.Anniversary.map((item, index) => {
                             return (
-                              <>
+                              <View key={`body--${index}`}>
                                 <Text
                                   style={[
                                     styles.remarkText,
-                                    {color: this.props.themeColor.textColor},
+                                    { color: this.props.themeColor.textColor },
                                   ]}>
                                   {item}
                                 </Text>
-                              </>
+                              </View>
                             );
                           })}
                         </View>
@@ -809,9 +811,9 @@ class hrontips extends Component {
                         }}>
                         <Image
                           source={utils.icons.Cake}
-                          style={{height: 24, width: 24, resizeMode: 'contain'}}
+                          style={{ height: 24, width: 24, resizeMode: 'contain' }}
                         />
-                        <View style={{marginLeft: 10}}>
+                        <View style={{ marginLeft: 10 }}>
                           <Text
                             style={{
                               fontSize: 16,
@@ -822,15 +824,16 @@ class hrontips extends Component {
                           </Text>
                           {this.state.Birthday.map((item, index) => {
                             return (
-                              <>
-                                <Text
-                                  style={[
-                                    styles.remarkText,
-                                    {color: this.props.themeColor.textColor},
-                                  ]}>
-                                  {item}
-                                </Text>
-                              </>
+
+                              <Text
+                                key={`body-${index}`}
+                                style={[
+                                  styles.remarkText,
+                                  { color: this.props.themeColor.textColor },
+                                ]}>
+                                {item}
+                              </Text>
+
                             );
                           })}
                         </View>
@@ -838,27 +841,13 @@ class hrontips extends Component {
                     )}
                   </View>
 
-                  {/* <Image
-                    source={utils.icons.Balloons}
-                    style={{
-                      height: 30,
-                      width: 30,
-                      resizeMode: 'contain',
-                    }}
-                  /> */}
+
                 </View>
-                <View style={{alignSelf: 'center'}}>
-                  {/* <Image
-                    source={utils.icons.Balloons}
-                    style={{
-                      height: vh(30),
-                      width: vw(30),
-                      // alignSelf: 'center',
-                      // marginRight: 20,
-                    }}
-                  /> */}
+                <View style={{ alignSelf: 'center' }}>
+
                 </View>
               </View>
+
               <View
                 style={{
                   flexDirection: 'row',
@@ -900,11 +889,11 @@ class hrontips extends Component {
                     My Task
                   </Text>
                 </TouchableOpacity>
-                {/* <Text>{this.state.NotiToken}</Text> */}
+
                 <TouchableOpacity
                   onPress={() => {
                     this.props.navigation.navigate('DSR');
-                    // alert('We are launching soon.');
+
                   }}
                   style={[
                     styles.Card,
@@ -943,8 +932,8 @@ class hrontips extends Component {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginTop: 30,
-                  marginBottom: 10,
+                  marginTop: vh(30),
+                  marginBottom: vh(10),
                 }}>
                 <TouchableOpacity
                   onPress={() => {
@@ -1019,12 +1008,13 @@ class hrontips extends Component {
                   </Text>
                 </TouchableOpacity>
               </View>
+
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginTop: 20,
-                  marginBottom: 10,
+                  marginTop: vh(20),
+                  marginBottom: vh(10),
                 }}>
                 <TouchableOpacity
                   onPress={() => {
@@ -1061,7 +1051,7 @@ class hrontips extends Component {
                     Daily Logs
                   </Text>
                 </TouchableOpacity>
-                {/* {this.state.RoleName !== 'End User' ? ( */}
+
                 <TouchableOpacity
                   onPress={() => {
                     this.props.navigation.navigate('Announcement', {
@@ -1078,7 +1068,7 @@ class hrontips extends Component {
                   ]}>
                   <Image
                     source={utils.icons.promoter}
-                    style={{alignSelf: 'center', height: 40, width: 40}}
+                    style={{ alignSelf: 'center', height: 40, width: 40 }}
                   />
                   <Text
                     style={[
@@ -1095,89 +1085,30 @@ class hrontips extends Component {
                 </TouchableOpacity>
                 {/* ) : null} */}
               </View>
-              <View
+
+              {this.state.RoleName !== 'End User' && <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginTop: 20,
-                  marginBottom: 20,
+                  marginTop: vh(10),
+                  marginBottom: vh(20),
                 }}>
-                {this.state.RoleName !== 'End User' ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.navigation.navigate('Team');
-                    }}
-                    style={[
-                      styles.Card,
-                      {
-                        backgroundColor: this.props.themeColor.themeBackground,
-                        borderWidth: this.props.isDark ? 1 : 0,
-                        borderColor: this.props.isDark ? '#fff' : 'white',
-                      },
-                    ]}>
-                    <Image
-                      source={utils.icons.teamtracker}
-                      style={{alignSelf: 'center', height: 35, width: 35}}
-                    />
-                    <Text
-                      style={[
-                        utils.fontStyle.FontFamilyRegular,
-                        {
-                          alignSelf: 'center',
-                          color: this.props.themeColor.textColor,
-                          fontSize: 16,
-                          marginTop: 7,
-                        },
-                      ]}>
-                      My Team
-                    </Text>
-                  </TouchableOpacity>
-                ) : null}
-                {this.state.RoleName !== 'End User' ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.props.navigation.navigate('ApproveLeaves');
-                    }}
-                    style={[
-                      styles.Card,
-                      {
-                        backgroundColor: this.props.themeColor.themeBackground,
-                        borderWidth: this.props.isDark ? 1 : 0,
-                        borderColor: this.props.isDark ? '#fff' : 'white',
-                      },
-                    ]}>
-                    <Image
-                      source={utils.icons.Leaveapproval}
-                      style={{
-                        alignSelf: 'center',
-                        // tintColor: '#3083EF',
-                        height: 30,
-                        width: 30,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                    <Text
-                      style={[
-                        utils.fontStyle.FontFamilyRegular,
-                        {
-                          alignSelf: 'center',
-                          color: this.props.themeColor.textColor,
-                          fontSize: 16,
-                          marginTop: 7,
-                        },
-                      ]}>
-                      Approve Leave
-                    </Text>
-                  </TouchableOpacity>
-                ) : null}
-                {/* <TouchableOpacity
+
+                <TouchableOpacity
                   onPress={() => {
-                    this.props.navigation.navigate('leaveStatus');
+                    this.props.navigation.navigate('Team');
                   }}
-                  style={[styles.Card]}>
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
                   <Image
-                    source={utils.icons.eye}
-                    style={{alignSelf: 'center', height: 50, width: 50}}
+                    source={utils.icons.teamtracker}
+                    style={{ alignSelf: 'center', height: 35, width: 35 }}
                   />
                   <Text
                     style={[
@@ -1185,13 +1116,224 @@ class hrontips extends Component {
                       {
                         alignSelf: 'center',
                         color: this.props.themeColor.textColor,
-                        fontSize: normalize(18),
+                        fontSize: 16,
                         marginTop: 7,
                       },
                     ]}>
-                    Leave Status
+                    My Team
                   </Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
+
+
+
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate('ApproveLeaves');
+                  }}
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
+                  <Image
+                    source={utils.icons.Leaveapproval}
+                    style={{
+                      alignSelf: 'center',
+                      // tintColor: '#3083EF',
+                      height: 30,
+                      width: 30,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text
+                    style={[
+                      utils.fontStyle.FontFamilyRegular,
+                      {
+                        alignSelf: 'center',
+                        color: this.props.themeColor.textColor,
+                        fontSize: 16,
+                        marginTop: 7,
+                      },
+                    ]}>
+                    Approve Leave
+                  </Text>
+                </TouchableOpacity>
+
+              </View>}
+
+
+
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: vh(10),
+                marginBottom: vh(20)
+              }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate('RegularizationStatus', {
+                      role: this.state.RoleName,
+                    });
+                  }}
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
+                  <Image
+                    source={utils.icons.Regularisation}
+                    style={{
+                      alignSelf: 'center',
+                      // tintColor: '#3083EF',
+                      height: 30,
+                      width: 30,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text
+                    style={[
+                      utils.fontStyle.FontFamilyRegular,
+                      {
+                        alignSelf: 'center',
+                        color: this.props.themeColor.textColor,
+                        fontSize: 16,
+                        marginTop: 7,
+                        textAlign: 'center'
+                      },
+                    ]}>
+                    Regularization{"\n"}Status
+                  </Text>
+                </TouchableOpacity>
+                {this.state.RoleName !== 'End User' ? <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate('RegularizationApproval', {
+                      role: this.state.RoleName,
+                    });
+                  }}
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                    },
+                  ]}>
+                  <Image
+                    source={utils.icons.Regularisation}
+                    style={{
+                      alignSelf: 'center',
+                      // tintColor: '#3083EF',
+                      height: 30,
+                      width: 30,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text
+                    style={[
+                      utils.fontStyle.FontFamilyRegular,
+                      {
+                        alignSelf: 'center',
+                        color: this.props.themeColor.textColor,
+                        fontSize: 16,
+                        marginTop: 7,
+                        textAlign: 'center'
+                      },
+                    ]}>
+                    Regularization{"\n"}Approval
+                  </Text>
+                </TouchableOpacity> : null}
+              </View>
+
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: vh(10),
+              }}>
+                {this.state.RoleName !== 'End User' && <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate('ManageAttendance', {
+                      role: this.state.RoleName,
+                    });
+                  }}
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                      marginBottom: vh(20)
+                    },
+                  ]}>
+                  <Image
+                    source={utils.icons.Regularisation}
+                    style={{
+                      alignSelf: 'center',
+                      // tintColor: '#3083EF',
+                      height: 30,
+                      width: 30,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text
+                    style={[
+                      utils.fontStyle.FontFamilyRegular,
+                      {
+                        alignSelf: 'center',
+                        color: this.props.themeColor.textColor,
+                        fontSize: 16,
+                        marginTop: 7,
+                        textAlign: 'center'
+                      },
+                    ]}>
+                    Manage{"\n"}Attendance
+                  </Text>
+                </TouchableOpacity>}
+                {this.state.RoleName !== 'End User' && <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate('AttendanceReport', {
+                      role: this.state.RoleName,
+                    });
+                  }}
+                  style={[
+                    styles.Card,
+                    {
+                      backgroundColor: this.props.themeColor.themeBackground,
+                      borderWidth: this.props.isDark ? 1 : 0,
+                      borderColor: this.props.isDark ? '#fff' : 'white',
+                      marginBottom: vh(20)
+                    },
+                  ]}>
+                  <Image
+                    source={utils.icons.Regularisation}
+                    style={{
+                      alignSelf: 'center',
+                      // tintColor: '#3083EF',
+                      height: 30,
+                      width: 30,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text
+                    style={[
+                      utils.fontStyle.FontFamilyRegular,
+                      {
+                        alignSelf: 'center',
+                        color: this.props.themeColor.textColor,
+                        fontSize: 16,
+                        marginTop: 7,
+                        textAlign: 'center'
+                      },
+                    ]}>
+                    Attendance{"\n"}Report
+                  </Text>
+                </TouchableOpacity>}
+
               </View>
             </View>
           </View>
@@ -1201,12 +1343,12 @@ class hrontips extends Component {
           isVisible={this.state.sideModalD}
           backdropColor="transparent"
           onBackdropPress={() => {
-            this.setState({sideModalD: false});
+            this.setState({ sideModalD: false });
           }}
           // onBackdropPress={() => sideModalD(false)}
           animationIn="slideInLeft"
           animationOut="slideOutLeft"
-          style={{margin: 0, backgroundColor: 'transform'}}>
+          style={{ margin: 0, backgroundColor: 'transform' }}>
           <View
             style={{
               flex: 1,
@@ -1228,21 +1370,13 @@ class hrontips extends Component {
                   width: '100%',
                   backgroundColor: utils.color.background,
                 }}>
-                <View style={{flex: 1}}>
-                  {/* <TouchableOpacity
+                <View style={{ flex: 1 }}>
 
-                                                onPress={() => this.setState({ sideModalD: false })}
-                                                style={{ padding: 0, paddingBottom: 60 }}
-                                            >
-                                                <Image source={utils.icons.Back} style={{ alignSelf: 'flex-end', marginTop: vh(50), marginRight: vw(30), height: vh(40), width: vw(40), tintColor: '#fff' }} />
-                                            </TouchableOpacity> */}
-                  <View style={{backgroundColor: utils.color.HeaderColor}}>
-                    {/* <TouchableOpacity  >
-                                                    <Image source={utils.icons.User} style={{ alignSelf: 'center', height: vh(150), width: vw(150), }} />
-                                                </TouchableOpacity> */}
+                  <View style={{ backgroundColor: utils.color.HeaderColor }}>
+
                     <TouchableOpacity
                       onPress={() => {
-                        this.setState({imageselect: true});
+                        this.setState({ imageselect: true });
                       }}
                       style={{
                         height: vh(112),
@@ -1254,7 +1388,7 @@ class hrontips extends Component {
                         alignItems: 'center',
                         marginTop: 50,
                       }}>
-                      {/* <Text style={{ fontSize: 36, color: utils.color.HeaderColor, fontWeight: 'bold' }} >{profileName}</Text> */}
+
                       <Image
                         source={utils.icons.Userprofile}
                         style={{
@@ -1286,7 +1420,7 @@ class hrontips extends Component {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Terms');
                     }}>
                     <View
@@ -1319,7 +1453,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Goal');
                     }}>
                     <View
@@ -1352,7 +1486,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Terms');
                     }}>
                     <View
@@ -1385,7 +1519,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Announcement');
                     }}>
                     <View
@@ -1418,7 +1552,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('DSR');
                     }}>
                     <View
@@ -1451,7 +1585,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Terms');
                     }}>
                     <View
@@ -1484,7 +1618,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Terms');
                     }}>
                     <View
@@ -1517,7 +1651,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Terms');
                     }}>
                     <View
@@ -1550,7 +1684,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Terms');
                     }}>
                     <View
@@ -1583,7 +1717,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Terms');
                     }}>
                     <View
@@ -1617,7 +1751,7 @@ class hrontips extends Component {
 
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Terms');
                     }}>
                     <View
@@ -1650,7 +1784,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('Privacy');
                     }}>
                     <View
@@ -1683,7 +1817,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.props.navigation.navigate('AboutUs');
                     }}>
                     <View
@@ -1716,7 +1850,7 @@ class hrontips extends Component {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({sideModalD: false});
+                      this.setState({ sideModalD: false });
                       this.Logout_Alert();
                     }}>
                     <View
@@ -1795,14 +1929,14 @@ class hrontips extends Component {
                   justifyContent: 'space-between',
                 }}>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
                     this.pickSingleWithCamera(),
-                      this.setState({imageselect: false});
+                      this.setState({ imageselect: false });
                   }}>
                   <Image
                     source={utils.icons.Cameraa}
-                    style={{alignSelf: 'center', height: vh(63), width: vw(60)}}
+                    style={{ alignSelf: 'center', height: vh(63), width: vw(60) }}
                   />
                   <Text
                     style={[
@@ -1817,13 +1951,13 @@ class hrontips extends Component {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
-                    this.takeScreenshot(), this.setState({imageselect: false});
+                    this.takeScreenshot(), this.setState({ imageselect: false });
                   }}>
                   <Image
                     source={utils.icons.Imagee}
-                    style={{alignSelf: 'center', height: vh(63), width: vw(60)}}
+                    style={{ alignSelf: 'center', height: vh(63), width: vw(60) }}
                   />
                   <Text
                     style={[
@@ -1838,9 +1972,9 @@ class hrontips extends Component {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
-                    this.setState({imageselect: false});
+                    this.setState({ imageselect: false });
                   }}>
                   <Image
                     source={utils.icons.Cancel}
@@ -1870,7 +2004,7 @@ class hrontips extends Component {
         <Modal
           isVisible={this.state.isModalVisible}
           onBackdropPress={() => {
-            this.setState({isModalVisible: false});
+            this.setState({ isModalVisible: false });
           }}
           // animationType="slide"
           // transparent={true}
@@ -1887,70 +2021,10 @@ class hrontips extends Component {
               borderTopLeftRadius: 80,
               backgroundColor: utils.color.whiteText,
             }}>
-            {/* <CameraKitCamera
-              ref={ref => {
-                this.camera = ref;
-              }}
-              style={{flex: 1}}
-              onFacesDetected={this.onFacesDetected}
-              facesDetectedColor={'rgba(255, 0, 0, 0.5)'}
-              facesDetectedInfo={'Move your face into the frame'}
-            />
 
-            <View
-              style={{position: 'absolute', bottom: 20, alignSelf: 'center'}}>
-              <TouchableOpacity
-                style={{
-                  padding: 10,
-                  backgroundColor: this.state.isFaceDetected ? 'green' : 'red',
-                  borderRadius: 5,
-                }}
-                disabled={!this.state.isFaceDetected}
-                onPress={() => {
-                  // Implement clock-in logic here
-                  alert('Clock-in successful!');
-                }}>
-                <Text style={{color: 'white'}}>Clock In</Text>
-              </TouchableOpacity>
-            </View> */}
-            {/* <Camera /> */}
-            {/* <Camera
-              style={StyleSheet.absoluteFill}
-              device={device}
-              isActive={true}
-            /> */}
-
-            {/* <TouchableOpacity
-              onPress={this.handleFaceDetection()}
-              style={{position: 'absolute', bottom: 20, alignSelf: 'center'}}>
-              <Text style={{fontSize: 20, color: 'white'}}>Detect Face</Text>
-            </TouchableOpacity> */}
-
-            {/* <TouchableOpacity
-              onPress={() => {
-                // this.setState({isModalVisible: false});
-                this.handleFaceDetection();
-              }}
-              style={{
-                backgroundColor: 'grey',
-                height: vh(40),
-                width: '100%',
-                justifyContent: 'center',
-              }}>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: normalize(20),
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}>
-                Back to Home
-              </Text>
-            </TouchableOpacity> */}
           </View>
         </Modal>
 
-        {/* </View> */}
       </ImageBackground>
     );
   }

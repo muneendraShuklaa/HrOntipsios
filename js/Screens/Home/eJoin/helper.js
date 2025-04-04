@@ -33,7 +33,7 @@ export default class EjoinHelper {
       )
       .then(async response => {
         this.self.setState({
-          data: response.data.Table,
+          data: response?.data?.Table,
         });
       })
       .catch(function (error) {
@@ -75,12 +75,12 @@ export class EjoinPageHelper {
       .then(async response => {
         console.log('Download doc', response);
         this.self.setState({
-          Docdata: response.data,
+          Docdata: response?.data,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };

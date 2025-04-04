@@ -32,20 +32,20 @@ export default class DSRHelper {
         },
       )
       .then(async response => {
-        console.log('DDSSRR', response.data);
+        console.log('DDSSRR', response?.data);
         this.self.setState({
-          Comments: response.data.Table[0].Comments,
-          ProjectDescription: response.data.Table[0].ProjectDescription,
-          DSRDate: response.data.Table[0].DSRDate,
-          DsrStatus: response.data.Table[0].DsrStatus,
-          ProjectId: response.data.Table[0].ProjectId,
-          ProjectModuleId: response.data.Table[0].ProjectModuleId,
-          ProjectCategoryId: response.data.Table[0].ProjectCategoryId,
+          Comments: response?.data?.Table[0]?.Comments,
+          ProjectDescription: response?.data?.Table[0]?.ProjectDescription,
+          DSRDate: response?.data?.Table[0]?.DSRDate,
+          DsrStatus: response?.data?.Table[0]?.DsrStatus,
+          ProjectId: response?.data?.Table[0]?.ProjectId,
+          ProjectModuleId: response?.data?.Table[0]?.ProjectModuleId,
+          ProjectCategoryId: response?.data?.Table[0]?.ProjectCategoryId,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };
@@ -73,15 +73,15 @@ export default class DSRHelper {
         },
       )
       .then(async response => {
-        console.log('subbmitt', response.data);
+        // console.log('subbmitt', response.data);
         // alert(response.data.Table[0].Code.toString());
         this.self.setState({
-          DSREmpDataId: response.data.Table[0].DSREmpDataId.toString(),
+          DSREmpDataId: response?.data?.Table[0]?.DSREmpDataId?.toString(),
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        // alert(response.data.message);
         // console.warn("guggsgggdsy", error);
       });
   };

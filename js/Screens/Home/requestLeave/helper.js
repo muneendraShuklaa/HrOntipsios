@@ -30,19 +30,19 @@ export default class RequestHelper {
         },
       )
       .then(async response => {
-        console.log('get_data...vendor======>>>>>>>', response.data.Table);
-        let tmpArr = response.data.Table.map(val => {
-          return val.LeaveName;
+        // console.log('get_data...vendor======>>>>>>>', response.data.Table);
+        let tmpArr = response?.data?.Table?.map(val => {
+          return val?.LeaveName;
         });
         this.self.setState({
           DropdownVendorList: tmpArr,
-          LeaveSplit: response.data.Table,
-          validation: response.data.Table[1].MaxLeaveAllowed,
+          LeaveSplit: response?.data?.Table,
+          validation: response?.data?.Table[1]?.MaxLeaveAllowed,
           // validation: 2,
         });
       })
       .catch(function (error) {
-        alert(response.data.message);
+        // alert(response.data.message);
         // console.warn("guggsgggdsy", error);
       });
   };
@@ -51,7 +51,7 @@ export default class RequestHelper {
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
 
-    console.log('Leave Approval');
+ 
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.LeaveBalance,
@@ -68,8 +68,8 @@ export default class RequestHelper {
         },
       )
       .then(async response => {
-        console.log('get_data...vendor========>', response.data.Table);
-        let tmpArr = response.data.Table.map(val => {
+        // console.log('get_data...vendor========>', response.data.Table);
+        let tmpArr = response?.data?.Table?.map(val => {
           return val.Balance;
         });
         this.self.setState({
@@ -77,7 +77,7 @@ export default class RequestHelper {
         });
       })
       .catch(function (error) {
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.log('responce', 'ooooomgghggg');
       });
   };
@@ -123,11 +123,11 @@ export default class RequestHelper {
       },
     })
       .then(async response => {
-        console.log('Leave apply res====>', response);
+     
         this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
       })
       .catch(function (error) {
-        alert(response.data.message);
+      
         console.warn('apply leave error----->', error);
       });
   };

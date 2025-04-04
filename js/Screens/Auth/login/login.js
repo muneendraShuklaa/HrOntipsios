@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -11,23 +11,25 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
-import {withMyHook} from '../../../Utils/Dark';
-import {vh, vw, normalize} from '../../../Utils/dimentions';
+import { withMyHook } from '../../../Utils/Dark';
+import { vh, vw, normalize } from '../../../Utils/dimentions';
 import utils from '../../../Utils';
 import SignInHelper from './helper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geocoder from 'react-native-geocoder';
-import {StackActions} from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 
 // import Geolocation from '@react-native-community/geolocation';
-import CountryPicker, {DARK_THEME} from 'react-native-country-picker-modal';
+import CountryPicker, { DARK_THEME } from 'react-native-country-picker-modal';
 // import{ firebase } from '@react-native-firebase/auth';
 // import { AppOpenAd, InterstitialAd, BannerAdSize, BannerAd, TestIds } from "react-native-google-mobile-ads";
 // import { AppOpenAd, InterstitialAd, BannerAdSize, BannerAd, TestIds } from "react-native-google-mobile-ads";
 import RNLocation from 'react-native-location';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Utils from '../../../Utils';
-import {color} from '../../../Utils/color';
+import { color } from '../../../Utils/color';
+import useNetworkStatus from '../../../Utils/useNetworkStatus';
+
 // navigator.geolocation = require('@react-native-community/geolocation');
 
 Icon.loadFont();
@@ -48,18 +50,49 @@ class login extends Component {
       // Title:this.props.route.params.Title
     };
     this.helper = new SignInHelper(this);
+
+    this.isMountedComponent = false;
+    this.abortController = new AbortController();
   }
   async componentDidMount() {
-    this.helper.AuthCheck();
-    this.AuthCheck();
-    let AuthToken = await AsyncStorage.getItem('AuthToken');
-    this.setState({
-      AuthToken: AuthToken,
-    });
+    this.isMountedComponent = true;
+
+    try {
+      let AuthToken = await AsyncStorage.getItem('AuthToken');
+      if (this.isMountedComponent) {
+        this.setState({ AuthToken });
+      }
+      this.helper.AuthCheck(this.abortController.signal);
+      this.AuthCheck(this.abortController.signal);
+    } catch (error) {
+      console.log('Error fetching authtoken', error);
+
+    }
+ 
   }
-  AuthCheck = async () => {
-    let Active = await AsyncStorage.getItem('IsAuthenticated');
-    let Answer1 = await AsyncStorage.getItem('Answer1');
+
+  componentWillUnmount() {
+    this.isMountedComponent = false;
+    this.abortController.abort();
+  }
+
+  AuthCheck = async (signal) => {
+    if (signal?.aborted) return;
+
+    try {
+      let Active = await AsyncStorage.getItem('IsAuthenticated');
+      let Answer1 = await AsyncStorage.getItem('Answer1');
+      if (signal?.aborted) return;
+
+      if (Active == 'True' && this.isMountedComponent) {
+        this.props.navigation.dispatch(StackActions.replace('HomeStack'));
+      }
+
+    } catch (error) {
+      console.log('Eror in authcheck :', error);
+
+    }
+
 
     // if (Active == 'true' && Answer1 == 'hrontips') {
     //   this.props.navigation.navigate('bottomTabBarr');
@@ -67,9 +100,7 @@ class login extends Component {
     // if (Active == 'true' && Answer1 == 'ejoin') {
     //   this.props.navigation.navigate('WEJoin');
     // }
-    if (Active == 'True') {
-      this.props.navigation.dispatch(StackActions.replace('HomeStack'));
-    }
+
   };
   getLocationUser = async () => {
     RNLocation.configure({
@@ -83,28 +114,32 @@ class login extends Component {
       },
     }).then(granted => {
       if (granted) {
-        RNLocation.getLatestLocation({timeout: 60000}).then(latestLocation => {
+        RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
           var NY = {
             lat: latestLocation?.latitude,
             lng: latestLocation?.longitude,
           };
           Geocoder.geocodePosition(NY)
             .then(res => {
-              this.setState({address: res[0].locality});
-              // console.log('geolocation =====>', res);
+              if (this.isMountedComponent) {
+                this.setState({ address: res[0].locality });
+              }
             })
             .catch(err => console.log(err));
+          if (this.isMountedComponent) {
+            this.setState({
+              latitude: latestLocation?.latitude ?? 0,
+              longitude: latestLocation?.longitude ?? 0,
+              current_latitude: latestLocation?.latitude ?? 0,
+              current_longitude: latestLocation?.longitude ?? 0,
+            });
+          }
 
-          this.setState({
-            latitude: latestLocation?.latitude,
-            longitude: latestLocation?.longitude,
-            current_latitude: latestLocation?.latitude,
-            current_longitude: latestLocation?.longitude,
-          });
         });
       }
     });
   };
+
   validateNLogin = () => {
     if (this.state.email == false) {
       alert('Please enter your Email-Id.');
@@ -112,17 +147,19 @@ class login extends Component {
       if (this.state.password == '') {
         alert('Please enter your password.');
       } else {
+        
         // this.props.navigation.navigate("Dashboard")
-        this.helper.signIN();
+        const signal = this.abortController.signal;
+        this.helper.signIN(signal);
         setTimeout(() => {
-          this.helper.registerDevice();
+          this.helper.registerDevice(signal);
         }, 5000);
       }
     }
   };
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#ffff', height: '100%'}}>
+      <View style={{ flex: 1, backgroundColor: '#ffff', height: '100%' }}>
         <StatusBar
           hidden={false}
           backgroundColor={utils.color.HeaderColor}
@@ -205,13 +242,13 @@ class login extends Component {
                 keyboardType="email-address"
                 allowFontScaling={false}
                 // onBlur={() => this.state.validMail == false && this.setState({ Mobile: '' })}
-                onChangeText={val => this.setState({email: val})}
+                onChangeText={val => this.setState({ email: val })}
                 value={this.state.email}
                 maxLength={60}
                 style={[
                   styles.mobileTextInput,
                   utils.fontStyle.FontFamilyRegular,
-                  {color: this.props.isDark ? '#fff' : '#000'},
+                  { color: this.props.isDark ? '#fff' : '#000' },
                 ]}></TextInput>
             </View>
             <View
@@ -245,18 +282,18 @@ class login extends Component {
                 secureTextEntry={this.state.secureTextEntry}
                 allowFontScaling={false}
                 // onBlur={() => this.state.validMail == false && this.setState({ Mobile: '' })}
-                onChangeText={val => this.setState({password: val})}
+                onChangeText={val => this.setState({ password: val })}
                 value={this.state.password}
                 maxLength={16}
                 style={[
                   styles.mobileTextInput,
                   utils.fontStyle.FontFamilyRegular,
-                  {color: this.props.isDark ? '#fff' : '#000'},
+                  { color: this.props.isDark ? '#fff' : '#000' },
                 ]}></TextInput>
               {this.state.secureTextEntry === true ? (
                 <TouchableOpacity
-                  onPress={() => this.setState({secureTextEntry: false})}
-                  style={{justifyContent: 'center'}}>
+                  onPress={() => this.setState({ secureTextEntry: false })}
+                  style={{ justifyContent: 'center' }}>
                   <Image
                     source={utils.icons.hidden}
                     style={{
@@ -272,8 +309,8 @@ class login extends Component {
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
-                  onPress={() => this.setState({secureTextEntry: true})}
-                  style={{justifyContent: 'center'}}>
+                  onPress={() => this.setState({ secureTextEntry: true })}
+                  style={{ justifyContent: 'center' }}>
                   <Image
                     source={utils.icons.eye}
                     style={{
@@ -298,7 +335,7 @@ class login extends Component {
               <Text
                 style={[
                   utils.fontStyle.FontFamilyBold,
-                  {color: 'red', marginTop: 5, marginLeft: 5},
+                  { color: 'red', marginTop: 5, marginLeft: 5 },
                 ]}>
                 Email Id or Password is incorrect
               </Text>
@@ -317,7 +354,7 @@ class login extends Component {
                 <Text
                   style={[
                     utils.fontStyle.FontFamilyBold,
-                    {color: utils.color.ClorText, fontSize: 16},
+                    { color: utils.color.ClorText, fontSize: 16 },
                   ]}>
                   Forgot Password ?
                 </Text>
@@ -331,12 +368,13 @@ class login extends Component {
                   // this.props.navigation.navigate("bottomTabBar");
                   // this.handleSendCode(), { Email: this.state.email, Password: this.state.password }
                   this.validateNLogin();
+                
                 }}>
                 <Text
                   style={[
                     utils.fontStyle.FontFamilyExtraBold,
-                    {color: utils.color.TextColorWhite},
-                    {textAlign: 'center', fontSize: 22, fontWeight: 'bold'},
+                    { color: utils.color.TextColorWhite },
+                    { textAlign: 'center', fontSize: 22, fontWeight: 'bold' },
                   ]}>
                   {utils.Strings.login}
                 </Text>

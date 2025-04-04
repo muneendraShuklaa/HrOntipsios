@@ -71,6 +71,7 @@ class approveLeaves extends Component {
           height: '100%',
           width: '100%',
           backgroundColor: utils.color.HeaderColor,
+      
         }}>
         <TouchableOpacity
           onPress={() => {
@@ -246,16 +247,17 @@ class approveLeaves extends Component {
             extraData={this.state.approvedIndex}
             style={{ padding: 20, marginTop: 30 }}
             showsHorizontalScrollIndicator={false}
-            data={this.state.LeaveRecord?.length>0??[]}
+            data={this.state.LeaveRecord?.length>0?this.state.LeaveRecord:[]}
             keyExxtractor={(item, index) => index.toString}
             renderItem={({ item, index }) =>
               this.renderItem(item, index, this.props.isDark)
             }
           />
-        )}
+        )} 
 
         <Modal
           isVisible={this.state.sideModalcomment}
+
           // animationType="fade",
           transparent={true}
 
@@ -357,7 +359,7 @@ class approveLeaves extends Component {
                 }}
                 style={[styles.ButtonView, {}]}>
                 <ImageBackground
-                  imageStyle={{ tintColor: '#A3A3A3', borderRadius: 5 }}
+                  imageStyle={{ tintColor: '#A3A3A3', borderRadius:  5 }}
                   style={{
                     height: 37,
                     width: '100%',
@@ -559,10 +561,10 @@ class approveLeaves extends Component {
                       {item.LeaveName}-{this.getLeaveDescription(item?.LeaveDuration)}
                     </Text>
                   </View>
-                  <Image
-                    source={item?.Status ?? ""}
+                  {/* {item?.Status && <Image
+                    source={item?.Status }
                     style={{ alignSelf: 'center', marginRight: 10 }}
-                  />
+                  />} */}
                   {item.Status == 'Approved' ? (
                     <Image
                       source={utils.icons.gted}
@@ -765,10 +767,10 @@ class approveLeaves extends Component {
                     {item.LeaveName}-{this.getLeaveDescription(item?.LeaveDuration)}
                   </Text>
                 </View>
-                <Image
+                {/* <Image
                   source={""}
                   style={{ alignSelf: 'center', marginRight: 10 }}
-                />
+                /> */}
                 {/* {item.Status == 'Approved' ? (
                   <Image
                     source={utils.icons.gted}

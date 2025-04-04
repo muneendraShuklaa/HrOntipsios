@@ -1,5 +1,6 @@
 const images = {
   Logo: require('../Components/Image/logo.png'),
+  Regularisation:require('../Components/Image/regularisation.png'),
   //Login Screen
   backImage: require('../Components/Image/bbgg.png'),
   profile: require('../Components/Image/editimgBack.png'),

@@ -55,7 +55,8 @@ class leavebalance extends Component {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
         <ImageBackground
-          imageStyle={{tintColor: this.props.themeColor.Darkk}}
+          // imageStyle={{tintColor: this.props.themeColor.Darkk}}
+          // imageStyle={{tintColor: this.props.themeColor.Darkk}}
           source={utils.icons.backImage}
           style={{flex: 1, height: '100%', width: '100%'}}>
           <TouchableOpacity

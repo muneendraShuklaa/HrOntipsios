@@ -43,10 +43,20 @@ class dailylog extends Component {
       DateMarkedDates: {},
       selectedDate: '',
     };
-    this.helper = new DailyLogHelper(this);
+    this.helper = new DailyLogHelper(this); 
+    this.isMountedComponent=false;
   }
   componentDidMount() {
-    this.helper.dailylogData();
+    this.isMountedComponent=true;
+    this.abortController=new AbortController();
+    this.helper.dailylogData(this.abortController.signal);
+  }
+
+  componentWillUnmount(){
+    this.isMountedComponent=false;
+    if (this.abortController) {
+      this.abortController.abort();
+    }
   }
 
   render() {
@@ -137,7 +147,7 @@ class dailylog extends Component {
               }}
               // maxDate={'2099-09-22'}
               onDayPress={day => {
-                console.log('selected day', day);
+                // console.log('selected day', day);
                 // console.log("nnnnnnnnn", this, this.helper)
                 // alert(day);
                 // this.helper.FilterTask()
@@ -166,7 +176,7 @@ class dailylog extends Component {
               monthFormat={'MMM yyyy'}
               // markingType='custom'
               onMonthChange={month => {
-                console.log('month changed', month);
+                // console.log('month changed', month);
               }}
             />
           </View>

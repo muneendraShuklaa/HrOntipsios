@@ -8,7 +8,7 @@ export default class DailyLogHelper {
   constructor(self) {
     this.self = self;
   }
-  dailylogData = async () => {
+  dailylogData = async (signal) => {
     console.log('dailyloyscelender');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const EmpId = await AsyncStorage.getItem('EmpId');
@@ -25,11 +25,12 @@ export default class DailyLogHelper {
             token: AuthToken,
             ClientId: JSON.parse(jsonValueClientID),
           },
+          signal,
         },
       )
 
       .then(async response => {
-        console.log('dailylogs', response.data);
+        // console.log('dailylogs', response.data);
         let tmpArr = response.data.Table.map(val => {
           return val.Status;
         });
@@ -57,13 +58,15 @@ export default class DailyLogHelper {
           return val.Date;
         });
 
-        console.log('VAL DATE', dateMarkedDates);
-        this.self.setState({
-          Status: tmpArr, //emp absent or present record
-          Datee: Datee, //emp dates
-          DateMarkedDates: dateMarkedDates, // date list
-          DailyLog: response.data.Table, //emp all data
-        });
+        // console.log('VAL DATE', dateMarkedDates);
+        if (this.self.isMountedComponent) {
+          this.self.setState({
+            Status: tmpArr, //emp absent or present record
+            Datee: Datee, //emp dates
+            DateMarkedDates: dateMarkedDates, // date list
+            DailyLog: response.data.Table, //emp all data
+          });
+        }
       })
 
       .catch(function (error) {

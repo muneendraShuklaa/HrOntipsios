@@ -1,3 +1,5 @@
+
+
 import * as React from 'react';
 import {
   View,
@@ -5,6 +7,8 @@ import {
   Image,
   useColorScheme,
   PermissionsAndroid,
+  LogBox,
+  ToastAndroid
 } from 'react-native';
 import {
   NavigationContainer,
@@ -13,48 +17,58 @@ import {
 } from '@react-navigation/native';
 
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Login} from './js/Screens/Auth/login';
-import {Dashboard} from './js/Screens/Home/Dashboard';
-import {DailyLogs} from './js/Screens/Home/dailyLog';
-import {Forgot} from './js/Screens/Auth/forgot';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {HrOnTips} from './js/Screens/Home/hrontips';
-import {DSR} from './js/Screens/Home/dsr';
-import {RequestLeave} from './js/Screens/Home/requestLeave';
-import {LeaveBalance} from './js/Screens/Home/leavebalence';
-import {leaveStatus} from './js/Screens/Home/leavestatus';
-import {Goal} from './js/Screens/Home/goals';
-import {ApproveLeaves} from './js/Screens/Home/approveLeave';
-import {Done} from './js/Screens/Home/done';
-import {WEJoin} from './js/Screens/Home/welcomeEjoin';
-import {EJoin} from './js/Screens/Home/eJoin';
-import {DsrDetail} from './js/Screens/Home/dsrDetail';
-import {DailylogDetail} from './js/Screens/Home/dailylogDetail';
-import {Welcome} from './js/Screens/Auth/welcome';
-import {NewTask} from './js/Screens/Home/newTask';
-import {MyTask} from './js/Screens/Home/myTask';
-import {AddDSR} from './js/Screens/Home/addDsr';
-import {Profile} from './js/Screens/Home/profile';
-import {Notification} from './js/Screens/Home/notification';
-import {Commenting} from './js/Screens/Home/Comment';
-import {Reminder} from './js/Screens/Home/reminder';
-import {Announcement} from './js/Screens/Home/announcement';
+import { Login } from './js/Screens/Auth/login';
+import { Dashboard } from './js/Screens/Home/Dashboard';
+import { DailyLogs } from './js/Screens/Home/dailyLog';
+import { Forgot } from './js/Screens/Auth/forgot';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { HrOnTips } from './js/Screens/Home/hrontips';
+import { DSR } from './js/Screens/Home/dsr';
+import { RequestLeave } from './js/Screens/Home/requestLeave';
+import { LeaveBalance } from './js/Screens/Home/leavebalence';
+import { leaveStatus } from './js/Screens/Home/leavestatus';
+import { Goal } from './js/Screens/Home/goals';
+import { ApproveLeaves } from './js/Screens/Home/approveLeave';
+import { Done } from './js/Screens/Home/done';
+import { WEJoin } from './js/Screens/Home/welcomeEjoin';
+import { EJoin } from './js/Screens/Home/eJoin';
+import { DsrDetail } from './js/Screens/Home/dsrDetail';
+import { DailylogDetail } from './js/Screens/Home/dailylogDetail';
+import { Welcome } from './js/Screens/Auth/welcome';
+import { NewTask } from './js/Screens/Home/newTask';
+import { MyTask } from './js/Screens/Home/myTask';
+import { AddDSR } from './js/Screens/Home/addDsr';
+import { Profile } from './js/Screens/Home/profile';
+import { Notification } from './js/Screens/Home/notification';
+import { Commenting } from './js/Screens/Home/Comment';
+import { Reminder } from './js/Screens/Home/reminder';
+import { Announcement } from './js/Screens/Home/announcement';
 // const Stack = createNativeStackNavigator();
 import utils from './js/Utils';
-import {vh, vw, normalize} from './js/Utils/dimentions';
-import {Team} from './js/Screens/Home/team';
-import {ImageView} from './js/Screens/Home/imageView';
+import { vh, vw, normalize } from './js/Utils/dimentions';
+import { Team } from './js/Screens/Home/team';
+import { ImageView } from './js/Screens/Home/imageView';
 
 // const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
-import {EditDSR} from './js/Screens/Home/editDsr';
-import {createStackNavigator} from '@react-navigation/stack';
-import {fcmService} from './js/notification/FCMNotification';
-import {localNotificationService} from './js/notification/localNotification';
+import { EditDSR } from './js/Screens/Home/editDsr';
+import { createStackNavigator } from '@react-navigation/stack';
+import { fcmService } from './js/notification/FCMNotification';
+import { localNotificationService } from './js/notification/localNotification';
+import NetInfo from "@react-native-community/netinfo"
+// console.warn =()=>{}
+// console.error =()=>{}
+
+  
 
 if (__DEV__) {
   require("./ReactotronConfig.js");
 }
+
+LogBox.ignoreLogs([
+  'new NativeEventEmitter()',
+  "EventEmitter.removeListener",
+]);
 // AppRegistry.registerHeadlessTask('myapp',()=>{console.log("testing 123")})
 // AppRegistry.run
 
@@ -88,13 +102,20 @@ const onNotification = notify => {
 
 const onOpenNotification = async notify => {
   // console.log('************ Is notify----->', notify);
-  if (notify ) {
+  if (notify) {
     NavigationContainer.navigate('Home', notify.data);
   } else if (notify && notify.data && notify.data.page == 'today') {
     navigate('Today', notify.data);
   }
 };
 import OneSignal from 'react-native-onesignal';
+
+import RegularizationApproval from './js/Screens/Home/regularizationApproval/regularizationApproval.js';
+import RegularizationStatus from './js/Screens/Home/regularizationStatus/regularizationStatus.js';
+import ManageAttendance from './js/Screens/Home/manageAttendance/manageAttendance.js';
+import styles from './js/Components/Header/styles.js';
+import useNetworkStatus from './js/Utils/useNetworkStatus.js';
+import { AttendanceReport } from './js/Screens/Home/attendanceReport/attendanceReport.js';
 // OneSignal.init("f7924110-6e36-4b81-a8d0-83eac5d15f63");
 OneSignal.setNotificationWillShowInForegroundHandler(
   notificationReceivedEvent => {
@@ -138,33 +159,15 @@ const BottomTabBarr = () => {
         name="Notification"
         component={Notification}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <View
               style={{
                 position: 'absolute',
                 top: 0,
-                //  backgroundColor: focused ? "#fff" : "#fff",
+
                 paddingHorizontal: vw(5),
               }}>
-              {/* <View
-                style={{
-                  // height: 20,
-                  // width: 20,
-                  backgroundColor: 'red',
-                  borderRadius: 20,
-                  // marginLeft: -20,
-                  alignSelf: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    color: '#fff',
-                  }}>
-                  0
-                </Text>
-              </View> */}
+
               <Image
                 source={utils.icons.noti}
                 style={{
@@ -198,12 +201,11 @@ const BottomTabBarr = () => {
         name="HrOnTipsRequestLeave"
         component={HrOnTips}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <View
               style={{
                 position: 'absolute',
                 top: 0,
-                //  backgroundColor: focused ? "#fff" : "#fff",
                 paddingHorizontal: vw(5),
               }}>
               {focused ? (
@@ -215,7 +217,6 @@ const BottomTabBarr = () => {
                     alignSelf: 'center',
                     marginTop: vh(-20),
                     borderColor: 'red',
-                    tintColor: focused ? '' : '',
                   }}
                 />
               ) : (
@@ -227,12 +228,10 @@ const BottomTabBarr = () => {
                     alignSelf: 'center',
                     marginTop: vh(-20),
                     borderColor: 'red',
-                    tintColor: focused ? '' : '',
                   }}
                 />
               )}
 
-              {/* <Text style={{alignSelf:'center',color: focused ? "#fff" : "lightgrey",fontWeight: focused ? "bold" : "300",fontSize:normalize(14),margin:normalize(-2)}}>HrOnTips</Text> */}
             </View>
           ),
           tabBarLabel: () => {
@@ -244,12 +243,11 @@ const BottomTabBarr = () => {
         name="Profile"
         component={Profile}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <View
               style={{
                 position: 'absolute',
                 top: 0,
-                //  backgroundColor: focused ? "#fff" : "#fff",
                 paddingHorizontal: vw(5),
               }}>
               <Image
@@ -271,7 +269,6 @@ const BottomTabBarr = () => {
                   margin: normalize(-2),
                   width: 110,
                   textAlign: 'center',
-                  // backgroundColor: 'red',
                 }}>
                 Profile
               </Text>
@@ -292,12 +289,12 @@ function AuthStack() {
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Forgot"
         component={Forgot}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
@@ -309,17 +306,17 @@ function EjoinStack() {
       <Stack.Screen
         name="WEJoin"
         component={WEJoin}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="EJoin"
         component={EJoin}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Done"
         component={Done}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
@@ -337,7 +334,7 @@ function HomeStack() {
       <Stack.Screen
         name="BottomTabBarr"
         component={BottomTabBarr}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       {/* <Stack.Screen
         name="Done"
@@ -347,53 +344,53 @@ function HomeStack() {
       <Stack.Screen
         name="DailyLogs"
         component={DailyLogs}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
-      <Stack.Screen name="DSR" component={DSR} options={{headerShown: false}} />
+      <Stack.Screen name="DSR" component={DSR} options={{ headerShown: false }} />
       <Stack.Screen
         name="DailylogDetail"
         component={DailylogDetail}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="DsrDetail"
         component={DsrDetail}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="AddDSR"
         component={AddDSR}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Team"
         component={Team}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="RequestLeave"
         component={RequestLeave}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Dashboard"
         component={Dashboard}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="LeaveBalance"
         component={LeaveBalance}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="leaveStatus"
         component={leaveStatus}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Goal"
         component={Goal}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       {/* <Stack.Screen
         name="WEJoin"
@@ -408,47 +405,75 @@ function HomeStack() {
       <Stack.Screen
         name="Notification"
         component={Notification}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ApproveLeaves"
         component={ApproveLeaves}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="EditDSR"
         component={EditDSR}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="MyTask"
         component={MyTask}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="NewTask"
         component={NewTask}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="RegularizationStatus"
+        component={RegularizationStatus}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="RegularizationApproval"
+        component={RegularizationApproval}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="ManageAttendance"
+        component={ManageAttendance}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name='AttendanceReport'
+        component={AttendanceReport}
+        options={{
+          headerShown: false
+        }}
       />
       <Stack.Screen
         name="Commenting"
         component={Commenting}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Reminder"
         component={Reminder}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ImageView"
         component={ImageView}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Announcement"
         component={Announcement}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       {/* <Stack.Screen name="AddVendor" component={AddVendor} options={{ headerShown: false }} />
@@ -456,24 +481,44 @@ function HomeStack() {
     </Stack.Navigator>
   );
 }
+
+
 const App = () => {
+  const [isConnected, setIsConnected] = React.useState(null);
+
+  // React.useEffect(() => {
+  //   const unsubscribe = NetInfo.addEventListener((state) => {
+  //     if (state.isConnected) {
+  //       ToastAndroid.show("Internet Connected", ToastAndroid.SHORT);
+  //     } else {
+  //       ToastAndroid.show("No Internet Connection", ToastAndroid.LONG);
+  //     }
+  //     setIsConnected(state.isConnected);
+  //   });
+
+  //   return () => {
+  //     unsubscribe(); 
+  //   };
+  // }, []);
+  useNetworkStatus();
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="AuthStack"
           component={AuthStack}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="HomeStack"
           component={HomeStack}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="EjoinStack"
           component={EjoinStack}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

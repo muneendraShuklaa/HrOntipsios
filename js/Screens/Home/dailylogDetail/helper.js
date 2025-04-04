@@ -9,7 +9,7 @@ export default class DailyLogHelperr {
   }
   dailylogdataData = async () => {
     // alert('logssggss');
-    console.log('dailyloysffffcelender', this.self.state.Dateee);
+    // console.log('dailyloysffffcelender', this.self.state.Dateee);
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const EmpId = await AsyncStorage.getItem('EmpId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
@@ -32,19 +32,19 @@ export default class DailyLogHelperr {
         },
       )
       .then(async response => {
-        console.log('LogDetails', response.data);
+        
         // await AsyncStorage.setItem('RoleName', response.data.RoleName);
-        let Duration = response.data.Table.map(val => {
+        let Duration = response?.data?.Table?.map(val => {
           return val.Duration;
         });
         this.self.setState({
-          LogDetails: response.data.Table,
+          LogDetails: response?.data?.Table,
           Data: Duration,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        // alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };

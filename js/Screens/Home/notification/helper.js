@@ -28,9 +28,9 @@ export default class NotificationHelper {
         },
       )
       .then(async response => {
-        console.log('notificationn  =========>>', response.data);
+        console.log('notificationn  =========>>', response?.data);
         this.self.setState({
-          notification: response.data.Table,
+          notification: response?.data?.Table,
         });
       })
       .catch(function (error) {

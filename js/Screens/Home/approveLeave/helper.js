@@ -37,18 +37,18 @@ export default class ApproveLeaveHelper {
       )
       .then(async response => {
 
-        //  console.log(JSON.stringify(response.data.Table, null, 2));
+         console.log(JSON.stringify(response?.data?.Table, null, 2));
         this.self.setState({
-          LeaveRecord: response.data.Table,
-          Pending: response.data.Table1[0].ApprovalPending,
-          Reject: response.data.Table1[0].Reject,
-          Approved: response.data.Table1[0].Approved,
-          leaveduration:response.data.Table
+          LeaveRecord: response?.data?.Table,
+          Pending: response?.data?.Table1[0]?.ApprovalPending,
+          Reject: response?.data?.Table1[0]?.Reject,
+          Approved: response?.data?.Table1[0]?.Approved,
+          leaveduration:response?.data?.Table
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };

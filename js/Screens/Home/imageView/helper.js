@@ -34,9 +34,9 @@ export default class ImageHelper {
       )
       .then(response => {
         console.log('gdfgdfhdfhdf');
-        console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify(response?.data));
         this.self.setState({
-          Imagee: JSON.stringify(response.data),
+          Imagee: JSON.stringify(response?.data),
         });
       })
       .catch(function (error) {

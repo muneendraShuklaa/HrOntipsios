@@ -20,7 +20,6 @@ import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-crop-picker';
 import {StackActions} from '@react-navigation/native';
-
 import {withMyHook} from '../../../Utils/Dark';
 
 import Modal from 'react-native-modal';
@@ -58,23 +57,45 @@ class profile extends Component {
       PAN: '',
       Address2: '',
     };
-
+    this.logoutTimeout = null;
     this.helper = new ProfiledHelper(this);
+    this.abortController = new AbortController();
   }
 
   async componentDidMount() {
-    this.helper.UserData(), this.helper.UserPersonalData();
+    // this.isComponentMounted = true;
+    this.helper.UserData(this.abortController.signal);
+    this.helper.UserPersonalData(this.abortController.signal);
     let Name = await AsyncStorage.getItem('Name');
     let Departmenttt = await AsyncStorage.getItem('Department');
 
     let ImagePicUrl = await AsyncStorage.getItem('ImagePicUrl');
-
+    // if (this.isComponentMounted) {
     this.setState({
       Name: Name,
       ImagePicUrl: ImagePicUrl,
       Departmenttt: Departmenttt,
     });
+  // }
   }
+  handleLogout = async () => {
+    AsyncStorage.removeItem('Answer1');
+    AsyncStorage.removeItem('IsAuthenticated');
+    AsyncStorage.removeItem('EmpId');
+
+    this.logoutTimeout = setTimeout(() => {
+      this.props.navigation.dispatch(StackActions.replace('AuthStack'));
+      AsyncStorage.setItem('ImagePicUrl', '');
+      this.setState({ Logout: false });
+    }, 1000);
+  };
+  componentWillUnmount() {
+    this.isComponentMounted = false;
+    this.abortController.abort();
+    if (this.logoutTimeout) {
+      clearTimeout(this.logoutTimeout); 
+    }
+}
   takeScreenshot = () => {
     ImagePicker.openPicker({
       width: vw(300),
@@ -112,7 +133,7 @@ class profile extends Component {
         // this.img_ipdate()
       })
       .catch(e => {
-        console.log(e);
+        // console.log(e);
         Alert.alert(e.message ? e.message : e);
       });
   }
@@ -129,8 +150,11 @@ class profile extends Component {
     } = this.state;
     return (
       <ImageBackground
+      
+        // imageStyle={{overlayColor: this.props.themeColor.Darkk}}
         imageStyle={{tintColor: this.props.themeColor.Darkk}}
         source={utils.icons.backImage}
+      
         style={{flex: 1, height: '100%', width: '100%'}}>
         <View
           style={{
@@ -174,20 +198,7 @@ class profile extends Component {
               }}
             />
           </ImageBackground>
-          {/* <TouchableOpacity
-            onPress={() => {
-              this.setState({sideModalImageDoc: true});
-            }}>
-            <Icon
-              name="edit"
-              size={30}
-              color="#fff"
-              style={{
-                alignSelf: 'center',
-                marginTop: -20,
-                marginLeft: '20%',
-              }}></Icon>
-          </TouchableOpacity> */}
+        
           <Text
             style={[
               utils.fontStyle.FontFamilymachoB,
@@ -207,10 +218,7 @@ class profile extends Component {
             ]}>
             {this.state.Departmenttt}
           </Text>
-          {/* Reject: r
-Locationp
-Lock: req
-Payslip:  */}
+
         </View>
         <View
           style={{
@@ -322,7 +330,7 @@ Payslip:  */}
                 style={{
                   flexDirection: 'row',
                   marginTop: 6,
-                  // backgroundColor: 'red',
+          
                 }}>
                 <Icon
                   name="envelope-o"
@@ -724,7 +732,7 @@ Payslip:  */}
         <TouchableOpacity
           onPress={() => {
             this.setState({Logout: true});
-            // this.props.navigation.navigate("Login"), AsyncStorage.setItem('IsAuthenticated', "false")}
+          
           }}
           style={{
             height: 60,
@@ -799,20 +807,21 @@ Payslip:  */}
               </Text>
 
               <TouchableOpacity
-                onPress={async () => {
-                  AsyncStorage.removeItem('Answer1');
-                  AsyncStorage.removeItem('IsAuthenticated');
-                  AsyncStorage.removeItem('EmpId');
-                  setTimeout(() => {
-                    // this.props.navigation.navigate('Login'),
-                    this.props.navigation.dispatch(
-                      StackActions.replace('AuthStack'),
-                    );
+                // onPress={async () => {
+                //   AsyncStorage.removeItem('Answer1');
+                //   AsyncStorage.removeItem('IsAuthenticated');
+                //   AsyncStorage.removeItem('EmpId');
+                //   setTimeout(() => {
+                //     // this.props.navigation.navigate('Login'),
+                //     this.props.navigation.dispatch(
+                //       StackActions.replace('AuthStack'),
+                //     );
 
-                    AsyncStorage.setItem('ImagePicUrl', '');
-                    this.setState({Logout: false});
-                  }, 1000);
-                }}
+                //     AsyncStorage.setItem('ImagePicUrl', '');
+                //     this.setState({Logout: false});
+                //   }, 1000);
+                // }}
+                onPress={this.handleLogout}
                 style={[styles.ButtonView, {marginTop: 20}]}>
                 <ImageBackground
                   imageStyle={{borderRadius: 5}}

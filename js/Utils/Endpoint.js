@@ -1,21 +1,18 @@
 export default {
   // ---------------------------- Production Url -----------------------
 
-  // baseUrl: 'https://prodapi.hrontips.com/',
-  // baseUrlTask: 'https://prodapi.hrontips.com/',
+  baseUrl: 'https://prodapi.hrontips.com/',
+  baseUrlTask: 'https://prodapi.hrontips.com/',
 
   //  ----------------------------------------------------------------------------
 
   // -------------------------Stage Url ------------------------------------------
 
-  baseUrl: 'https://stageapi.hrontips.com/',
+  // baseUrl: 'https://stageapi.hrontips.com/',
 
-  baseUrlTask: 'https://stageapi.hrontips.com/',
+  // baseUrlTask: 'https://stageapi.hrontips.com/',
 
   // -------------------------------------------------------------------
-
-  // baseUrlTask: 'https://prodapi2.hrontips.com/',
-  // baseUrl: 'https://prodapinew.hrontips.com/',
 
   Login: 'API/Account/AuthenticateUser',
   PersonalDetail: 'API/Home/GetDataPesionaldetails',
@@ -23,8 +20,8 @@ export default {
   track: 'API/Home/InsertEmpGeoTrack',
   leaveStatus: 'API/Home/GetEmployeePendingLeaveApproval',
   UserPersonalDetail: 'API/Home/GetDatajobdetails',
-//  LeaveApproval: 'API/Home/GetPendingLeaveApproval_newapi',
-   LeaveApproval: 'API/Home/GetPendingLeaveApproval_V2',
+  //  LeaveApproval: 'API/Home/GetPendingLeaveApproval_newapi',
+  LeaveApproval: 'API/Home/GetPendingLeaveApproval_V2',
 
   statusLeave: 'API/Home/ApproveRejectLeave',
   GetLeaveBalance: 'API/Home/GetLeaveBalance',
@@ -73,4 +70,22 @@ export default {
   LogDetails: 'API/home/GetDataforpresentorabsent',
   RegisterDevice: 'API/UploadPicture/SaveDeviceToken',
   RegisterAddress: 'API/TaskManager/InsertGeoAdress',
+
+
+  // regularisation
+  BindRegularisationData: `api/Regularisation/BindRegularisationDataByEmpid`,
+  SaveRegularisationReq: `api/Regularisation/SaveRegualrisationRequest`,
+  ApproveRejectAttendanceRequest: `api/Regularisation/ApproveRejectAttendanceRequest`,
+  BindApprovalAttendanceGrid_API: `api/Regularisation/BindApprovalAttendanceGrid_API`,
+
+
+  //manage attendance
+  BindManageAttend: `API/Attendance/BindLeaveManagementGrid`,
+  updateInOutAttend: `api/Attendance/InsertUpdateClockInoutFromLeaveManagement`,
+  insertUpdateLeave: `api/Attendance/leaveInsertUpdate`,
+  insertUpdateInAndOut: `api/Attendance/InsertUpdateClockInoutFromLeaveManagement`,
+
+  // emp attendance
+  EmpAttendance: `API/MYTeam/GetEmpAttendance`
+
 };
