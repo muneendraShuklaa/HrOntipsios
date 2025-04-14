@@ -1,16 +1,16 @@
 export default {
   // ---------------------------- Production Url -----------------------
 
-  baseUrl: 'https://prodapi.hrontips.com/',
-  baseUrlTask: 'https://prodapi.hrontips.com/',
+  // baseUrl: 'https://prodapi.hrontips.com/',
+  // baseUrlTask: 'https://prodapi.hrontips.com/',
 
   //  ----------------------------------------------------------------------------
 
   // -------------------------Stage Url ------------------------------------------
 
-  // baseUrl: 'https://stageapi.hrontips.com/',
+  baseUrl: 'https://stageapi.hrontips.com/',
 
-  // baseUrlTask: 'https://stageapi.hrontips.com/',
+  baseUrlTask: 'https://stageapi.hrontips.com/',
 
   // -------------------------------------------------------------------
 
@@ -86,6 +86,18 @@ export default {
   insertUpdateInAndOut: `api/Attendance/InsertUpdateClockInoutFromLeaveManagement`,
 
   // emp attendance
-  EmpAttendance: `API/MYTeam/GetEmpAttendance`
+  EmpAttendance: `API/MYTeam/GetEmpAttendance`,
+
+
+  // reimbursement
+  EmpReimbursement:`api/Reimbursement/BindEmpReimbursement`,
+  HrReimbursement:`API/Reimbursement/BindReimbursement_HR_Manager_V2`,
+  ConfirmReimbursement:`API/Reimbursement/ApproveRejectEmployeeReimbursement`,
+  // ApplyReimbursement:`api/Reimbursement/BindReimbursement`,
+  DeleteReimbursement:`API/Reimbursement/DeleteEmpReimbursementData`,
+  DownImgReimbursement:`API/Reimbursement/GetReimbursementImage`,
+  ApplyWithoutImgReimbursement:`API/Reimbursement/SaveEmpReimbursementData`,
+  ApplyWithImgReimbursement:`API/Reimbursement/SaveEmpReimbursementDataWithImage`
+
 
 };

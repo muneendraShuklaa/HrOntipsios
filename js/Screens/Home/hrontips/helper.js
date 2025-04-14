@@ -2,6 +2,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Endpoint from '../../../Utils/Endpoint';
 import moment from 'moment';
+import { StackActions } from '@react-navigation/native';
+import { navigate } from '../../../Components/Common/NavigationService';
 
 export default class DashboardHelper {
   constructor(self) {
@@ -30,8 +32,8 @@ export default class DashboardHelper {
         // console.log('gdfgdfhdfhdf', response.data);
       })
       .catch(function (error) {
-        alert('Please Enter Valid Credentials');
-        // console.warn("guggsgggdsy", error);
+        // alert('Please Enter Valid Credentials');
+        console.warn("guggsgggdsy", error);
       });
   };
 
@@ -79,7 +81,8 @@ export default class DashboardHelper {
         // console.log('ClockIn...........Details==== :', response.data);
       })
       .catch(function (error) {
-        alert('ClockIn Request Failed');
+        this.handleTokenExpiration(error)
+        // alert('ClockIn Request Failed');
       });
   };
   ClockOut = async () => {
@@ -125,7 +128,8 @@ export default class DashboardHelper {
         // console.log('Clockout...........Details :', response?.data);
       })
       .catch(function (error) {
-        alert('Clockout Request Failed');
+        this.handleTokenExpiration(error)
+        // alert('Clockout Request Failed');
       });
   };
 
@@ -291,7 +295,7 @@ export default class DashboardHelper {
   };
 
   registerAddress = async () => {
-    console.log('Register device called ---->');
+    // console.log('Register device called ---->');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     // console.log('reg data is --------->', this.self.state.latitude);
@@ -318,3 +322,15 @@ export default class DashboardHelper {
       });
   };
 }
+
+handleTokenExpiration = (error) => {
+  
+  
+  if (error?.response?.status === 401) {
+    AsyncStorage.setItem('IsAuthenticated', 'false');
+    AsyncStorage.removeItem('AuthToken');
+
+      navigate('AuthStack');
+   
+  }
+};

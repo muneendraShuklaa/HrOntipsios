@@ -2,6 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Endpoint from '../../../Utils/Endpoint';
 import moment from 'moment';
+import { StackActions } from '@react-navigation/native';
 
 export default class homeHelper {
   constructor(self) {
@@ -52,24 +53,27 @@ export default class homeHelper {
           this.self.setState({});
           // this.self.props.navigation.navigate("Today");
           // this.props.navigation.navigate("Today")
-          this.self.setState({play: true});
+          this.self.setState({ play: true });
           {
             userType == 'Admin'
               ? null
               : this.self.props.navigation.navigate('Today');
           }
         } else {
+          console.log(response.data.message,'200');
+          
           // this.self.setState({ isloadingtime: false })
-          alert(response?.data?.message);
+          // alert(response?.data?.message);
         }
       })
       .catch(function (error) {
         console.warn('gogoago', error);
+        this.handleTokenExpiration(error)
       });
   };
 
   ClockOut = async () => {
-    console.log('datasdasda', this.self.state.email, this.self.state.password);
+    // console.log('datasdasda', this.self.state.email, this.self.state.password);
     // this.self.setState({ isloadingtime: true })
     const Token = await AsyncStorage.getItem('AuthToken');
 
@@ -100,12 +104,12 @@ export default class homeHelper {
         },
       )
       .then(async response => {
-        console.log('get_token', Token);
+        // console.log('get_token', Token);
 
-        console.warn(
-          'get_data',
-          response?.data?.result?.TimeKeeperClockInDetailsRequest?.TotalHours,
-        );
+        // console.warn(
+        //   'get_data',
+        //   response?.data?.result?.TimeKeeperClockInDetailsRequest?.TotalHours,
+        // );
         // console.warn("hhhpooouurrrr", response.data.result.TimeKeeperClockInDetailsRequest.Lattitudee)
         await AsyncStorage.setItem(
           'HotalHours',
@@ -128,7 +132,7 @@ export default class homeHelper {
           // this.self.setState({ isloadingtime: false })
           // this.self.props.navigation.navigate("Today");
           // this.self.setState({ play: true })
-          this.self.setState({play: false});
+          this.self.setState({ play: false });
         } else {
           // this.self.setState({ isloadingtime: false })
           alert(response?.data?.message);
@@ -136,6 +140,21 @@ export default class homeHelper {
       })
       .catch(function (error) {
         console.warn('gogoago', error);
+
+        this.handleTokenExpiration(error)
       });
+  };
+
+  handleTokenExpiration = (error) => {
+    console.log(error,'reriri--');
+    
+    if (error.response?.status === 401) {
+      AsyncStorage.setItem('IsAuthenticated', 'false');
+      AsyncStorage.removeItem('AuthToken');
+      this.self.props.navigation.dispatch(
+        StackActions.replace('Login')
+      );
+
+    }
   };
 }

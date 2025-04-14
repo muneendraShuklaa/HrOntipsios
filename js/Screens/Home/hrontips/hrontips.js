@@ -1335,6 +1335,44 @@ class hrontips extends Component {
                 </TouchableOpacity>}
 
               </View>
+              {/* <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('ViewReimbursement');
+                }}
+                style={[
+                  styles.Card,
+                  {
+                    backgroundColor: this.props.themeColor.themeBackground,
+                    borderWidth: this.props.isDark ? 1 : 0,
+                    borderColor: this.props.isDark ? '#fff' : 'white',
+                    marginBottom: vh(20),
+                    marginTop: vh(10),
+                  },
+                ]}>
+                <Image
+                  source={utils.icons.Regularisation}
+                  style={{
+                    alignSelf: 'center',
+                    // tintColor: '#3083EF',
+                    height: 30,
+                    width: 30,
+                    resizeMode: 'contain',
+                  }}
+                />
+                <Text
+                  style={[
+                    utils.fontStyle.FontFamilyRegular,
+                    {
+                      alignSelf: 'center',
+                      color: this.props.themeColor.textColor,
+                      fontSize: 16,
+                      marginTop: 7,
+                      textAlign:'center'
+                    },
+                  ]}>
+                  View{'\n'}Reimbursement
+                </Text>
+              </TouchableOpacity> */}
             </View>
           </View>
         </ScrollView>

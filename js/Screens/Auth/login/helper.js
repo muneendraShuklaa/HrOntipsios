@@ -2,6 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Endpoint from '../../../Utils/Endpoint';
 import { StackActions } from '@react-navigation/native';
+import { getDeviceDetails } from '../../../Utils/constant';
 
 export default class signInHelper {
   constructor(self) {
@@ -27,9 +28,15 @@ export default class signInHelper {
     }
   };
   signIN = async (signal) => {
-
     if (signal?.aborted) return;
-
+    const info = await getDeviceDetails();
+    console.log( {
+      username: this.self.state.email,
+      password: this.self.state.password,
+      IMEI: info.imei ?? '',
+      DeviceId: info.deviceId ?? '',
+      DomainName: 'MobileApplicationLogin',
+    },'loginn===');
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.Login,
@@ -38,8 +45,8 @@ export default class signInHelper {
           password: this.self.state.password,
           // username: 'rituparnaganguly@drdangslab.com',
           // password: 'Ritu@0808',
-          // IMEI: '',
-          // DeviceId: '',
+          IMEI: info.imei ?? '',
+          DeviceId: info.deviceId ?? '',
           DomainName: 'MobileApplicationLogin',
           // grant_type: '',
         },
@@ -51,9 +58,10 @@ export default class signInHelper {
           signal
         },
       )
-
       .then(async response => {
 
+       
+        // console.log(response.data,'mess===');
         if (signal?.aborted) return;
 
 
@@ -94,6 +102,8 @@ export default class signInHelper {
           ['IsAuthenticated', response?.data?.IsAuthenticated?.toString() || ''],
           ['UserType', response?.data?.UserType?.toString() || ''],
         ]);
+
+        
 
         if (this.self.isMountedComponent) {
           this.self.setState({ message: response?.data?.Message });
@@ -155,4 +165,6 @@ export default class signInHelper {
         }
       });
   };
+
+
 }

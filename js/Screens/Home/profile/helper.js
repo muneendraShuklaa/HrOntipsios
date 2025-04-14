@@ -2,6 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Endpoint from '../../../Utils/Endpoint';
 import moment from 'moment';
+import { navigate } from '../../../Components/Common/NavigationService';
 
 export default class ProfiledHelper {
   constructor(self) {
@@ -96,6 +97,7 @@ export default class ProfiledHelper {
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
         alert('userpersonaldata');
+        handleTokenExpiration(error);
         // alert(response.data.message);
         // console.warn("guggsgggdsy", error);
       });
@@ -119,5 +121,12 @@ export default class ProfiledHelper {
         // alert(response.data.message);
         // console.warn("guggsgggdsy", error);
       });
+  };
+  handleTokenExpiration = (error) => {
+    if (error?.response?.status === 401) {
+      AsyncStorage.setItem('IsAuthenticated', 'false');
+      AsyncStorage.removeItem('AuthToken');
+        navigate('AuthStack');
+    }
   };
 }

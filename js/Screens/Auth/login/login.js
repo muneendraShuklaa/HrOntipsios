@@ -56,6 +56,8 @@ class login extends Component {
   }
   async componentDidMount() {
     this.isMountedComponent = true;
+    // console.log('Navigation in component:', this.props.navigation); // <-- should NOT be undefined
+
 
     try {
       let AuthToken = await AsyncStorage.getItem('AuthToken');

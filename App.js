@@ -56,6 +56,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { fcmService } from './js/notification/FCMNotification';
 import { localNotificationService } from './js/notification/localNotification';
 import NetInfo from "@react-native-community/netinfo"
+import AddRimbursement from'./js/Screens/Home/addReimbursement/addReimbursement.js';
 // console.warn =()=>{}
 // console.error =()=>{}
 
@@ -116,6 +117,8 @@ import ManageAttendance from './js/Screens/Home/manageAttendance/manageAttendanc
 import styles from './js/Components/Header/styles.js';
 import useNetworkStatus from './js/Utils/useNetworkStatus.js';
 import { AttendanceReport } from './js/Screens/Home/attendanceReport/attendanceReport.js';
+import ViewReimbursement from './js/Screens/Home/reimbursement/viewReimbursement.js';
+import { navigationRef } from './js/Components/Common/NavigationService.js';
 // OneSignal.init("f7924110-6e36-4b81-a8d0-83eac5d15f63");
 OneSignal.setNotificationWillShowInForegroundHandler(
   notificationReceivedEvent => {
@@ -442,6 +445,20 @@ function HomeStack() {
         }}
       />
       <Stack.Screen
+        name="ViewReimbursement"
+        component={ViewReimbursement}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="AddReimbursement"
+        component={AddRimbursement}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
         name="ManageAttendance"
         component={ManageAttendance}
         options={{
@@ -503,7 +520,7 @@ const App = () => {
   useNetworkStatus();
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen
           name="AuthStack"
