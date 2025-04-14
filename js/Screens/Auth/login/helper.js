@@ -30,13 +30,13 @@ export default class signInHelper {
   signIN = async (signal) => {
     if (signal?.aborted) return;
     const info = await getDeviceDetails();
-    console.log( {
-      username: this.self.state.email,
-      password: this.self.state.password,
-      IMEI: info.imei ?? '',
-      DeviceId: info.deviceId ?? '',
-      DomainName: 'MobileApplicationLogin',
-    },'loginn===');
+    // console.log( {
+    //   username: this.self.state.email,
+    //   password: this.self.state.password,
+    //   IMEI: info.imei ?? '',
+    //   DeviceId: info.deviceId ?? '',
+    //   DomainName: 'MobileApplicationLogin',
+    // },'loginn===');
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.Login,
