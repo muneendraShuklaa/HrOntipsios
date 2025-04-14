@@ -55,7 +55,7 @@ export default class DSREditHelper {
       body: formdata,
     };
     fetch(Endpoint.baseUrl + Endpoint.AddDsr, requestOptions)
-      .then(response => response.text())
+      .then(response => response?.text())
       //   .then(result => console.log(result,"...."))
 
       .then(result => {
@@ -88,20 +88,20 @@ export default class DSREditHelper {
         },
       )
       .then(async response => {
-        console.log('Dropdowntaskcate', response.data);
-        let category = response.data.map(val => {
+        console.log('Dropdowntaskcate', response?.data);
+        let category = response?.data.map(val => {
           return val.Category;
         });
 
         this.self.setState({
           //   Dropdowntaskcate: response.data.Table,
           dropcategory: category,
-          dropcategoryData: response.data,
+          dropcategoryData: response?.data,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };

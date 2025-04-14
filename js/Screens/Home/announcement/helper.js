@@ -33,7 +33,7 @@ export default class AnnouncementHelper {
       .then(async response => {
         // console.log('Announcement------->>', response.data);
         this.self.setState({
-          Announcement: response.data.Table,
+          Announcement: response?.data?.Table,
         });
       })
       .catch(function (error) {
@@ -71,7 +71,7 @@ export default class AnnouncementHelper {
       body: formdata,
     };
     fetch(Endpoint.baseUrl + Endpoint.AddAnnoucement, requestOptions)
-      .then(response => response.text())
+      .then(response => response?.text())
       //   .then(result => console.log(result,"...."))
       .then(result => {
         // console.log('Annoucement Responce=======>', result);
@@ -101,8 +101,8 @@ export default class AnnouncementHelper {
         },
       )
       .then(async response => {
-       console.log('Announcement Type >>------->>', response.data);
-        let ClientDescription2 = response.data.Table.map(val => {
+       console.log('Announcement Type >>------->>', response?.data);
+        let ClientDescription2 = response?.data?.Table.map(val => {
           return val.Fieldvalue;
         });
          console.log('Announcement Type ***------->>', ClientDescription2);

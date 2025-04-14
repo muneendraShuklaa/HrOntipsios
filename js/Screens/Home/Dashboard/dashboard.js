@@ -32,6 +32,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {Dropdown} from 'react-native-material-dropdown';
 import Geolocation from '@react-native-community/geolocation';
+import DashboardHelper from '../hrontips/helper';
 // import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 // import homeHelper from './helper'
@@ -45,6 +46,8 @@ class dashboard extends Component {
     this.state = {
       sideModalD: false,
     };
+
+    this.helper=new DashboardHelper(this);
   }
 
   async componentDidMount() {}

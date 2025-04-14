@@ -178,7 +178,7 @@ class requestleave extends Component {
     this.setState({startDate, endDate});
   };
   render() {
-    console.log(this.state.Full, 'typeeeeee');
+    // console.log(this.state.LeaveType, 'typeeeeee');
     const {Age, Gender, PhoneNumber, DateOfbirth} = this.state;
     let data = [
       {
@@ -417,9 +417,9 @@ class requestleave extends Component {
                   {/* {moment(this.state.selectedDate).format('ll')} */}
                   {/* {moment(this.state.selectedDate?.dateString).format('ll')} */}
                   {/* {this.state.selectedEndDate?.dateString} */}
-                  {this.state.Balance <= differenceDays
+                  { this.state.LeaveType!=="Leave WithOut Pay"? this.state.Balance <= differenceDays
                     ? this.setState({selectedEndDate: 'Invalid'})
-                    : this.state.selectedEndDate?.dateString}
+                    : this.state.selectedEndDate?.dateString:this.state.selectedEndDate?.dateString}
                 </TextInput>
               </TouchableOpacity>
             </View>

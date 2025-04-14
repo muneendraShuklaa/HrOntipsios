@@ -53,7 +53,7 @@ export default class taskdata {
       body: formdata,
     };
     fetch(Endpoint.baseUrl + Endpoint.UpdateTask, requestOptions)
-      .then(response => response.text())
+      .then(response => response?.text())
       //   .then(result => console.log(result,"...."))
       .then(result => {
         console.log('get Add data...adddtata', result);
@@ -198,20 +198,20 @@ export default class taskdata {
         },
       )
       .then(async response => {
-        console.log('Dropdowntaskcate', response.data);
-        let Name = response.data.Table.map(val => {
+        console.log('Dropdowntaskcate', response?.data);
+        let Name = response?.data?.Table?.map(val => {
           return val.Name;
         });
 
         this.self.setState({
           //   Dropdowntaskcate: response.data.Table,
           assignUsername: Name,
-          Dropdownproject: response.data.Table,
+          Dropdownproject: response?.data?.Table,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };
@@ -238,20 +238,20 @@ export default class taskdata {
         },
       )
       .then(async response => {
-        console.log('cate', response.data);
-        let Category = response.data.map(val => {
+        console.log('cate', response?.data);
+        let Category = response?.data?.map(val => {
           return val.Category;
         });
 
         this.self.setState({
           //   Dropdowntaskcate: response.data.Table,
           Category: Category,
-          dropcategoryData: response.data,
+          dropcategoryData: response?.data,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };

@@ -2,6 +2,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Endpoint from '../../../Utils/Endpoint';
 import moment from 'moment';
+import { StackActions } from '@react-navigation/native';
+import { navigate } from '../../../Components/Common/NavigationService';
 
 export default class DashboardHelper {
   constructor(self) {
@@ -30,8 +32,8 @@ export default class DashboardHelper {
         // console.log('gdfgdfhdfhdf', response.data);
       })
       .catch(function (error) {
-        alert('Please Enter Valid Credentials');
-        // console.warn("guggsgggdsy", error);
+        // alert('Please Enter Valid Credentials');
+        console.warn("guggsgggdsy", error);
       });
   };
 
@@ -41,14 +43,14 @@ export default class DashboardHelper {
 
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const jsonValue = await AsyncStorage.getItem('UserId');
-    console.log(
-      this.self.state.longitude,
-      this.self.state.latitude,
-      EmpId,
-      jsonValueClientID,
-      jsonValue,
-      'leave value',
-    );
+    // console.log(
+    //   this.self.state.longitude,
+    //   this.self.state.latitude,
+    //   EmpId,
+    //   jsonValueClientID,
+    //   jsonValue,
+    //   'leave value',
+    // );
     let formData = new FormData();
     formData.append('longtitude', this.self.state.longitude);
     formData.append('Comment', '');
@@ -76,10 +78,11 @@ export default class DashboardHelper {
       },
     })
       .then(function (response) {
-        console.log('ClockIn...........Details :', response);
+        // console.log('ClockIn...........Details==== :', response.data);
       })
       .catch(function (error) {
-        alert('ClockIn Request Failed');
+        this.handleTokenExpiration(error)
+        // alert('ClockIn Request Failed');
       });
   };
   ClockOut = async () => {
@@ -88,14 +91,14 @@ export default class DashboardHelper {
     const jsonValue = await AsyncStorage.getItem('UserId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
 
-    console.log(
-      this.self.state.longitude,
-      this.self.state.latitude,
-      EmpId,
-      jsonValueClientID,
-      jsonValue,
-      'leave value',
-    );
+    // console.log(
+    //   this.self.state.longitude,
+    //   this.self.state.latitude,
+    //   EmpId,
+    //   jsonValueClientID,
+    //   jsonValue,
+    //   'leave value',
+    // );
     let formData = new FormData();
     formData.append('longtitude', this.self.state.longitude);
     formData.append('Comment', '');
@@ -122,17 +125,18 @@ export default class DashboardHelper {
       },
     })
       .then(function (response) {
-        console.log('Clockout...........Details :', response.data);
+        // console.log('Clockout...........Details :', response?.data);
       })
       .catch(function (error) {
-        alert('Clockout Request Failed');
+        this.handleTokenExpiration(error)
+        // alert('Clockout Request Failed');
       });
   };
 
   track = async () => {
     // alert('hhhhhh');
     this.self.setState({isloading: true});
-    console.log('clockkusing locationn');
+    // console.log('clockkusing locationn');
     const EmpId = await AsyncStorage.getItem('EmpId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
 
@@ -161,19 +165,19 @@ export default class DashboardHelper {
         },
       )
       .then(async response => {
-        console.log('tracking data  ==========>', response.data);
+        // console.log('tracking data  ==========>', response?.data);
         this.self.toggleStopwatch();
         this.self.setState({play: true});
         // await AsyncStorage.setItem('Name', response.data.FirstName)
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };
   TimeTracker = async () => {
-    console.log('Clocking datata locationn');
+    // console.log('Clocking datata locationn');
     const EmpId = await AsyncStorage.getItem('EmpId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const jsonValue = await AsyncStorage.getItem('UserId');
@@ -197,7 +201,7 @@ export default class DashboardHelper {
         },
       )
       .then(async response => {
-        // console.log('ClockIn.allready data..', response.data);
+        // console.log('ClockIn.allready data..', response?.data);
         // await AsyncStorage.setItem(
         //   'allreadyLogin',
         //   moment(String(response.data[0].StartTime)).unix().toString(),
@@ -208,7 +212,7 @@ export default class DashboardHelper {
           this.self.setState({
             play: true,
             stopwatchStartTime: moment().diff(
-              moment.utc(String(response.data[0].StartTime)),
+              moment.utc(String(response?.data[0]?.StartTime)),
               'milliseconds',
             ),
             // .subtract(50000, 'milliseconds')
@@ -223,18 +227,21 @@ export default class DashboardHelper {
         // );
         // alert(clockIn);
         // format('LTS');
+      
+        
         this.self.setState({
-          allreadyLogin: moment(String(response.data[0].StartTime))
+          allreadyLogin: moment(String(response?.data[0]?.StartTime))
             .add(5, 'h')
             .add(30, 'm')
             .format('LT'),
 
-          StatusClockin: response.data[0].StatusId,
+
+          StatusClockin: response?.data[0]?.StatusId,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };
@@ -262,33 +269,36 @@ export default class DashboardHelper {
       )
       .then(async response => {
         // console.log('imagegegege..,gg.', response.data.DocumentUrlBase64);
-         console.log('Remark date is ----->', response.data);
-        await AsyncStorage.setItem(
-          'ImagePicUrl',
-          response.data.DocumentUrlBase64,
-        );
+        //  console.log('Remark date is ----->', response?.data);
+        if (response) {
+          
+          await AsyncStorage.setItem(
+            'ImagePicUrl',
+            response?.data?.DocumentUrlBase64,
+          );
+          this.self.setState({
+            ImagePicUrl: response?.data?.DocumentUrlBase64,
+            count: response?.data?.Remarks?.Count,
+            Birthday: response?.data?.Remarks?.Birthday,
+            Anniversary: response?.data?.Remarks?.Anniversary,
+            RemarkDate: response?.data?.remarks,
+            Quote: response?.data?.Remarks?.MotivaltionalQuote,
+          });
+        }
 
-        this.self.setState({
-          ImagePicUrl: response.data.DocumentUrlBase64,
-          count: response.data.Remarks.Count,
-          Birthday: response.data.Remarks.Birthday,
-          Anniversary: response.data.Remarks.Anniversary,
-          RemarkDate: response.data.remarks,
-          Quote: response.data.Remarks.MotivaltionalQuote,
-        });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        // alert(response?.data?.message);
         console.log('Remarks date error=======>', error);
       });
   };
 
   registerAddress = async () => {
-    console.log('Register device called ---->');
+    // console.log('Register device called ---->');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
-    console.log('reg data is --------->', this.self.state.latitude);
+    // console.log('reg data is --------->', this.self.state.latitude);
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.RegisterAddress,
@@ -305,10 +315,22 @@ export default class DashboardHelper {
         },
       )
       .then(async response => {
-        console.log(' address responce -------->', response.data);
+        // console.log(' address responce -------->', response?.data);
       })
       .catch(function (error) {
         console.log('Address is not registered----->', error);
       });
   };
 }
+
+handleTokenExpiration = (error) => {
+  
+  
+  if (error?.response?.status === 401) {
+    AsyncStorage.setItem('IsAuthenticated', 'false');
+    AsyncStorage.removeItem('AuthToken');
+
+      navigate('AuthStack');
+   
+  }
+};

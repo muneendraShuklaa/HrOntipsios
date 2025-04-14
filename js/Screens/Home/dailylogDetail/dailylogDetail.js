@@ -68,6 +68,7 @@ class dailylogDetail extends Component {
       this.calculateTotal();
       // alert('ggg');
     }, 500);
+    
   }
 
   render() {
@@ -102,7 +103,7 @@ class dailylogDetail extends Component {
               </Text>
             </ImageBackground>
           </TouchableOpacity>
-          <ScrollView>
+          <View>
             <View
               style={{
                 backgroundColor: utils.color.background,
@@ -164,14 +165,19 @@ class dailylogDetail extends Component {
                 Day Logs
               </Text>
               <FlatList
-                style={{height: 'auto', padding: 10}}
+                style={{
+                  height: '100%',
+                   padding: 10}}
+                contentContainerStyle={{
+           paddingBottom:350
+                }}
                 showsHorizontalScrollIndicator={false}
-                data={this.state.LogDetails?.length>0??[]}
+                data={this.state.LogDetails?.length>0?this.state.LogDetails:[]}
                 keyExxtractor={(item, index) => index.toString}
                 renderItem={({item, index}) => this.renderItem(item, index)}
               />
             </View>
-          </ScrollView>
+          </View>
         </View>
         <Modal
           isVisible={this.state.sideModalLogsAdd}
@@ -434,11 +440,14 @@ class dailylogDetail extends Component {
     // LogDetails.forEach(item => {
     //   sum += item.Duration;
     // });
-    const sum = this.state.Data.reduce(
-      (acc, currentValue) => acc + parseInt(currentValue),
-      0,
-    );
-    this.setState({total: sum});
+    if (this.state.Data) {
+      
+      const sum = this.state.Data?.reduce(
+        (acc, currentValue) => acc + parseInt(currentValue),
+        0,
+      );
+      this.setState({total: sum});
+    }
   };
   renderItem(item, index) {
     return (
@@ -448,6 +457,7 @@ class dailylogDetail extends Component {
           width: '98%',
           justifyContent: 'center',
           alignSelf: 'center',
+     
           // backgroundColor: 'grey',
         }}>
         <View
@@ -467,7 +477,7 @@ class dailylogDetail extends Component {
                 textAlign: 'right',
               },
             ]}>
-            {moment(item.InTime).add(5, 'h').add(30, 'm').format('LT')}
+            {item?.InTime && moment(item.InTime).add(5, 'h').add(30, 'm').format('LT')}
           </Text>
           {/* <Text>{item.Duration}</Text> */}
           <View style={{flexDirection: 'column'}}>
@@ -492,11 +502,11 @@ class dailylogDetail extends Component {
             onPress={() => {
               this.setState({
                 sideModalLogsAdd: true,
-                clockIn: item.InTime,
-                out: item.OutTime,
-                InLoc: item.Location,
-                OutLoc: item.OutLocation,
-                totall: item.Duration,
+                clockIn: item?.InTime,
+                out: item?.OutTime,
+                InLoc: item?.Location,
+                OutLoc: item?.OutLocation,
+                totall: item?.Duration,
               });
             }}>
             <Text
@@ -567,13 +577,13 @@ class dailylogDetail extends Component {
               style={{alignSelf: 'center'}}
             />
             <Text style={{marginLeft: 10, alignSelf: 'center'}}>
-              {moment
+              {item.Duration && moment
                 .utc(moment.duration(item.Duration, 'minutes').asMilliseconds())
                 .format('H [Hrs] m [Mins ]')}
             </Text>
           </View>
         </View>
-        {item.OutTime == null ? null : (
+        {item?.OutTime == null ? null : (
           <View>
             <View style={{flexDirection: 'row', alignSelf: 'center'}}>
               <Text
@@ -591,7 +601,7 @@ class dailylogDetail extends Component {
                   },
                 ]}>
                 {/* {} */}
-                {moment(item.OutTime).add(5, 'h').add(30, 'm').format('LT')}
+                {item?.OutTime && moment(item?.OutTime).add(5, 'h').add(30, 'm').format('LT')}
               </Text>
               <View style={{flexDirection: 'column'}}>
                 <View
@@ -607,7 +617,7 @@ class dailylogDetail extends Component {
                 style={[
                   utils.fontStyle.TextSemiBold,
                   {
-                    color: item.outTime == 'green' ? '#000' : 'red',
+                    color: item?.outTime == 'green' ? '#000' : 'red',
                     marginLeft: 5,
                     // backgroundColor: 'green',
                     marginTop: 5,

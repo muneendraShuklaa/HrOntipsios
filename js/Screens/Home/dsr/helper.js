@@ -34,7 +34,7 @@ export default class DSRHelper {
       .then(async response => {
         // console.log('gdfgdfhdfhdf=====>', response.data);
         this.self.setState({
-          DSR: response.data.Table,
+          DSR: response?.data?.Table,
         });
       })
       .catch(function (error) {

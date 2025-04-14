@@ -35,7 +35,7 @@ class LocalNotificationService {
         if (Platform.OS === 'ios') {
           if (notification.alert.length !== 0) {
             //handleNotification(notification)
-            notification.finish(PushNotificationIOS.FetchResult.NoData);
+            // notification.finish(PushNotificationIOS.FetchResult.NoData);
           }
         } else {
           // handleNotification(notification)

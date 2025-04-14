@@ -31,9 +31,9 @@ export default class remiderHelper {
         },
       )
       .then(async response => {
-        console.log('gdfgdfhdfhdf', response.data);
+        console.log('gdfgdfhdfhdf', response?.data);
         this.self.setState({
-          Comment: response.data.Table,
+          Comment: response?.data?.Table,
         });
       })
       .catch(function (error) {
@@ -63,9 +63,9 @@ export default class remiderHelper {
         },
       )
       .then(async response => {
-        console.log('gdfgdfhdfhdf', response.data);
+        console.log('gdfgdfhdfhdf', response?.data);
         this.self.setState({
-          reminder: response.data.Table,
+          reminder: response?.data?.Table,
         });
       })
       .catch(function (error) {
@@ -95,9 +95,9 @@ export default class remiderHelper {
         },
       )
       .then(async response => {
-        console.log('gdfgdfhdfhdf', response.data);
+        console.log('gdfgdfhdfhdf', response?.data);
         this.self.setState({
-          Comment: response.data.Table,
+          Comment: response?.data?.Table,
         });
       })
       .catch(function (error) {

@@ -44,7 +44,7 @@ class FCMService {
       .getToken()
 
       .then(async fcmToken => {
-        console.log('fcmtakennnnn======>', fcmToken);
+        // console.log('fcmtakennnnn======>', fcmToken);
         // alert(fcmToken);
         await AsyncStorage.setItem('NotiToken', fcmToken);
 

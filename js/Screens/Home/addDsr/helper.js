@@ -40,7 +40,7 @@ export default class adddsrHelper {
         },
       )
       .then(async response => {
-        console.log('DDSSRRfill', response?.data);
+        // console.log('DDSSRRfill', response?.data);
         this.props.navigation.navigate('Login');
       })
       .catch(function (error) {
@@ -84,7 +84,7 @@ export default class adddsrHelper {
       .then(response => response?.text())
       //   .then(result => console.log(result,"...."))
       .then(result => {
-        console.log('get Add data...adddtata', result);
+        // console.log('get Add data...adddtata', result);
         this.self.setState({Success: true});
         this.self.props.navigation.navigate('DSR');
       })
@@ -120,13 +120,13 @@ export default class adddsrHelper {
           return val.Text;
         });
         this.self.setState({
-          Dropdownproject: response?.data.Table,
+          Dropdownproject: response?.data?.Table,
           Search: tmpArr,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response?.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };
@@ -154,7 +154,7 @@ export default class adddsrHelper {
         },
       )
       .then(async response => {
-        console.log('Dropdowntaskcate', response?.data);
+        // console.log('Dropdowntaskcate', response?.data);
         let category = response?.data.map(val => {
           return val.Category;
         });

@@ -30,9 +30,9 @@ export default class DSRHelper {
         },
       )
       .then(async response => {
-        console.log('Task dsr data ----------->', response.data.Table);
+        // console.log('Task dsr data ----------->', response.data.Table);
         this.self.setState({
-          DSR: response.data.Table,
+          DSR: response?.data?.Table,
         });
       })
       .catch(function (error) {
@@ -63,12 +63,12 @@ export default class DSRHelper {
         },
       )
       .then(async response => {
-        console.log('gdfgdfhdfhdf', response.data.Table);
-        let doc = response.data.map(val => {
+        console.log('gdfgdfhdfhdf', response?.data?.Table);
+        let doc = response?.data?.map(val => {
           return val.doc;
         });
         this.self.setState({
-          TaskPic: response.data,
+          TaskPic: response?.data,
           doc: doc,
         });
       })
@@ -96,10 +96,10 @@ export default class DSRHelper {
         },
       )
       .then(async response => {
-        console.log('gdfgdfhdfhdf', response.data.Table);
+        console.log('gdfgdfhdfhdf', response?.data?.Table);
 
         this.self.setState({
-          DSR: response.data.Table,
+          DSR: response?.data?.Table,
         });
       })
       .catch(function (error) {
@@ -226,7 +226,7 @@ export default class DSRHelper {
       body: formdata,
     };
     fetch(Endpoint.baseUrl + Endpoint.AddimageInTAsk, requestOptions)
-      .then(response => response.text())
+      .then(response => response?.text())
       //   .then(result => console.log(result,"...."))
       .then(result => {
         console.log('ad000imageee', result);

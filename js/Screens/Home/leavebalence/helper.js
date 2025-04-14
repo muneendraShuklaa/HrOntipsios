@@ -33,12 +33,12 @@ export default class LeavedHelper {
       .then(async response => {
         // console.log('leaavevevdatata', response.data);
         this.self.setState({
-          LeaveRecord: response.data.Table,
+          LeaveRecord: response?.data?.Table,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };
@@ -66,14 +66,14 @@ export default class LeavedHelper {
         },
       )
       .then(async response => {
-        console.log('leave avaialable <------------>>>', response.data);
+        console.log('leave avaialable <------------>>>', response?.data);
         this.self.setState({
-          LeaveDeatilsss: response.data.Table1,
+          LeaveDeatilsss: response?.data?.Table1,
         });
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response.data.message);
+        alert(response?.data?.message);
         // console.warn("guggsgggdsy", error);
       });
   };

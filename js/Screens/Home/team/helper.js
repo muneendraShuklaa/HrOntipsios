@@ -27,11 +27,11 @@ export default class EmpListHelper {
         },
       )
       .then(async response => {
-        console.warn('get_data', response.data);
-        console.warn('iiiiiiiiiiiiii', response.data.Table);
+        console.warn('get_data', response?.data);
+        console.warn('iiiiiiiiiiiiii', response?.data?.Table);
         this.self.setState({
-          TeamTrack: response.data.Table,
-          markers: response.data.Table.map(marker => {
+          TeamTrack: response?.data?.Table,
+          markers: response?.data?.Table?.map(marker => {
             return {
               title: marker['FirstName'],
               coordinates: {
