@@ -139,11 +139,10 @@ OneSignal.setNotificationWillShowInForegroundHandler(
 OneSignal.setNotificationOpenedHandler(notification => {
   // console.log('OneSignal: notification opened:', notification);
 });
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+// PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 const BottomTabBarr = () => {
   const colorScheme = useColorScheme();
-
   const isDarkMode = colorScheme === 'dark';
 
   return (
@@ -153,7 +152,6 @@ const BottomTabBarr = () => {
         headerShown: false,
         tabBarStyle: {
           height: vh(75),
-
           backgroundColor: isDarkMode ? '#000' : '#fff',
           // backgroundColor: 'black',
         },

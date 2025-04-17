@@ -16,7 +16,7 @@ import { vh, vw, normalize } from '../../../Utils/dimentions';
 import utils from '../../../Utils';
 import SignInHelper from './helper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Geocoder from 'react-native-geocoder';
+// import Geocoder from 'react-native-geocoder';
 import { StackActions } from '@react-navigation/native';
 
 // import Geolocation from '@react-native-community/geolocation';
@@ -56,16 +56,13 @@ class login extends Component {
   }
   async componentDidMount() {
     this.isMountedComponent = true;
-    // console.log('Navigation in component:', this.props.navigation); // <-- should NOT be undefined
-
-
     try {
       let AuthToken = await AsyncStorage.getItem('AuthToken');
       if (this.isMountedComponent) {
         this.setState({ AuthToken });
       }
       this.helper.AuthCheck(this.abortController.signal);
-      this.AuthCheck(this.abortController.signal);
+      this.AuthChecks(this.abortController.signal);
     } catch (error) {
       console.log('Error fetching authtoken', error);
 
@@ -78,13 +75,14 @@ class login extends Component {
     this.abortController.abort();
   }
 
-  AuthCheck = async (signal) => {
+  AuthChecks = async (signal) => {
+    
     if (signal?.aborted) return;
 
     try {
       let Active = await AsyncStorage.getItem('IsAuthenticated');
       let Answer1 = await AsyncStorage.getItem('Answer1');
-      if (signal?.aborted) return;
+
 
       if (Active == 'True' && this.isMountedComponent) {
         this.props.navigation.dispatch(StackActions.replace('HomeStack'));
@@ -284,7 +282,7 @@ class login extends Component {
                 secureTextEntry={this.state.secureTextEntry}
                 allowFontScaling={false}
                 // onBlur={() => this.state.validMail == false && this.setState({ Mobile: '' })}
-                onChangeText={val => this.setState({ password: val })}
+                onChangeText={val => this.setState({ password: val.trim() })}
                 value={this.state.password}
                 maxLength={16}
                 style={[

@@ -38,25 +38,12 @@ import moment from 'moment';
 // import {CameraKitCamera, CameraKitCameraScreen} from 'react-native-camera-kit';
 // import { CameraKitCameraScreen, } from 'react-native-camera-kit';
 
-const options = {
-  container: {
-    backgroundColor: utils.color.HeaderColor,
-    padding: 5,
-    borderRadius: 5,
-    width: 220,
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFF',
-    marginLeft: 7,
-  },
-};
+
 class hrontips extends Component {
   constructor(props) {
     super(props);
     this.camera = React.createRef();
-
+    // const options = ;
     this.state = {
       isFaceDetected: false,
       sideModalD: false,
@@ -172,7 +159,7 @@ class hrontips extends Component {
     let RoleName = await AsyncStorage.getItem('RoleName');
     let LastName = await AsyncStorage.getItem('LastName');
     this.helper.TimeTracker();
-    this.getLocationUser();
+    // this.getLocationUser();
     // setTimeout(() => {
     //   this.getLocationUser();
     // }, 2000);
@@ -329,24 +316,27 @@ class hrontips extends Component {
       });
   }
   getLocationUser = async () => {
-    RNLocation.configure({
-      distanceFilter: 5.0,
-    });
+    RNLocation.configure({ distanceFilter: .5 });
 
     RNLocation.requestPermission({
       ios: 'whenInUse',
       android: {
-        detail: 'coarse',
+        detail: 'fine',
+        // detail: 'coarse',
       },
     }).then(granted => {
       if (granted) {
+
         RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
+          
           var NY = {
             lat: latestLocation?.latitude ?? 0,
             lng: latestLocation?.longitude ?? 0,
           };
           Geocoder.geocodePosition(NY)
             .then(res => {
+              
+              
               this.setState({ address: res[0].locality });
               this.setState({ formattedAddress: res[0].formattedAddress });
               setTimeout(() => {
@@ -364,6 +354,8 @@ class hrontips extends Component {
       }
     });
   };
+
+
 
   render() {
     const {
@@ -500,11 +492,27 @@ class hrontips extends Component {
                       />
                       <Stopwatch
                         laps
-                        msecs
+                        // msecs
                         start={this.state.stopwatchStart}
                         reset={this.state.stopwatchReset}
                         startTime={this.state.stopwatchStartTime}
-                        options={options}
+                        // options={options}
+                        options={{
+                          container: {
+                            backgroundColor: this.props.isDark ? utils.color.Darkk: utils.color.TextColorWhite,
+                            // backgroundColor: utils.color.HeaderColor,
+                            // padding: 5,
+                            borderRadius: 5,
+                            width: 220,
+                          },
+                          text: {
+                            fontSize: 24,
+                            fontWeight: 'bold',
+                            // color: '#FFF',
+                            color: this.props.isDark ? utils.color.TextColorWhite:utils.color.HeaderColor,
+                            marginLeft: 7,
+                          },
+                        }}
                         isDark={this.props.isDark}
                       />
                     </View>
@@ -518,7 +526,7 @@ class hrontips extends Component {
                           height: vh(30),
                           width: vw(30),
                           alignSelf: 'center',
-                          marginRight: 10,
+                          marginRight: 15,
                           resizeMode: 'contain',
                         }}
                       />
