@@ -10,11 +10,11 @@ export default class signInHelper {
   }
 
   AuthCheck = async (signal) => {
-    // console.log('CALLLED');
+
     if (signal?.aborted) return;
     let Active = await AsyncStorage.getItem('IsAuthenticated');
     // let Answer1 = await AsyncStorage.getItem('Answer1');
-    // console.log('CALLLED--->', Active, Answer1);
+
     let Answer1 = '';
     if (signal?.aborted) return;
 
@@ -61,7 +61,7 @@ export default class signInHelper {
       .then(async response => {
 
        
-        // console.log(response.data,'mess===');
+       
         if (signal?.aborted) return;
 
 
@@ -87,7 +87,7 @@ export default class signInHelper {
         //   'UserType',
         //   response?.data?.UserType.toString(),
         // );
-
+     
         await AsyncStorage.multiSet([
           ['Name', response?.data?.FirstName || ''],
           ['LastName', response?.data?.LastName || ''],
@@ -102,15 +102,17 @@ export default class signInHelper {
           ['IsAuthenticated', response?.data?.IsAuthenticated?.toString() || ''],
           ['UserType', response?.data?.UserType?.toString() || ''],
         ]);
-
+    
         
 
         if (this.self.isMountedComponent) {
           this.self.setState({ message: response?.data?.Message });
         }
-
+    
         // this.self.setState({isloading: false});
         this.self.getLocationUser();
+
+
         this.AuthCheck(signal);
         // setTimeout(() => {
         // }, 2000);
@@ -124,18 +126,16 @@ export default class signInHelper {
         if (axios.isCancel(error)) {
           console.log('Request was cancelled:', error.message);
         } else {
-          console.log('Login error:', error);
+          console.log('Login error signi:', error);
         }
       });
   };
 
   registerDevice = async (signal) => {
     if (signal?.aborted) return;
-    // console.log('Register device called ---->');
     let token = await AsyncStorage.getItem('NotiToken');
     let empid = await AsyncStorage.getItem('EmpId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
-    // console.log('data of register--->', empid, token, 'and', jsonValueClientID);
     await axios
       .post(
         Endpoint.baseUrl + Endpoint.RegisterDevice,
@@ -154,14 +154,12 @@ export default class signInHelper {
       )
       .then(async response => {
         if (signal?.aborted) return;
-        // console.log('register device responce -------->', response);
       })
       .catch(function (error) {
-        // console.log('Device not registered---->', error);
         if (axios.isCancel(error)) {
           console.log('Request was cancelled:', error.message);
         } else {
-          console.log('Login error:', error);
+          console.log('Login error regis:', error);
         }
       });
   };

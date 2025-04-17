@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.devfd.RNGeocoder.RNGeocoderPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -14,6 +15,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
 import com.hrontips.newarchitecture.MainApplicationReactNativeHost;
+// import com.devfd.RNGeocoder.RNGeocoderPackage; // Add this line
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;  // <--- Import Package
@@ -35,9 +37,9 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
             // packages.add(new RNHTMLtoPDFPackage()); 
             // new RNHTMLtoPDFPackage()
-            new ReactNativePushNotificationPackage();
+            // packages.add(new ReactNativePushNotificationPackage());
+            // packages.add(new RNGeocoderPackage());
             return packages;
-
         }
 
         @Override
