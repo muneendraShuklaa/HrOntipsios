@@ -30,7 +30,7 @@ class header extends PureComponent {
                   : utils.color.BackPagecolor,
               },
             ]}>
-            <View style={[styles.titleContainer, {backgroundColor: 'red'}]}>
+            <View style={[styles.titleContainer, {backgroundColor: 'transparent'}]}>
               <TouchableOpacity onPress={this.props.leftFunction}>
                 <Image
                   // source={utils.icons.splashLogo}

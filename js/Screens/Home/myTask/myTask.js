@@ -188,7 +188,7 @@ class Mytask extends Component {
   }
   render() {
     const {Age, Gender, PhoneNumber, DateOfbirth} = this.state;
-    console.log('color name is --------->', this.props.isdark);
+    // console.log('color name is --------->', this.props.isdark);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
         <View
@@ -233,7 +233,10 @@ class Mytask extends Component {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{flexDirection: 'row', padding: 10, paddingBottom: -10}}>
+          <View style={{flexDirection: 'row',
+           padding: 10,
+             paddingBottom: -10
+             }}>
             {/* <TouchableOpacity style={{height: 'auto', width: 'auto'}}>
               <Text style={{color: '#fff'}}>MyTask </Text>
             </TouchableOpacity> */}

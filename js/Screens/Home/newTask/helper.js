@@ -57,7 +57,7 @@ export default class taskdata {
       //   .then(result => console.log(result,"...."))
       .then(result => {
         console.log('get Add data...adddtata', result);
-        this.self.setState({Success: true});
+        this.self.setState({ Success: true });
         this.self.props.navigation.navigate('MyTask');
         // this.self.props.route.params.refetch();
       })
@@ -218,6 +218,7 @@ export default class taskdata {
   category = async () => {
     // this.self.setState({ isloading: true })
     // console.log("Leave",EmpId,AuthToken)
+
     const jsonValue = await AsyncStorage.getItem('UserId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
@@ -238,20 +239,39 @@ export default class taskdata {
         },
       )
       .then(async response => {
-        console.log('cate', response?.data);
-        let Category = response?.data?.map(val => {
-          return val.Category;
-        });
+        // console.log('cate', response?.data);
 
-        this.self.setState({
-          //   Dropdowntaskcate: response.data.Table,
-          Category: Category,
-          dropcategoryData: response?.data,
-        });
+        // let Category = response?.data?.map(val => {
+        //   return val.Category;
+        // });
+
+
+        // this.self.setState({
+        //   //   Dropdowntaskcate: response.data.Table,
+        //   Category: Category,
+        //   dropcategoryData: response?.data
+        // });
+
+
+
+
+        if (Array.isArray(response?.data)) {
+          let Category = response.data.map(val => val?.Category);
+        
+          this.self.setState({
+            Category,
+            dropcategoryData: response.data
+          }, () => {
+            console.log('Set state completed');
+          });
+        } else {
+          console.warn('Expected response.data to be an array, got:', response?.data);
+        }
+
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert(response?.data?.message);
+        alert(error);
         // console.warn("guggsgggdsy", error);
       });
   };

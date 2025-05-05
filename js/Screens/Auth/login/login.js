@@ -16,7 +16,7 @@ import { vh, vw, normalize } from '../../../Utils/dimentions';
 import utils from '../../../Utils';
 import SignInHelper from './helper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import Geocoder from 'react-native-geocoder';
+import Geocoder from 'react-native-geocoder';
 import { StackActions } from '@react-navigation/native';
 
 // import Geolocation from '@react-native-community/geolocation';
@@ -153,7 +153,8 @@ class login extends Component {
         this.helper.signIN(signal);
         setTimeout(() => {
           this.helper.registerDevice(signal);
-        }, 5000);
+        }, 4000);
+        // this.helper.registerDevice(signal);
       }
     }
   };

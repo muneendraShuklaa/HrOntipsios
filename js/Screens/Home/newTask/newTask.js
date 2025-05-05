@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -7,13 +7,14 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  Keyboard,
 } from 'react-native';
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 import utils from '../../../Utils';
-import {Header} from '../../../Components/Header';
-import {withMyHook} from '../../../Utils/Dark';
-import {vh, vw, normalize} from '../../../Utils/dimentions';
-import {Dropdown} from 'react-native-material-dropdown';
+import { Header } from '../../../Components/Header';
+import { withMyHook } from '../../../Utils/Dark';
+import { vh, vw, normalize } from '../../../Utils/dimentions';
+import { Dropdown } from 'react-native-material-dropdown';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   Calendar,
@@ -25,7 +26,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import RBSheet from 'react-native-raw-bottom-sheet';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment';
 import Modal from 'react-native-modal';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -35,6 +36,8 @@ class newTask extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      textInputDescribeRef: null,
+      textInputAddTaskRef: null,
       height: false,
       selectedDate: '',
       imageselect: false,
@@ -69,6 +72,7 @@ class newTask extends Component {
     }, 2000);
   }
   componentDidMount() {
+    Keyboard.dismiss();
     this.helper.AssignUser();
     this.helper.category();
   }
@@ -84,7 +88,7 @@ class newTask extends Component {
         // let tmpArr = this.state.imageArray2;
         // tmpArr.push(imageUrl.path);
         // console.warn(imageUrl.path);
-        this.setState({imageArray2: imageUrl});
+        this.setState({ imageArray2: imageUrl });
         // this.img_ipdate();
         console.log(this.state.imageArray2, 'Imageeeeeeass');
       })
@@ -105,7 +109,7 @@ class newTask extends Component {
         // let tmpArr = this.state.imageArray2;
         // tmpArr.push(imageUrl.path);
         // console.warn(imageUrl.path);
-        this.setState({imageArray2: imageUrl});
+        this.setState({ imageArray2: imageUrl });
         // this.img_ipdate();
         console.log(this.state.imageArray2, 'Imagessss');
       })
@@ -211,9 +215,9 @@ class newTask extends Component {
     }
   };
   render() {
-    console.log('upcomeing props is ---------->', this.props);
+
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: utils.color.HeaderColor }}>
         <View
           style={{
             flex: 1,
@@ -233,7 +237,7 @@ class newTask extends Component {
               this.props.navigation.goBack();
             }}
             isDark={this.props.isDark}
-            // rightIcon={utils.icons.splashLogo} rightFunctionality={() => { this.props.navigation.navigate("Profile") }}
+          // rightIcon={utils.icons.splashLogo} rightFunctionality={() => { this.props.navigation.navigate("Profile") }}
           />
           <View
             style={{
@@ -275,12 +279,18 @@ class newTask extends Component {
                   borderColor: this.props.isDark ? '#fff' : 'grey',
                 }}>
                 <TextInput
+                ref={ref => {
+                  this.textInputAddTaskRef = ref;
+                }}
+                  onSubmitEditing={() => {
+                    this.textInputAddTaskRef.blur();
+                  }}
                   placeholder="Add Your Task"
                   placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
                   value={this.state.Task}
                   allowFontScaling={false}
                   onChangeText={text => {
-                    this.setState({Task: text});
+                    this.setState({ Task: text });
                   }}
                   multiline={true}
                   maxLength={500}
@@ -303,10 +313,16 @@ class newTask extends Component {
                   marginLeft: 10,
                 }}>
                 <TextInput
+                  ref={ref => {
+                    this.textInputDescribeRef = ref;
+                  }}
+                  onSubmitEditing={() => {
+                    this.textInputDescribeRef.blur();
+                  }}
                   placeholder="Describe Your Task"
                   allowFontScaling={false}
                   onChangeText={text => {
-                    this.setState({discribe: text});
+                    this.setState({ discribe: text });
                   }}
                   multiline={true}
                   value={this.state.discribe}
@@ -344,9 +360,8 @@ class newTask extends Component {
                     onSelect={(selectedItem, index) => {
                       this.setState({
                         projectCategory: selectedItem,
-
                         projectCategoryCodeid:
-                          this.state.dropcategoryData[index].CategoryId,
+                          this.state.dropcategoryData[index].CategoryId
                       });
                       console.log(selectedItem, index);
                     }}
@@ -478,7 +493,7 @@ class newTask extends Component {
                   name="user"
                   size={20}
                   color="#3083EF"
-                  style={{alignSelf: 'center', marginLeft: 15}}
+                  style={{ alignSelf: 'center', marginLeft: 15 }}
                 />
 
                 <SelectDropdown
@@ -491,7 +506,6 @@ class newTask extends Component {
                       AssignCode: this.state.Dropdownproject[index].UserId,
                       type: this.state.Dropdownproject[index].AssignToClientId,
                     });
-
                     console.log(selectedItem, index);
                   }}
                   defaultButtonText={'Assign To'}
@@ -570,9 +584,10 @@ class newTask extends Component {
                   name="calendar"
                   size={20}
                   color="#3C97FF"
-                  style={{alignSelf: 'center', marginLeft: '5%'}}
+                  style={{ alignSelf: 'center', marginLeft: '5%' }}
                 />
                 <TextInput
+                pointerEvents="none"
                   placeholder=""
                   editable={false}
                   placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
@@ -585,7 +600,7 @@ class newTask extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({imageselect: true});
+                  this.setState({ imageselect: true });
                 }}>
                 <Text
                   style={{
@@ -736,7 +751,7 @@ class newTask extends Component {
                   name="times-circle"
                   size={30}
                   color="#000"
-                  style={{alignSelf: 'center', marginRight: 10}}
+                  style={{ alignSelf: 'center', marginRight: 10 }}
                 />
               </TouchableOpacity>
             </View>
@@ -746,7 +761,7 @@ class newTask extends Component {
                 overflow: 'hidden',
               }}
               theme={{
-                header: {height: 0},
+                header: { height: 0 },
                 backgroundColor: '#2d5986',
                 calendarBackground: 'transparent',
                 textSectionTitleColor: '#b6c1cd',
@@ -829,16 +844,16 @@ class newTask extends Component {
                   justifyContent: 'space-between',
                 }}>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
                     this.pickSingleWithCamera(),
-                      this.setState({imageselect: false});
+                      this.setState({ imageselect: false });
                   }}>
                   <Icon
                     name="camera"
                     size={40}
                     color={this.props.themeColor.IconColor}
-                    style={{alignSelf: 'center', marginLeft: '5%'}}
+                    style={{ alignSelf: 'center', marginLeft: '5%' }}
                   />
                   <Text
                     style={[
@@ -853,15 +868,15 @@ class newTask extends Component {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
-                    this.takeScreenshot(), this.setState({imageselect: false});
+                    this.takeScreenshot(), this.setState({ imageselect: false });
                   }}>
                   <Icon
                     name="file-image-o"
                     size={40}
                     color={this.props.themeColor.IconColor}
-                    style={{alignSelf: 'center', marginLeft: '5%'}}
+                    style={{ alignSelf: 'center', marginLeft: '5%' }}
                   />
                   <Text
                     style={[
@@ -876,9 +891,9 @@ class newTask extends Component {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
-                    this.setState({imageselect: false});
+                    this.setState({ imageselect: false });
                   }}>
                   <Icon
                     name="times-circle-o"

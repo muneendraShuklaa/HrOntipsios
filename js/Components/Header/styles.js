@@ -29,8 +29,10 @@ export default StyleSheet.create({
     // tintColor:"#fff"
   },
   rightIcon: {
-    height: vh(38),
-    width: vh(38),
+    height: vh(25),
+    width: vh(25),
+    // height: vh(38),
+    // width: vh(38),
     alignItems: 'flex-end',
     // marginVertical:vh(5),
     // marginHorizontal:vw(16.75)

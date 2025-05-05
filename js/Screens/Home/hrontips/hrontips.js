@@ -116,30 +116,30 @@ class hrontips extends Component {
       // console.log('disttanceee', dist);
       if (dist <= 12410197) {
         this.helper.track();
+        // console.log('poll geolocation----');
+
         setTimeout(() => {
           this.helper.track();
           // this.helper.ClockInOut();      //--------->Saurabh cmnt clockin
-
           this.setState({ play: true, StatusClockin: 1 });
         }, 1000);
 
         // alert('Automatic Clocked In Based On your Location');
-        clearInterval(this.pollingInterval());
+        // clearInterval(this.pollingInterval());
+        clearInterval(this.pollingInterval);
       }
     });
   }
   async componentDidMount() {
     this.getBatteryLevel();
 
-    // setTimeout(() => {
-    //   this.pollingInterval = setInterval(() => {
-    //     this.pollGeolocation();
-    //   }, 30 * 1000); // Poll every 30 seconds
-    // }, 1 * 60 * 1000);
+    setTimeout(() => {
+      this.pollingInterval = setInterval(() => {
+        this.pollGeolocation();
+      }, 30 * 1000); // Poll every 30 seconds
+    }, 1 * 60 * 1000);
     this.helper.GetImageProfile();
-
-
-
+    
     this.imageProfileTimeout = setTimeout(() => {
       this.helper.GetImageProfile();
     }, 3000);
@@ -147,26 +147,25 @@ class hrontips extends Component {
     //   this.helper.GetImageProfile();
     // }, 3000);
 
-
     // this.helper.UserData();
     // this.helper.ClockInOut();
     timer.clearTimeout(this);
     let Name = await AsyncStorage.getItem('Name');
     let Department = await AsyncStorage.getItem('Department');
     let allreadyLogin = await AsyncStorage.getItem('allreadyLogin');
-
     let NotiToken = await AsyncStorage.getItem('NotiToken');
     let RoleName = await AsyncStorage.getItem('RoleName');
     let LastName = await AsyncStorage.getItem('LastName');
     this.helper.TimeTracker();
-    // this.getLocationUser();
+    this.getLocationUser();
     // setTimeout(() => {
     //   this.getLocationUser();
     // }, 2000);
 
-    this.locationTimeout = setTimeout(() => {
-      this.getLocationUser();
-    }, 2000);
+    // this.locationTimeout = setTimeout(() => {
+    //   this.getLocationUser();
+    // }, 2000);
+
     this.setState({
       Name: Name,
       LastName: LastName,
@@ -175,7 +174,9 @@ class hrontips extends Component {
       allreadyLogin: allreadyLogin,
       Department: Department,
     });
+
   }
+
   componentWillUnmount() {
     // Clear all subscriptions
     if (this.pollingInterval) {
@@ -184,9 +185,9 @@ class hrontips extends Component {
     if (this.imageProfileTimeout) {
       clearTimeout(this.imageProfileTimeout);
     }
-    if (this.locationTimeout) {
-      clearTimeout(this.locationTimeout);
-    }
+    // if (this.locationTimeout) {
+    //   clearTimeout(this.locationTimeout);
+    // }
   }
 
   getFormattedTime(time) {
@@ -326,17 +327,15 @@ class hrontips extends Component {
       },
     }).then(granted => {
       if (granted) {
-
         RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
-          
+
           var NY = {
             lat: latestLocation?.latitude ?? 0,
             lng: latestLocation?.longitude ?? 0,
           };
           Geocoder.geocodePosition(NY)
             .then(res => {
-              
-              
+
               this.setState({ address: res[0].locality });
               this.setState({ formattedAddress: res[0].formattedAddress });
               setTimeout(() => {
@@ -368,6 +367,12 @@ class hrontips extends Component {
       ClockIn_datetime,
       allreadyLogin,
     } = this.state;
+    // console.log(this.state.play,'-play=');
+    // console.log(this.state.StatusClockin,'-StatusClockin=');
+    // console.log(this.state.stopwatchStart,'-stopwatchStart=');
+    console.log(this.state.stopwatchStartTime,'-stopwatchStartTime=');
+    // console.log(this.state.play == true && this.state.StatusClockin == 1,'-test play condition=');
+
 
     // console.log('battery level is =====>', this.state.batteryLevel);
     // console.log('Birthday--->', this.state.Birthday);
@@ -499,7 +504,7 @@ class hrontips extends Component {
                         // options={options}
                         options={{
                           container: {
-                            backgroundColor: this.props.isDark ? utils.color.Darkk: utils.color.TextColorWhite,
+                            backgroundColor: this.props.isDark ? utils.color.Darkk : utils.color.TextColorWhite,
                             // backgroundColor: utils.color.HeaderColor,
                             // padding: 5,
                             borderRadius: 5,
@@ -509,7 +514,7 @@ class hrontips extends Component {
                             fontSize: 24,
                             fontWeight: 'bold',
                             // color: '#FFF',
-                            color: this.props.isDark ? utils.color.TextColorWhite:utils.color.HeaderColor,
+                            color: this.props.isDark ? utils.color.TextColorWhite : utils.color.HeaderColor,
                             marginLeft: 7,
                           },
                         }}
@@ -616,13 +621,10 @@ class hrontips extends Component {
                             StatusClockin: 1
                           });
                         }, 1000);
-
                         this.helper.ClockInOut();
-
                         setTimeout(() => {
                           this.helper.TimeTracker();
                         }, 1100);
-
                         this.helper.registerAddress();
                       }}>
                       <ImageBackground

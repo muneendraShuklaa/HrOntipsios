@@ -37,7 +37,7 @@ class commenting extends Component {
   }
   validcomment = () => {
     if (this.state.CommentText == '') {
-      alert('Enter Enter Comment');
+      alert('Enter Comment');
     } else {
       this.helper.AddComment();
       setTimeout(async () => {
@@ -83,9 +83,9 @@ class commenting extends Component {
                 //   backgroundColor: 'red',
               }}
               showsHorizontalScrollIndicator={false}
-              data={this.state.Comment?.length>0??[]}
+              data={this.state.Comment || []}
               contentContainerStyle={{paddingBottom: vh(100)}}
-              keyExxtractor={(item, index) => index.toString}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({item, index}) => this.renderItem(item, index)}
             />
           )}
@@ -115,7 +115,8 @@ class commenting extends Component {
             style={styles.btn}
             onPress={() => {
               this.validcomment();
-              this.textInput.clear();
+              this.setState({ CommentText: '' });
+              // this.textInput.clear();
             }}>
             <Icon
               name="send"
@@ -129,6 +130,8 @@ class commenting extends Component {
     );
   }
   renderItem(item, index) {
+
+    
     return (
       <View
         style={{
@@ -168,7 +171,6 @@ class commenting extends Component {
                     this.setState({Commentid: item.Id});
                     setTimeout(() => {
                       this.setState({Commentid: '0'});
-
                       this.helper.CommentData();
                     }, 500);
                   }}>

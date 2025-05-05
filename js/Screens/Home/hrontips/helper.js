@@ -10,7 +10,7 @@ export default class DashboardHelper {
     this.self = self;
   }
   UserData = async () => {
-    this.self.setState({isloading: true});
+    this.self.setState({ isloading: true });
     const AuthToken = await AsyncStorage.getItem('AuthToken');
     const EmpId = await AsyncStorage.getItem('EmpId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
@@ -51,6 +51,8 @@ export default class DashboardHelper {
     //   jsonValue,
     //   'leave value',
     // );
+    // console.log('in---',AuthToken);
+
     let formData = new FormData();
     formData.append('longtitude', this.self.state.longitude);
     formData.append('Comment', '');
@@ -60,7 +62,9 @@ export default class DashboardHelper {
     formData.append('IsAutoClockIn', true);
     formData.append('ClientId', JSON.parse(jsonValueClientID));
     formData.append('FileUrl', '');
-
+    console.log(formData,'formdata==');
+    
+    // console.log('out---',JSON.parse(jsonValueClientID));
     // formData.append('FileUrl', '', {
     //   uri: photo.uri,
     //   name: 'image.jpg',
@@ -78,9 +82,11 @@ export default class DashboardHelper {
       },
     })
       .then(function (response) {
-        // console.log('ClockIn...........Details==== :', response.data);
+        console.log('ClockIn...........Details==== :', response.data);
       })
       .catch(function (error) {
+        console.log(error, 'coclin in error-----');
+        
         this.handleTokenExpiration(error)
         // alert('ClockIn Request Failed');
       });
@@ -108,11 +114,15 @@ export default class DashboardHelper {
     formData.append('IsAutoClockIn', false);
     formData.append('ClientId', JSON.parse(jsonValueClientID));
     formData.append('FileUrl', '');
+    console.log(formData,'formdaa----dalogout');
+    
     // formData.append('FileUrl', this.self.state.imageArray2, {
     //   uri: photo.uri,
     //   name: 'image.jpg',
     //   type: 'image/jpeg',
     // });
+    console.log('url endp---',Endpoint.baseUrl + Endpoint.ClockInOut);
+    
     return axios({
       url: Endpoint.baseUrl + Endpoint.ClockInOut,
       method: 'POST',
@@ -125,9 +135,10 @@ export default class DashboardHelper {
       },
     })
       .then(function (response) {
-        // console.log('Clockout...........Details :', response?.data);
+        console.log('Clockout...........Details :', response?.data);
       })
       .catch(function (error) {
+        console.log(error,'clocuout error----');
         this.handleTokenExpiration(error)
         // alert('Clockout Request Failed');
       });
@@ -135,7 +146,7 @@ export default class DashboardHelper {
 
   track = async () => {
     // alert('hhhhhh');
-    this.self.setState({isloading: true});
+    this.self.setState({ isloading: true });
     // console.log('clockkusing locationn');
     const EmpId = await AsyncStorage.getItem('EmpId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
@@ -167,7 +178,7 @@ export default class DashboardHelper {
       .then(async response => {
         // console.log('tracking data  ==========>', response?.data);
         this.self.toggleStopwatch();
-        this.self.setState({play: true});
+        this.self.setState({ play: true });
         // await AsyncStorage.setItem('Name', response.data.FirstName)
       })
       .catch(function (error) {
@@ -182,6 +193,7 @@ export default class DashboardHelper {
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const jsonValue = await AsyncStorage.getItem('UserId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
+    console.log('timetracker--');
 
     await axios
       .post(
@@ -201,43 +213,53 @@ export default class DashboardHelper {
         },
       )
       .then(async response => {
-        // console.log('ClockIn.allready data..', response?.data);
+        console.log('ClockIn.allready data..', response?.data);
         // await AsyncStorage.setItem(
         //   'allreadyLogin',
         //   moment(String(response.data[0].StartTime)).unix().toString(),
         // );
+        // console.log(moment().diff(
+        //   moment.utc(String(response?.data[0]?.StartTime)),
+        //   'milliseconds',
+        // ),'startwa===');
 
-        const starTime = response?.data?.[0]?.StartTime;
-        if (starTime) {
+   
+
+        if (response?.data?.length > 0) {
+
+          const starTime = response?.data?.[0]?.StartTime;
+          if (starTime) {
+            this.self.setState({
+              play: true,
+              stopwatchStartTime: moment().diff(
+                moment.utc(String(response?.data[0]?.StartTime)),
+                'milliseconds',
+              ),
+              // StatusClockin: 2
+              // .subtract(50000, 'milliseconds')
+            });
+            this.self.toggleStopwatch();
+            // this.self.setState({
+            //   play: false,
+            // });
+          }
           this.self.setState({
-            play: true,
-            stopwatchStartTime: moment().diff(
-              moment.utc(String(response?.data[0]?.StartTime)),
-              'milliseconds',
-            ),
-            // .subtract(50000, 'milliseconds')
+            allreadyLogin: moment(String(response?.data[0]?.StartTime))
+              .add(5, 'h')
+              .add(30, 'm')
+              .format('LT'),
+            StatusClockin: response?.data[0]?.StatusId
           });
-          this.self.toggleStopwatch();
-          // this.self.setState({
-          //   play: false,
-          // });
         }
+
         // const clockIn = moment(String(response.data[0].StartTime)).format(
         //   'LTS',
         // );
         // alert(clockIn);
         // format('LTS');
-      
-        
-        this.self.setState({
-          allreadyLogin: moment(String(response?.data[0]?.StartTime))
-            .add(5, 'h')
-            .add(30, 'm')
-            .format('LT'),
 
 
-          StatusClockin: response?.data[0]?.StatusId,
-        });
+
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
@@ -271,7 +293,7 @@ export default class DashboardHelper {
         // console.log('imagegegege..,gg.', response.data.DocumentUrlBase64);
         //  console.log('Remark date is ----->', response?.data);
         if (response) {
-          
+
           await AsyncStorage.setItem(
             'ImagePicUrl',
             response?.data?.DocumentUrlBase64,
@@ -324,13 +346,11 @@ export default class DashboardHelper {
 }
 
 handleTokenExpiration = (error) => {
-  
-  
+
+
   if (error?.response?.status === 401) {
     AsyncStorage.setItem('IsAuthenticated', 'false');
     AsyncStorage.removeItem('AuthToken');
-
-      navigate('AuthStack');
-   
+    navigate('AuthStack');
   }
 };

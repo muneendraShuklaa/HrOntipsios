@@ -41,7 +41,7 @@ export default globalStyles = StyleSheet.create({
     calendarBtnStyle: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: vh(60),
+        height: vh(55),
         borderWidth: 1,
         borderColor: '#3C97FF',
         backgroundColor: '#fff',

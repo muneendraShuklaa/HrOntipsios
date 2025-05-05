@@ -10,6 +10,7 @@ import {
   LogBox,
   ToastAndroid
 } from 'react-native';
+
 import {
   NavigationContainer,
   DefaultTheme,
@@ -60,7 +61,10 @@ import AddRimbursement from'./js/Screens/Home/addReimbursement/addReimbursement.
 // console.warn =()=>{}
 // console.error =()=>{}
 
-  
+  ErrorUtils.setGlobalHandler((error, isFatal) => {
+    // Send error to your server or logging service
+    console.log(error, isFatal);
+  });
 
 if (__DEV__) {
   require("./ReactotronConfig.js");
@@ -72,16 +76,42 @@ LogBox.ignoreLogs([
 ]);
 // AppRegistry.registerHeadlessTask('myapp',()=>{console.log("testing 123")})
 // AppRegistry.run
+// const firebaseConfig={
+//   apiKey:'AIzaSyDuWI0CpY9QUHq9gCZ46wpOgr-HkLb4twY',
+//   authDomain:'hrontips-cda03.firebaseapp.com',
+//   projectId:'hrontips-cda03',
+//   storageBucket:'hrontips-cda03.firebasestorage.app',
+//   messagingSenderId:'758960097793',
+//   appId:'1:758960097793:ios:1818affe310dc97bcb0e00'
+// }
 
-fcmService.registerAppWithFCM();
-fcmService.register(onRegister, onNotification, onOpenNotification);
-localNotificationService.configure(onOpenNotification);
+const firebaseConfig = {
+  apiKey:'AIzaSyDuWI0CpY9QUHq9gCZ46wpOgr-HkLb4twY',
+  projectId:'hrontips-cda03',
+  storageBucket:'hrontips-cda03.firebasestorage.app',
+  messagingSenderId:'758960097793',
+  authDomain:'hrontips-cda03.firebaseapp.com',
+  ...(Platform.OS === 'ios'
+    ? {
+       appId:'1:758960097793:ios:1818affe310dc97bcb0e00'
+      }
+    : {
+        appId: '1:758960097793:android:11cbd9a8f2c16beccb0e00',
+      }),
+};
+
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+
 const onRegister = async token => {
   console.log('s Token=======>', token);
 };
 
 const onNotification = notify => {
-  console.log('[App] onNotification', notify);
+  console.log('[App] local onNotification', notify);
   const options = {
     soundName: 'default',
     playSound: true,
@@ -109,6 +139,9 @@ const onOpenNotification = async notify => {
     navigate('Today', notify.data);
   }
 };
+fcmService.registerAppWithFCM();
+fcmService.register(onRegister, onNotification, onOpenNotification);
+localNotificationService.configure(onOpenNotification);
 import OneSignal from 'react-native-onesignal';
 
 import RegularizationApproval from './js/Screens/Home/regularizationApproval/regularizationApproval.js';
@@ -119,6 +152,9 @@ import useNetworkStatus from './js/Utils/useNetworkStatus.js';
 import { AttendanceReport } from './js/Screens/Home/attendanceReport/attendanceReport.js';
 import ViewReimbursement from './js/Screens/Home/reimbursement/viewReimbursement.js';
 import { navigationRef } from './js/Components/Common/NavigationService.js';
+import { firebase } from '@react-native-firebase/messaging';
+import axios from 'axios';
+import Endpoint from './js/Utils/Endpoint.js';
 // OneSignal.init("f7924110-6e36-4b81-a8d0-83eac5d15f63");
 OneSignal.setNotificationWillShowInForegroundHandler(
   notificationReceivedEvent => {
@@ -500,6 +536,14 @@ function HomeStack() {
 
 const App = () => {
   const [isConnected, setIsConnected] = React.useState(null);
+  axios.get(Endpoint.baseUrl)
+  .catch(error => {
+    console.log("AXIOS ERROR", error.message);
+    console.log(error.config);
+    if (error.response) {
+      console.log("RESPONSE ERROR", error.response.status);
+    }
+  });
 
   // React.useEffect(() => {
   //   const unsubscribe = NetInfo.addEventListener((state) => {

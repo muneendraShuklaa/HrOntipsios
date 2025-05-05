@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Image,
   TextInput,
+  Keyboard,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import utils from '../../../Utils';
@@ -443,6 +444,7 @@ class adddsr extends Component {
                   style={{margin: 10}}
                 />
                 <TextInput
+                onSubmitEditing={Keyboard.dismiss}
                   placeholder="Add Comment"
                   allowFontScaling={false}
                   onChangeText={text => {

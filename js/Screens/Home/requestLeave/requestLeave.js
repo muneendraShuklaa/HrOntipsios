@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -11,12 +11,14 @@ import {
   ImageBackground,
   TextInput,
   SafeAreaView,
+  Keyboard,
+  Alert,
 } from 'react-native';
-import {withMyHook} from '../../../Utils/Dark';
-import {vh, vw, normalize} from '../../../Utils/dimentions';
-import {Header} from '../../../Components/Header';
+import { withMyHook } from '../../../Utils/Dark';
+import { vh, vw, normalize } from '../../../Utils/dimentions';
+import { Header } from '../../../Components/Header';
 import utils from '../../../Utils';
-import {Dropdown} from 'react-native-material-dropdown';
+import { Dropdown } from 'react-native-material-dropdown';
 import {
   Calendar,
   CalendarList,
@@ -107,13 +109,13 @@ class requestleave extends Component {
         // tmpArr.push(imageUrl.path)
         // console.warn(imageUrl.path);
         // this.setState({ imageArray2: tmpArr })
-        this.setState({imageArray2: imageUrl});
+        this.setState({ imageArray2: imageUrl });
         // this.img_ipdate()
         // console.warn(this.state.imageArray.path)
       })
       .catch(e => {
         console.log(e);
-        // Alert.alert(e.message ? e.message : e);
+        Alert.alert(e.message ? e.message : e);
       });
   };
   pickSingleWithCamera() {
@@ -127,7 +129,7 @@ class requestleave extends Component {
         // let tmpArr = this.state.imageArray2;
         // tmpArr.push(imageUrl.path)
         // console.warn(imageUrl.path)
-        this.setState({imageArray2: imageUrl});
+        this.setState({ imageArray2: imageUrl });
         // this.img_ipdate()
       })
       .catch(e => {
@@ -174,12 +176,12 @@ class requestleave extends Component {
     // this.helper.uploadLeaveDoc();
   }
   handleDateRangeSelect = range => {
-    const {startDate, endDate} = range;
-    this.setState({startDate, endDate});
+    const { startDate, endDate } = range;
+    this.setState({ startDate, endDate });
   };
   render() {
     // console.log(this.state.LeaveType, 'typeeeeee');
-    const {Age, Gender, PhoneNumber, DateOfbirth} = this.state;
+    const { Age, Gender, PhoneNumber, DateOfbirth } = this.state;
     let data = [
       {
         value: 'IT',
@@ -200,7 +202,7 @@ class requestleave extends Component {
     const differenceDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
 
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: utils.color.HeaderColor }}>
         <View
           style={{
             flex: 1,
@@ -225,9 +227,9 @@ class requestleave extends Component {
             onPress={() => {
               this.props.navigation.goBack();
             }}
-            style={{flexDirection: 'row'}}>
+            style={{ flexDirection: 'row' }}>
             <ImageBackground
-              style={{flexDirection: 'row', height: 60, width: '100%'}}
+              style={{ flexDirection: 'row', height: 60, width: '100%' }}
               source={utils.icons.buttonnBacl}>
               <Image
                 source={utils.icons.Back}
@@ -241,13 +243,13 @@ class requestleave extends Component {
               <Text
                 style={[
                   utils.fontStyle.FontFamilymachoB,
-                  {color: '#fff', fontSize: 20, alignSelf: 'center'},
+                  { color: '#fff', fontSize: 20, alignSelf: 'center' },
                 ]}>
                 Apply Leave
               </Text>
             </ImageBackground>
           </TouchableOpacity>
-          <View style={{paddingLeft: 20, paddingRight: 20, marginTop: 40}}>
+          <View style={{ paddingLeft: 20, paddingRight: 20, marginTop: 40 }}>
             <SelectDropdown
               data={this.state.DropdownVendorList}
               // defaultValueByIndex={1}
@@ -312,7 +314,7 @@ class requestleave extends Component {
                 borderRadius: 5,
                 padding: 5,
               }}>
-              <Text style={{color: '#fff', fontSize: 16, marginLeft: 20}}>
+              <Text style={{ color: '#fff', fontSize: 16, marginLeft: 20 }}>
                 Available Balance : {this.state.Balance}
               </Text>
             </View>
@@ -352,8 +354,8 @@ class requestleave extends Component {
                     color: '#3083EF',
                   }}
                 />
-
                 <TextInput
+                  pointerEvents='none'
                   style={[
                     utils.fontStyle.FontFamilyRegular,
                     {
@@ -400,6 +402,7 @@ class requestleave extends Component {
                 />
 
                 <TextInput
+                  pointerEvents='none'
                   style={[
                     utils.fontStyle.FontFamilyRegular,
                     {
@@ -417,14 +420,14 @@ class requestleave extends Component {
                   {/* {moment(this.state.selectedDate).format('ll')} */}
                   {/* {moment(this.state.selectedDate?.dateString).format('ll')} */}
                   {/* {this.state.selectedEndDate?.dateString} */}
-                  { this.state.LeaveType!=="Leave WithOut Pay"? this.state.Balance <= differenceDays
-                    ? this.setState({selectedEndDate: 'Invalid'})
-                    : this.state.selectedEndDate?.dateString:this.state.selectedEndDate?.dateString}
+                  {this.state.LeaveType !== "Leave WithOut Pay" ? this.state.Balance <= differenceDays
+                    ? this.setState({ selectedEndDate: 'Invalid' })
+                    : this.state.selectedEndDate?.dateString : this.state.selectedEndDate?.dateString}
                 </TextInput>
               </TouchableOpacity>
             </View>
             {this.state.selectedEndDate == 'Invalid' ? (
-              <Text style={{color: 'red', marginTop: 10}}>
+              <Text style={{ color: 'red', marginTop: 10 }}>
                 Please enter valid end date.
               </Text>
             ) : (
@@ -444,7 +447,7 @@ class requestleave extends Component {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({Full: 'full'});
+                  this.setState({ Full: 'full' });
                 }}
                 style={{
                   width: '50%',
@@ -471,7 +474,7 @@ class requestleave extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({Full: 'half'});
+                  this.setState({ Full: 'half' });
                 }}
                 style={{
                   width: '50%',
@@ -513,8 +516,9 @@ class requestleave extends Component {
                 type={'custom'}
                 allowFontScaling={false}
                 onChangeText={text => {
-                  this.setState({notesadd: text});
+                  this.setState({ notesadd: text });
                 }}
+                onSubmitEditing={Keyboard.dismiss}
                 multiline={true}
                 maxLength={350}
                 style={[
@@ -530,13 +534,13 @@ class requestleave extends Component {
             </View>
             {/* <Text>{this.state.avalavleType.charAt(0)}</Text> */}
 
-            <View style={{marginTop: 20}}></View>
+            <View style={{ marginTop: 20 }}></View>
             <SelectDropdown
               data={Available}
               // defaultValueByIndex={1}
               defaultValue={'Dropdown'}
               onSelect={(selectedItem, index) => {
-                this.setState({avalavleType: selectedItem.charAt(0)});
+                this.setState({ avalavleType: selectedItem.charAt(0) });
                 console.log(selectedItem.charAt(0), index);
               }}
               defaultButtonText={'Select Availability'}
@@ -599,7 +603,7 @@ class requestleave extends Component {
             /> */}
             <TouchableOpacity
               onPress={() => {
-                this.setState({sideModalImageDoc: true});
+                this.setState({ sideModalImageDoc: true });
               }}
               style={{
                 height: 50,
@@ -614,7 +618,7 @@ class requestleave extends Component {
               <Text
                 style={[
                   utils.fontStyle.FontFamilyRegular,
-                  {alignSelf: 'center', fontSize: 20, color: '#000'},
+                  { alignSelf: 'center', fontSize: 20, color: '#000' },
                 ]}>
                 Upload Documents
               </Text>
@@ -705,16 +709,16 @@ class requestleave extends Component {
                   justifyContent: 'space-between',
                 }}>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
                     this.pickSingleWithCamera(),
-                      this.setState({sideModalImageDoc: false});
+                      this.setState({ sideModalImageDoc: false });
                   }}>
                   <Icon
                     name="camera"
                     size={30}
                     color="#3C97FF"
-                    style={{alignSelf: 'center', marginLeft: '5%'}}
+                    style={{ alignSelf: 'center', marginLeft: '5%' }}
                   />
                   <Text
                     style={[
@@ -729,16 +733,16 @@ class requestleave extends Component {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
                     this.takeScreenshot(),
-                      this.setState({sideModalImageDoc: false});
+                      this.setState({ sideModalImageDoc: false });
                   }}>
                   <Icon
                     name="file-image-o"
                     size={30}
                     color="#3C97FF"
-                    style={{alignSelf: 'center', marginLeft: '5%'}}
+                    style={{ alignSelf: 'center', marginLeft: '5%' }}
                   />
                   <Text
                     style={[
@@ -753,9 +757,9 @@ class requestleave extends Component {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{flexDirection: 'column', marginTop: 15}}
+                  style={{ flexDirection: 'column', marginTop: 15 }}
                   onPress={() => {
-                    this.setState({sideModalImageDoc: false});
+                    this.setState({ sideModalImageDoc: false });
                   }}>
                   <Icon
                     name="times-circle-o"
@@ -829,63 +833,69 @@ class requestleave extends Component {
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  this.RBSheet.close();
+                  this.RBSheet1.close();
                 }}>
                 <Icon
                   name="times-circle"
                   size={30}
                   color="#000"
-                  style={{alignSelf: 'center', marginRight: 10}}
+                  style={{ alignSelf: 'center', marginRight: 10 }}
                 />
               </TouchableOpacity>
             </View>
-            <Calendar
-              style={{
-                backgroundColor: 'transparent',
-                overflow: 'hidden',
-              }}
-              theme={{
-                header: {height: 0},
-                backgroundColor: '#2d5986',
-                calendarBackground: 'transparent',
-                textSectionTitleColor: '#b6c1cd',
-                textSectionTitleDisabledColor: '#d9e1e8',
-                selectedDayBackgroundColor: 'red',
-                selectedDayBackgroundColor: '#2d5986',
-                todayTextColor: '#2d5986',
-                dayTextColor: '#2d4150',
-                textDisabledColor: 'lightgrey',
-                dotColor: '#2d5986',
-                arrowColor: '#2d5986',
-                disabledArrowColor: '#d9e1e8',
-                indicatorColor: 'blue',
-                textDayFontWeight: '300',
-                monthTextColor: '#2d5986',
-                textMonthFontWeight: 'bold',
-                textDayHeaderFontWeight: 'bold',
-                textDayFontSize: 16,
-                textMonthFontSize: 22,
-                textDayHeaderFontSize: 16,
-              }}
-              // minDate={new Date()}
-              maxDate={'2099-09-22'}
-              onDayPress={day => {
-                console.log('selected day', day);
-                // console.log('nnnnnnnnn', this, this.helper);
-                // this.helper.FilterTask();
-                this.setState({
-                  selectedEndDate: day,
-                });
-                this.RBSheet1.close();
-              }}
-              onDayLongPress={day => {
-                console.log('selected day', day);
-              }}
-              monthFormat={'MMM yyyy'}
-              markingType={'period'}
+            <View style={{
+              height: '100%'
+            }}>
+
+
+              <Calendar
+                style={{
+                  backgroundColor: 'transparent',
+                  overflow: 'hidden',
+                }}
+                theme={{
+                  header: { height: 0 },
+                  backgroundColor: '#2d5986',
+                  calendarBackground: 'transparent',
+                  textSectionTitleColor: '#b6c1cd',
+                  textSectionTitleDisabledColor: '#d9e1e8',
+                  selectedDayBackgroundColor: 'red',
+                  selectedDayBackgroundColor: '#2d5986',
+                  todayTextColor: '#2d5986',
+                  dayTextColor: '#2d4150',
+                  textDisabledColor: 'lightgrey',
+                  dotColor: '#2d5986',
+                  arrowColor: '#2d5986',
+                  disabledArrowColor: '#d9e1e8',
+                  indicatorColor: 'blue',
+                  textDayFontWeight: '300',
+                  monthTextColor: '#2d5986',
+                  textMonthFontWeight: 'bold',
+                  textDayHeaderFontWeight: 'bold',
+                  textDayFontSize: 16,
+                  textMonthFontSize: 22,
+                  textDayHeaderFontSize: 16,
+                }}
+                // minDate={new Date()}
+                maxDate={'2099-09-22'}
+                onDayPress={day => {
+                  console.log('selected day', day);
+                  // console.log('nnnnnnnnn', this, this.helper);
+                  // this.helper.FilterTask();
+                  this.setState({
+                    selectedEndDate: day,
+                  });
+                  this.RBSheet1.close();
+                }}
+                onDayLongPress={day => {
+                  console.log('selected day', day);
+                }}
+                monthFormat={'MMM yyyy'}
+                markingType={'period'}
 
               // markingType="period"
-            />
+              />
+            </View>
           </View>
         </RBSheet>
         <RBSheet
@@ -894,6 +904,7 @@ class requestleave extends Component {
           }}
           height={vh(550)}
           width={'100%'}
+          // minClosingHeight={50}
           minClosingHeight={20}
           openDuration={250}
           closeOnDragDown={false}
@@ -910,6 +921,7 @@ class requestleave extends Component {
             }}>
             <View
               style={{
+                // height: vh(100),
                 height: vh(75),
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -928,6 +940,7 @@ class requestleave extends Component {
                     textAlign: 'center',
                     color: utils.color.blackText,
                     fontSize: 20,
+                    // paddingVertical:vh(20)
                   },
                 ]}>
                 Select Start date
@@ -940,55 +953,60 @@ class requestleave extends Component {
                   name="times-circle"
                   size={30}
                   color="#000"
-                  style={{alignSelf: 'center', marginRight: 10}}
+                  style={{ alignSelf: 'center', marginRight: 10 }}
                 />
               </TouchableOpacity>
             </View>
-            <Calendar
-              style={{
-                backgroundColor: 'transparent',
-                overflow: 'hidden',
-              }}
-              theme={{
-                header: {height: 0},
-                backgroundColor: '#2d5986',
-                calendarBackground: 'transparent',
-                textSectionTitleColor: '#b6c1cd',
-                textSectionTitleDisabledColor: '#d9e1e8',
-                selectedDayBackgroundColor: 'red',
-                selectedDayBackgroundColor: '#2d5986',
-                todayTextColor: '#2d5986',
-                dayTextColor: '#2d4150',
-                textDisabledColor: 'lightgrey',
-                dotColor: '#2d5986',
-                arrowColor: '#2d5986',
-                disabledArrowColor: '#d9e1e8',
-                indicatorColor: 'blue',
-                textDayFontWeight: '300',
-                monthTextColor: '#2d5986',
-                textMonthFontWeight: 'bold',
-                textDayHeaderFontWeight: 'bold',
-                textDayFontSize: 16,
-                textMonthFontSize: 22,
-                textDayHeaderFontSize: 16,
-              }}
-              // minDate={new Date()}
-              maxDate={'2099-09-22'}
-              onDayPress={day => {
-                // console.log('selected day', day);
-                // console.log('nnnnnnnnn', this, this.helper);
-                // this.helper.FilterTask();
-                this.setState({
-                  selectedDate: day,
-                });
-                this.RBSheet.close();
-              }}
-              onDayLongPress={day => {
-                console.log('selected day', day);
-              }}
-              monthFormat={'MMM yyyy'}
-              markingType="period"
-            />
+            <View style={{
+              height: '100%'
+            }}>
+
+              <Calendar
+                style={{
+                  backgroundColor: 'transparent',
+                  overflow: 'hidden',
+                }}
+                theme={{
+                  header: { height: 0 },
+                  backgroundColor: '#2d5986',
+                  calendarBackground: 'transparent',
+                  textSectionTitleColor: '#b6c1cd',
+                  textSectionTitleDisabledColor: '#d9e1e8',
+                  selectedDayBackgroundColor: 'red',
+                  selectedDayBackgroundColor: '#2d5986',
+                  todayTextColor: '#2d5986',
+                  dayTextColor: '#2d4150',
+                  textDisabledColor: 'lightgrey',
+                  dotColor: '#2d5986',
+                  arrowColor: '#2d5986',
+                  disabledArrowColor: '#d9e1e8',
+                  indicatorColor: 'blue',
+                  textDayFontWeight: '300',
+                  monthTextColor: '#2d5986',
+                  textMonthFontWeight: 'bold',
+                  textDayHeaderFontWeight: 'bold',
+                  textDayFontSize: 16,
+                  textMonthFontSize: 22,
+                  textDayHeaderFontSize: 16,
+                }}
+                // minDate={new Date()}
+                maxDate={'2099-09-22'}
+                onDayPress={day => {
+                  // console.log('selected day', day);
+                  // console.log('nnnnnnnnn', this, this.helper);
+                  // this.helper.FilterTask();
+                  this.setState({
+                    selectedDate: day,
+                  });
+                  this.RBSheet.close();
+                }}
+                onDayLongPress={day => {
+                  console.log('selected day', day);
+                }}
+                monthFormat={'MMM yyyy'}
+                markingType="period"
+              />
+            </View>
           </View>
         </RBSheet>
       </SafeAreaView>
