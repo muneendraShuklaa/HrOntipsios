@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -10,19 +10,21 @@ import {
   TextInput,
   Button,
   Modal,
+  Platform,
+  StatusBar,
 } from 'react-native';
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 import utils from '../../../Utils';
-import {Header} from '../../../Components/Header';
-import {withMyHook} from '../../../Utils/Dark';
-import {vh, vw, normalize} from '../../../Utils/dimentions';
+import { Header } from '../../../Components/Header';
+import { withMyHook } from '../../../Utils/Dark';
+import { vh, vw, normalize } from '../../../Utils/dimentions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AnnouncementHelper from './helper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 // import Modal from 'react-native-modal';
 
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment';
 import SelectDropdown from 'react-native-select-dropdown';
 class announcement extends Component {
@@ -32,6 +34,7 @@ class announcement extends Component {
       modalVisible: false,
       Announcement: [],
       Announcementtype: [],
+      textAddAnnRef: null,
       filter: false,
       //   TaskId: this.props.route.params.TaskId,
       // CommentText: '',
@@ -54,11 +57,10 @@ class announcement extends Component {
   }
   async componentDidMount() {
     this.helper.AnnoucementType();
-
     this.helper.AnnouncementData();
   }
   setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+    this.setState({ modalVisible: visible });
   }
   validateAnnoucements = () => {
     if (this.state.subject == '') {
@@ -76,12 +78,12 @@ class announcement extends Component {
   };
 
   render() {
-    const {route} = this.props;
-    const {role} = route.params;
-   console.log('type  ----->', this.state.Announcementtype);
- 
+    const { route } = this.props;
+    const { role } = route.params;
+    console.log('type  ----->', this.state.Announcementtype);
+
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: utils.color.HeaderColor}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: utils.color.HeaderColor }}>
         <View
           style={{
             flex: 1,
@@ -100,12 +102,12 @@ class announcement extends Component {
             isDark={this.props.isDark}
           />
 
-          {this.state.Announcement == '' ? (
+          {this.state.Announcement?.length < 0 ? (
             <ActivityIndicator
               size="large"
               color="#3083EF"
               animating={true}
-              style={[{marginTop: 320}]}
+              style={[{ marginTop: 320 }]}
             />
           ) : (
             <FlatList
@@ -115,13 +117,12 @@ class announcement extends Component {
                 height: '100%',
                 paddingLeft: 20,
                 paddingRight: 20,
-                //   backgroundColor: 'red',
               }}
               showsHorizontalScrollIndicator={false}
-              data={this.state.Announcement?.length>0?this.state.Announcement:[]}
-              contentContainerStyle={{paddingBottom: vh(100)}}
+              data={this.state.Announcement?.length > 0 ? this.state.Announcement : []}
+              contentContainerStyle={{ paddingBottom: vh(100) }}
               keyExxtractor={(item, index) => index.toString}
-              renderItem={({item, index}) =>
+              renderItem={({ item, index }) =>
                 this.renderItem(item, index, this.props.isDark)
               }
             />
@@ -136,7 +137,7 @@ class announcement extends Component {
                   name="plus-circle"
                   size={30}
                   color="#fff"
-                  style={{alignSelf: 'center'}}
+                  style={{ alignSelf: 'center' }}
                 />
                 <Text style={styles.txtBtn}> Post</Text>
               </TouchableOpacity>
@@ -154,15 +155,21 @@ class announcement extends Component {
           <View
             style={[
               styles.modalBackground,
-              {backgroundColor: this.props.isDark ? '#000' : '#fff'},
+              { backgroundColor: this.props.isDark ? '#000' : '#fff' },
             ]}>
-            <View style={{alignItems: 'flex-end'}}>
-              <TouchableOpacity onPress={() => this.setModalVisible(false)}>
+            {Platform.OS === 'ios' && this.state.modalVisible && (
+              <StatusBar hidden={true} animated={true} />
+            )}
+            <View style={{ alignItems: 'flex-end', marginTop: vh(10) }}>
+              <TouchableOpacity style={{
+                padding: vh(5),
+                // backgroundColor: 'red'
+              }} onPress={() => this.setModalVisible(false)}>
                 <Icon
                   name="close"
                   size={20}
                   color="lightgrey"
-                  style={{alignSelf: 'flex-end', margin: 10}}
+                  style={{ alignSelf: 'flex-end', margin: 10 }}
                 />
               </TouchableOpacity>
             </View>
@@ -185,8 +192,8 @@ class announcement extends Component {
               <Icon
                 name="paste"
                 size={20}
-                color={this.props.isDark?"#fff":"#darkgrey"}
-                style={{alignSelf: 'center', marginLeft: 10}}
+                color={this.props.isDark ? "#fff" : "#darkgrey"}
+                style={{ alignSelf: 'center', marginLeft: 10 }}
               />
               <SelectDropdown
                 data={this.state.dropcategory}
@@ -260,14 +267,14 @@ class announcement extends Component {
                 name="edit"
                 size={20}
                 color="#3083EF"
-                style={{alignSelf: 'center'}}
+                style={{ alignSelf: 'center' }}
               />
               <TextInput
                 placeholder="Enter Subject"
                 maxLength={100}
                 allowFontScaling={false}
                 onChangeText={text => {
-                  this.setState({subject: text});
+                  this.setState({ subject: text });
                 }}
                 placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
                 style={{
@@ -296,13 +303,18 @@ class announcement extends Component {
                   name="comment-o"
                   size={20}
                   color="#3083EF"
-                  style={{margin: 10}}
+                  style={{ margin: 10 }}
                 />
                 <TextInput
+                  ref={input => (this.textAddAnnRef = input)}
+                  onSubmitEditing={() => {
+                    this.textAddAnnRef.blur();
+                  }
+                  }
                   placeholder="Add Announcement"
                   allowFontScaling={false}
                   onChangeText={text => {
-                    this.setState({Comments: text});
+                    this.setState({ Comments: text });
                   }}
                   multiline={true}
                   maxLength={500}
@@ -365,7 +377,7 @@ class announcement extends Component {
                 backgroundColor: utils.color.HeaderColor,
               }}>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text
                   style={[
                     styles.Title,
@@ -417,11 +429,11 @@ class announcement extends Component {
                   {'.\n'} {'\n'}
                 </Text>
                 <Text
-                  style={{color: isDark ? 'white' : utils.color.HeaderColor}}>
+                  style={{ color: isDark ? 'white' : utils.color.HeaderColor }}>
                   {item.Message.replace(/<\/?[^>]+(>|$)/g, '')}
                 </Text>
               </Text>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Text
                   style={[
                     styles.Title,

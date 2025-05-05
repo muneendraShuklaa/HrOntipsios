@@ -446,6 +446,7 @@ class attendanceReport extends Component {
                                 />
 
                                 <TextInput
+                                pointerEvents="none"
                                     style={globalStyles.calendarBtnTxt}
                                     placeholder="Select Date"
                                     placeholderTextColor="grey"
@@ -478,6 +479,7 @@ class attendanceReport extends Component {
                                     />
 
                                     <TextInput
+                                    pointerEvents="none"
                                         style={globalStyles.calendarBtnTxt}
                                         placeholder="From Date"
                                         placeholderTextColor="grey"

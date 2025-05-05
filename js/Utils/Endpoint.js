@@ -16,7 +16,7 @@ export default {
 
   Login: 'API/Account/AuthenticateUser',
   PersonalDetail: 'API/Home/GetDataPesionaldetails',
-  ClockInOut: 'API/Home/InsertUpdateClockInAndOut ',
+  ClockInOut: 'API/Home/InsertUpdateClockInAndOut',
   track: 'API/Home/InsertEmpGeoTrack',
   leaveStatus: 'API/Home/GetEmployeePendingLeaveApproval',
   UserPersonalDetail: 'API/Home/GetDatajobdetails',

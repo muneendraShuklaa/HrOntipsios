@@ -302,7 +302,8 @@ class ManageAttendance extends Component {
                             buttonStyle={{
                                 elevation: 5,
                                 width: '48%',
-                                height: 50,
+                                // height: 50,
+                                height: vh(55),
                                 backgroundColor: '#FFF',
                                 borderWidth: 1,
                                 borderColor: Utils.color.bordercolor,

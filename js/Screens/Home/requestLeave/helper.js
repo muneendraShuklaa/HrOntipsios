@@ -4,6 +4,7 @@ import Endpoint from '../../../Utils/Endpoint';
 import moment from 'moment';
 import {Alert} from 'react-native';
 import {StackActions} from '@react-navigation/native';
+import { localNotificationService } from '../../../notification/localNotification';
 
 export default class RequestHelper {
   constructor(self) {
@@ -125,6 +126,21 @@ export default class RequestHelper {
       .then(async response => {
      
         this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
+        // const options = {
+        //   soundName: 'default',
+        //   playSound: true,
+        //   largeIcon: 'ic_launcher',
+        //   smallIcon: 'ic_launcher',
+        // };
+      
+        // localNotificationService.showNotification(
+        //   0,
+        //   'Leave Applied',
+        //   'Your leave application was submitted successfully.',
+        //   {},
+        //   options,
+        // );
+        
       })
       .catch(function (error) {
       

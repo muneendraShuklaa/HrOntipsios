@@ -18,19 +18,20 @@ class RegularizationApproval extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      textInputCommentRef: null,
+      Status: '',
       Id: '',
-      Status:'',
       approvedIndex: '-1',
       isloading: false,
-      regularizationData: [],
-      visibleData: [], 
+      visibleData: [],
       currentPage: 1,
-      pageSize: 15, 
+      regularizationData: [],
+      pageSize: 15,
       expandedItem: null,
       Approvalbutton: false,
       comment: '',
       EmpIdForApproval: '',
-      role:''
+      role: ''
     }
     this.helper = new RegularizationHelper(this)
   }
@@ -49,8 +50,8 @@ class RegularizationApproval extends Component {
   componentDidMount() {
     this.helper.bindAttendanceGrip()
     this.loadMoreData();
-    const {route} = this.props;
-    const {role} = route.params;
+    const { route } = this.props;
+    const { role } = route.params;
     this.setState((prevState) => ({
       role: role
     }));
@@ -76,9 +77,7 @@ class RegularizationApproval extends Component {
   };
 
   render() {
-
-   
-    
+    console.log(this.state.regularizationData, 'reg data--');
     return (
       <>
         <SafeAreaView style={{
@@ -97,36 +96,36 @@ class RegularizationApproval extends Component {
                 this.props.navigation.goBack();
               }}
             /> */}
-                 <TouchableOpacity
-                        onPress={() => {
-                          this.props.navigation.goBack();
-                        }}
-                        style={{flexDirection: 'row'}}>
-                        <ImageBackground
-                          style={{flexDirection: 'row', height: 60, width: '100%'}}
-                          source={Utils.icons.buttonnBacl}>
-                          <Image
-                            source={Utils.icons.Back}
-                            style={{
-                              alignSelf: 'center',
-                              marginRight: 10,
-                              marginLeft: 20,
-                              tintColor: '#fff',
-                            }}
-                          />
-                          <Text
-                            style={[
-                              Utils.fontStyle.FontFamilymachoB,
-                              {color: '#fff', fontSize: 20, alignSelf: 'center'},
-                            ]}>
-                            Regularization Approval
-                          </Text>
-                        </ImageBackground>
-                      </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.goBack();
+              }}
+              style={{ flexDirection: 'row' }}>
+              <ImageBackground
+                style={{ flexDirection: 'row', height: 60, width: '100%' }}
+                source={Utils.icons.buttonnBacl}>
+                <Image
+                  source={Utils.icons.Back}
+                  style={{
+                    alignSelf: 'center',
+                    marginRight: 10,
+                    marginLeft: 20,
+                    tintColor: '#fff',
+                  }}
+                />
+                <Text
+                  style={[
+                    Utils.fontStyle.FontFamilymachoB,
+                    { color: '#fff', fontSize: 20, alignSelf: 'center' },
+                  ]}>
+                  Regularization Approval
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
             <FlatList
               extraData={this.state.approvedIndex}
               style={{ padding: 20, marginTop: 30, }}
-              contentContainerStyle={{ 
+              contentContainerStyle={{
                 paddingBottom: vh(35)
               }}
               showsHorizontalScrollIndicator={false}
@@ -150,7 +149,7 @@ class RegularizationApproval extends Component {
                       {
                         color: this.props.isDark ? '#fff' : '#000',
                         marginBottom: 10
-                    },
+                      },
                     ]}>
                     No Data Available
                   </Text>
@@ -159,7 +158,6 @@ class RegularizationApproval extends Component {
             />
 
           </View>
-
         </SafeAreaView>
         <Modal
           isVisible={this.state.Approvalbutton}
@@ -196,6 +194,11 @@ class RegularizationApproval extends Component {
               </Text>
 
               <TextInput
+                ref={input => (this.textInputCommentRef = input)}
+                onSubmitEditing={() => {
+                  this.textInputCommentRef.blur();
+                }
+                }
                 placeholder="Please add your comments"
                 placeholderTextColor="grey"
                 returnKeyType="done"
@@ -238,7 +241,7 @@ class RegularizationApproval extends Component {
                       { color: '#fff' },
                       { textAlign: 'center' },
                     ]}>
-                  { this.state.Status=="Present"?  'Approve':'Reject'}
+                    {this.state.Status == "Present" ? 'Approve' : 'Reject'}
                   </Text>
                 </ImageBackground>
               </TouchableOpacity>
@@ -337,12 +340,14 @@ class RegularizationApproval extends Component {
                 <Icon name="check" size={vw(25)} color="white" />
               </TouchableHighlight>
               <TouchableHighlight
-                onPress={() => {  this.setState({
-                  Approvalbutton: true,
-                  Status: "",
-                  Id: item.Id,
-                  EmpIdForApproval: item.EmpId
-                }); }}
+                onPress={() => {
+                  this.setState({
+                    Approvalbutton: true,
+                    Status: "",
+                    Id: item.Id,
+                    EmpIdForApproval: item.EmpId
+                  });
+                }}
                 underlayColor="#FFCCCC"
                 style={{
                   borderRadius: vw(50),
@@ -363,7 +368,7 @@ class RegularizationApproval extends Component {
           }}>
             <Text style={[styles.Title, {
               color: this.state.expandedItem === item.Id ? "#00BFFF" : "#000"
-            }]}>In : {item.ClockIntime} Out: {item.ClockOuttime}</Text>
+            }]}>In : {item.ClockInTime} Out: {item.ClockOutTime}</Text>
             <View style={{
               marginLeft: vw(100)
             }}>
@@ -382,9 +387,9 @@ class RegularizationApproval extends Component {
           <Text style={
             [styles.Title,
             Utils.fontStyle.FontFamilyRegular]
-          // }>{item.ManagerComment}</Text>
-          }>{item.ManagerComment && item.ManagerComment.trim() !== "" 
-            ? item.ManagerComment 
+            // }>{item.ManagerComment}</Text>
+          }>{item.ManagerComment && item.ManagerComment.trim() !== ""
+            ? item.ManagerComment
             : item.EmployeeComment}</Text>
         </View>
       )}

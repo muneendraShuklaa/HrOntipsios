@@ -1,0 +1,12 @@
+{
+  "privacyTypes": [
+    {
+      "identifier": "deviceID",
+      "description": "Used to identify the device for app personalization and analytics."
+    },
+    {
+      "identifier": "diagnostics",
+      "description": "Used to collect information about app crashes and performance."
+    }
+  ]
+}

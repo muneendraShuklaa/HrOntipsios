@@ -16,7 +16,7 @@ import {
 } from 'react-native-calendars';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 class RegularizationStatus extends Component {
@@ -28,15 +28,20 @@ class RegularizationStatus extends Component {
             regularizationStatusData: [],
             expandedItem: null,
             Approvalbutton: false,
+            openRBSheet: true,
             // Comment: '',
+            txtInputCommentRef: null,
             isVisible: false,
+            selIsVisible: false,
             selectedTime: '',
             selectedField: '',
             clockInTime: '',
             clockOutTime: '',
             comment: '',
-            selectedDate: ''
+            selectedDate: '',
+            showDatePicker: false
         }
+        // this.RBSheet = React.createRef();
         this.helper = new RegularisationStatusHelper(this)
         this.isMountedComponent = false;
     }
@@ -90,16 +95,38 @@ class RegularizationStatus extends Component {
         return colors[status] || "#16A34A";
     }
     showPicker = (field) => {
-        this.setState({ isVisible: true, selectedField: field });
+        console.log(field, 'field');
+        setTimeout(() => {
+            this.setState({ isVisible: true, selectedField: field }, () => {
+                console.log('Picker state updated:', this.state.isVisible, this.state.selectedField);
+            });
+        }, 300);
     };
-
+    // showSelDatePicker=()=>{
+    //     console.log('showSelDatePicker');
+    //     this.setState({
+    //         selIsVisible:true
+    //     })
+    // }
+    showSelDatePicker = () => {
+        if (this.state.Approvalbutton) {
+            this.setState({ Approvalbutton: false }, () => {
+                this.setState({ selIsVisible: true }); // Open the DateTimePickerModal
+            });
+        } else {
+            this.setState({ selIsVisible: true }); // Open the DateTimePickerModal
+        }
+    };
     hidePicker = () => {
         this.setState({ isVisible: false });
     };
+
+    hideSelIsVisiblePicker = () => {
+        this.setState({ selIsVisible: false });
+    };
+
     validateTime = () => {
         const { clockInTime, clockOutTime } = this.state;
-
-
         if (clockInTime && clockOutTime) {
             const inMoment = moment(clockInTime, 'hh:mm A');
             const outMoment = moment(clockOutTime, 'hh:mm A');
@@ -108,6 +135,47 @@ class RegularizationStatus extends Component {
                 Alert.alert('Invalid Time', 'Clock-Out must be greater than Clock-In.');
                 this.setState({ clockOutTime: '' });
             }
+        }
+    };
+
+    // openSheet = () => {
+
+    //     if (this.RBSheet.current) {
+    //         this.setState({ Approvalbutton: false }, () => {
+    //             setTimeout(() => {
+    //                 this.RBSheet.current.open();
+    //             }, 300);
+    //         });
+    //     } else {
+    //         console.error('RBSheet reference is not defined');
+    //     }
+    // };
+
+
+    openSheet = () => {
+
+        if (this.RBSheet) {
+            // if (this.RBSheet && this.RBSheet.current) {
+            // this.setState({ Approvalbutton: false }, () => {
+            //     setTimeout(() => {
+            //         console.log('Opening RBSheet');
+            //         this.RBSheet.current.open();
+            //     }, 1000);
+            // });
+            this.setState({ Approvalbutton: false });
+            setTimeout(() => {
+                this.RBSheet.open();
+            }, 500);
+        } else {
+            console.error('RBSheet reference is not defined');
+        }
+    };
+
+
+    closeSheet = () => {
+        if (this.RBSheet.current) {
+            this.RBSheet.current.close();
+            // this.setState({ isSheetVisible: false });
         }
     };
     handleConfirm = (date) => {
@@ -123,6 +191,30 @@ class RegularizationStatus extends Component {
             });
         }
         this.hidePicker();
+    };
+
+    handleDateChange = (event, date) => {
+        if (date) {
+            const formattedDate = moment(date).format('hh:mm A');
+            if (this.state.selectedField === 'inTime') {
+                // this.setState({ clockInTime: formattedDate });
+                this.setState({ clockInTime: formattedDate }, () => {
+                    if (this.state.clockInTime) this.validateTime();
+                });
+            } else if (this.state.selectedField === 'outTime') {
+                // this.setState({ clockOutTime: formattedDate });
+                this.setState({ clockOutTime: formattedDate }, () => {
+                    this.validateTime();
+                });
+            }
+        }
+        if (this.state.clockInTime) {
+            this.setState({ isVisible: false });
+        }
+        if (this.state.clockOutTime) {
+            this.setState({ isVisible: false });
+        }
+        // this.setState({ showDatePicker: false }); 
     };
 
     render() {
@@ -203,6 +295,7 @@ class RegularizationStatus extends Component {
 
                 <Modal
                     isVisible={this.state.Approvalbutton}
+                    animationOutTiming={300}
                     transparent={true}
                     style={{ margin: vw(20) }}>
                     <View
@@ -228,9 +321,8 @@ class RegularizationStatus extends Component {
                         </View>
                         <View style={{ margin: 15 }}>
                             <TouchableOpacity
-                                onPress={() => {
-                                    this.RBSheet.open();
-                                }}
+                                // onPress={this.showSelDatePicker}
+                                onPress={this.openSheet}
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center', // Ensure items are aligned properly
@@ -252,7 +344,12 @@ class RegularizationStatus extends Component {
                                     }}
                                 />
 
-                                <TextInput
+                                {this.state.isVisible ? <DateTimePicker
+                                    value={new Date()}
+                                    mode="time"
+                                    display="spinner"
+                                    onChange={this.handleDateChange}
+                                /> : <TextInput
                                     style={{
                                         flex: 1,
                                         color: '#000',
@@ -266,7 +363,7 @@ class RegularizationStatus extends Component {
 
                                 >
                                     {this.state.selectedDate?.dateString}
-                                </TextInput>
+                                </TextInput>}
                             </TouchableOpacity>
 
                             <View style={{
@@ -289,8 +386,8 @@ class RegularizationStatus extends Component {
                                         width: '50%',
                                     }}>
 
-
                                     <TextInput
+                                        pointerEvents="none"
                                         style={[
                                             Utils.fontStyle.FontFamilyRegular,
                                             {
@@ -315,16 +412,17 @@ class RegularizationStatus extends Component {
                                         alignSelf: 'center',
                                         height: 50,
                                         borderWidth: 1,
-
                                         borderColor: '#3C97FF',
                                         // color: this.props.isDark ? '#fff' : '#000',
+
                                         backgroundColor: '#fff',
                                         borderRadius: 10,
                                         width: '48%',
+
                                     }}>
 
-
                                     <TextInput
+                                        pointerEvents="none"
                                         style={[
                                             Utils.fontStyle.FontFamilyRegular,
                                             {
@@ -343,19 +441,14 @@ class RegularizationStatus extends Component {
                                     </TextInput>
                                 </TouchableOpacity>
                             </View>
-                            {/* <View
-                                style={{
-                                    height: 140,
-                                    borderWidth: 0.4,
-                                    color: this.props.isDark ? '#fff' : '#000',
-                                  
-                                    backgroundColor: this.props.isDark ? '#000' : '#fff',
-                                    borderWidth: 1,
 
-                                    borderRadius: 10,
-                                 
-                                }}> */}
                             <TextInput
+                                ref={ref => {
+                                    this.txtInputCommentRef = ref;
+                                }}
+                                onSubmitEditing={() => {
+                                    this.txtInputCommentRef.blur();
+                                }}
                                 placeholder="Comment"
                                 allowFontScaling={false}
                                 onChangeText={text => {
@@ -441,11 +534,13 @@ class RegularizationStatus extends Component {
                     ref={ref => {
                         this.RBSheet = ref;
                     }}
+                    // ref={this.RBSheet}
                     height={vh(550)}
                     width={'100%'}
                     minClosingHeight={20}
                     openDuration={250}
                     closeOnDragDown={false}
+                    onClose={this.closeSheet}
                     customStyles={{
                         container: {
                             borderTopLeftRadius: normalize(26),
@@ -457,7 +552,15 @@ class RegularizationStatus extends Component {
                             borderTopLeftRadius: normalize(25),
                             borderTopRightRadius: normalize(25),
                         }}>
-                        <View
+                        <TouchableOpacity
+
+                            onPress={() => {
+                                this.RBSheet.close();
+                                setTimeout(() => {
+                                    this.setState({ Approvalbutton: true });
+                                }, 400);
+                            }}
+
                             style={{
                                 height: vh(75),
                                 flexDirection: 'row',
@@ -470,6 +573,7 @@ class RegularizationStatus extends Component {
                                 borderBottomWidth: vh(1),
                             }}>
                             <Text
+                            pointerEvents="none"
                                 style={[
                                     Utils.fontStyle.FontFamilyExtraBold,
                                     {
@@ -483,7 +587,17 @@ class RegularizationStatus extends Component {
                             </Text>
                             <TouchableOpacity
                                 onPress={() => {
+                                    // if (this.RBSheet.current) {
+                                    //         this.RBSheet.current.close();
+
+                                    //     setTimeout(() => {
+                                    //         this.setState({ Approvalbutton: true });
+                                    //     }, 400);
+                                    // }
                                     this.RBSheet.close();
+                                    setTimeout(() => {
+                                        this.setState({ Approvalbutton: true });
+                                    }, 400);
                                 }}>
                                 <FontAwesomeIcon
                                     name="times-circle"
@@ -492,7 +606,7 @@ class RegularizationStatus extends Component {
                                     style={{ alignSelf: 'center', marginRight: 10 }}
                                 />
                             </TouchableOpacity>
-                        </View>
+                        </TouchableOpacity>
                         <Calendar
                             style={{
                                 backgroundColor: 'transparent',
@@ -527,7 +641,22 @@ class RegularizationStatus extends Component {
                                 this.setState({
                                     selectedDate: day,
                                 });
+                                // if (this.RBSheet.current) {
+                                //     this.RBSheet.current.close();
+                                //     setTimeout(() => {
+                                //         this.setState({ Approvalbutton: true });
+                                //     }, 300);
+                                // }
+                                // this.RBSheet.close();
+                                // setTimeout(() => {
+                                //     this.setState({ Approvalbutton: true });
+                                // }, 300);
+
+
                                 this.RBSheet.close();
+                                setTimeout(() => {
+                                    this.setState({ Approvalbutton: true });
+                                }, 400);
                             }}
                             onDayLongPress={day => {
                                 console.log('selected day', day);
@@ -539,12 +668,26 @@ class RegularizationStatus extends Component {
 
                     </View>
                 </RBSheet>
-                <DateTimePickerModal
+                {/* <DateTimePickerModal
                     isVisible={this.state.isVisible}
                     mode="time"
                     onConfirm={this.handleConfirm}
                     onCancel={this.hidePicker}
                 />
+                <DateTimePickerModal
+                    isVisible={this.state.selIsVisible}
+                    mode="date"
+                    onConfirm={this.handleConfirm}
+                    onCancel={this.hideSelIsVisiblePicker}
+                /> */}
+                {this.state.showDatePicker && (
+                    <DateTimePicker
+                        value={new Date()} // Default date/time
+                        mode={this.state.selectedField === 'inTime' || this.state.selectedField === 'outTime' ? 'time' : 'date'} // Mode based on field
+                        display="default" // Native picker style
+                        onChange={this.handleDateChange} // Handle date/time selection
+                    />
+                )}
                 <View style={styles.viewBtn}>
                     <TouchableHighlight
                         style={styles.btn}
