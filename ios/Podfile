@@ -7,6 +7,8 @@ install! 'cocoapods', :deterministic_uuids => false
 target 'HrOnTips' do
   config = use_native_modules!
 
+  
+
   # Flags change depending on the env values.
   flags = get_default_flags()
 
@@ -19,16 +21,12 @@ target 'HrOnTips' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
-
-
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
 
 
-  pod 'react-native-geocoder', :path => '../node_modules/react-native-geocoder'
+
+
+
 
   target 'HrOnTipsTests' do
     inherit! :complete

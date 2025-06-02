@@ -45,6 +45,15 @@
 	<string>This app requires access to the camera.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need permission to save photos</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your location to provide location-based services.</string>
+
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We need your location to provide services even in the background.</string>
+
+<key>NSLocationAlwaysUsageDescription</key>
+<string>This app needs access to your location even when the app is not in use.</string>
+
 	<key>UIAppFonts</key>
 	<array>
 		<string>WorkSans-Black.ttf</string>

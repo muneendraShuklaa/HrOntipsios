@@ -96,7 +96,7 @@ export default class ProfiledHelper {
       })
       .catch(function (error) {
         // alert("Please Enter Valid Credentials")
-        alert('userpersonaldata');
+        // alert('userpersonaldata');
         handleTokenExpiration(error);
         // alert(response.data.message);
         // console.warn("guggsgggdsy", error);

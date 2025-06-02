@@ -320,7 +320,8 @@ class hrontips extends Component {
     RNLocation.configure({ distanceFilter: .5 });
 
     RNLocation.requestPermission({
-      ios: 'whenInUse',
+      ios: 'always',
+
       android: {
         detail: 'fine',
         // detail: 'coarse',

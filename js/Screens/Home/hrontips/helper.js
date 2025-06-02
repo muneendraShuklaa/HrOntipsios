@@ -187,16 +187,96 @@ export default class DashboardHelper {
         // console.warn("guggsgggdsy", error);
       });
   };
-  TimeTracker = async () => {
-    // console.log('Clocking datata locationn');
-    const EmpId = await AsyncStorage.getItem('EmpId');
-    const jsonValueClientID = await AsyncStorage.getItem('ClientId');
-    const jsonValue = await AsyncStorage.getItem('UserId');
-    const AuthToken = await AsyncStorage.getItem('AuthToken');
-    console.log('timetracker--');
+  // TimeTracker = async () => {
+  //   // console.log('Clocking datata locationn');
+  //   const EmpId = await AsyncStorage.getItem('EmpId');
+  //   const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+  //   const jsonValue = await AsyncStorage.getItem('UserId');
+  //   const AuthToken = await AsyncStorage.getItem('AuthToken');
+  //   console.log('timetracker--');
 
-    await axios
-      .post(
+  //   await axios
+  //     .post(
+  //       Endpoint.baseUrl + Endpoint.TimeTracker,
+  //       {
+  //         EmpId: EmpId,
+  //         BreakTypeId: '',
+  //         ActionType: '',
+  //         ClientId: JSON.parse(jsonValueClientID),
+  //       },
+
+  //       {
+  //         headers: {
+  //           token: AuthToken,
+  //           ClientId: JSON.parse(jsonValueClientID),
+  //         },
+  //       },
+  //     )
+  //     .then(async response => {
+  //       console.log('ClockIn.allready data..', response?.data);
+  //       // await AsyncStorage.setItem(
+  //       //   'allreadyLogin',
+  //       //   moment(String(response.data[0].StartTime)).unix().toString(),
+  //       // );
+  //       // console.log(moment().diff(
+  //       //   moment.utc(String(response?.data[0]?.StartTime)),
+  //       //   'milliseconds',
+  //       // ),'startwa===');
+
+   
+
+  //       if (response?.data?.length > 0) {
+
+  //         const starTime = response?.data?.[0]?.StartTime;
+  //         if (starTime) {
+  //           this.self.setState({
+  //             play: true,
+  //             stopwatchStartTime: moment().diff(
+  //               moment.utc(String(response?.data[0]?.StartTime)),
+  //               'milliseconds',
+  //             ),
+  //             // StatusClockin: 2
+  //             // .subtract(50000, 'milliseconds')
+  //           });
+  //           this.self.toggleStopwatch();
+  //           // this.self.setState({
+  //           //   play: false,
+  //           // });
+  //         }
+  //         this.self.setState({
+  //           allreadyLogin: moment(String(response?.data[0]?.StartTime))
+  //             .add(5, 'h')
+  //             .add(30, 'm')
+  //             .format('LT'),
+  //           StatusClockin: response?.data[0]?.StatusId
+  //         });
+  //       }
+
+  //       // const clockIn = moment(String(response.data[0].StartTime)).format(
+  //       //   'LTS',
+  //       // );
+  //       // alert(clockIn);
+  //       // format('LTS');
+
+
+
+  //     })
+  //     .catch(function (error) {
+  //       // alert("Please Enter Valid Credentials")
+  //       alert(response?.data?.message);
+  //       // console.warn("guggsgggdsy", error);
+  //     });
+  // };
+
+
+
+  TimeTracker = async () => {
+    try {
+      const EmpId = await AsyncStorage.getItem('EmpId');
+      const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+      const AuthToken = await AsyncStorage.getItem('AuthToken');
+  
+      const response = await axios.post(
         Endpoint.baseUrl + Endpoint.TimeTracker,
         {
           EmpId: EmpId,
@@ -204,69 +284,48 @@ export default class DashboardHelper {
           ActionType: '',
           ClientId: JSON.parse(jsonValueClientID),
         },
-
         {
           headers: {
             token: AuthToken,
             ClientId: JSON.parse(jsonValueClientID),
           },
-        },
-      )
-      .then(async response => {
-        console.log('ClockIn.allready data..', response?.data);
-        // await AsyncStorage.setItem(
-        //   'allreadyLogin',
-        //   moment(String(response.data[0].StartTime)).unix().toString(),
-        // );
-        // console.log(moment().diff(
-        //   moment.utc(String(response?.data[0]?.StartTime)),
-        //   'milliseconds',
-        // ),'startwa===');
-
-   
-
-        if (response?.data?.length > 0) {
-
-          const starTime = response?.data?.[0]?.StartTime;
-          if (starTime) {
-            this.self.setState({
-              play: true,
-              stopwatchStartTime: moment().diff(
-                moment.utc(String(response?.data[0]?.StartTime)),
-                'milliseconds',
-              ),
-              // StatusClockin: 2
-              // .subtract(50000, 'milliseconds')
-            });
-            this.self.toggleStopwatch();
-            // this.self.setState({
-            //   play: false,
-            // });
-          }
-          this.self.setState({
-            allreadyLogin: moment(String(response?.data[0]?.StartTime))
-              .add(5, 'h')
-              .add(30, 'm')
-              .format('LT'),
-            StatusClockin: response?.data[0]?.StatusId
-          });
         }
-
-        // const clockIn = moment(String(response.data[0].StartTime)).format(
-        //   'LTS',
-        // );
-        // alert(clockIn);
-        // format('LTS');
-
-
-
-      })
-      .catch(function (error) {
-        // alert("Please Enter Valid Credentials")
-        alert(response?.data?.message);
-        // console.warn("guggsgggdsy", error);
-      });
+      );
+  
+      console.log('ClockIn.already data:', response?.data);
+  
+      if (response?.data?.length > 0) {
+        const startTime = response?.data[0]?.StartTime;
+  
+        if (startTime) {
+          // Convert server UTC to JS Date
+          const serverStartUTC = moment.utc(String(startTime)).toDate();
+          // Get current local time
+          const nowLocal = new Date();
+          // Get elapsed time in ms
+          const elapsedMs = nowLocal.getTime() - serverStartUTC.getTime();
+  
+          // Avoid negative stopwatch time (e.g., due to system time mismatch)
+          const safeElapsedMs = elapsedMs > 0 ? elapsedMs : 0;
+  
+          this.self.setState({
+            play: true,
+            stopwatchStartTime: safeElapsedMs,
+            allreadyLogin: moment.utc(serverStartUTC).local().format('LT'),
+            StatusClockin: response?.data[0]?.StatusId,
+          });
+  
+          this.self.toggleStopwatch();
+        }
+      }
+    } catch (error) {
+      console.warn("TimeTracker error:", error);
+      alert("Error: " + (error?.response?.data?.message || "Unable to load time tracker."));
+    }
   };
+  
+
+
   GetImageProfile = async () => {
     // this.self.setState({isloading: true});
     // console.log('clockk');

@@ -10,6 +10,7 @@ import {
   ImageBackground,
   ScrollView,
   StatusBar,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { withMyHook } from '../../../Utils/Dark';
 import { vh, vw, normalize } from '../../../Utils/dimentions';
@@ -160,6 +161,7 @@ class login extends Component {
   };
   render() {
     return (
+      <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={{ flex: 1, backgroundColor: '#ffff', height: '100%' }}>
         <StatusBar
           hidden={false}
@@ -390,6 +392,8 @@ class login extends Component {
           </View>
         </ScrollView>
       </View>
+      </KeyboardAvoidingView>
+     
     );
   }
 }
