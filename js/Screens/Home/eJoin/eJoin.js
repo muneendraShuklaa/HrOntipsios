@@ -16,7 +16,7 @@ import utils from '../../../Utils';
 import Modal from 'react-native-modal';
 import {vh, vw, normalize} from '../../../Utils/dimentions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+// import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';/ 
 import {StackActions} from '@react-navigation/native';
 class eJoin extends Component {
   constructor(props) {

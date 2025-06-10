@@ -23,7 +23,7 @@ import {StackActions} from '@react-navigation/native';
 import {withMyHook} from '../../../Utils/Dark';
 
 import Modal from 'react-native-modal';
-// import RNLocation from 'react-native-location'
+import RNLocation from 'react-native-location'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ProfiledHelper from './helper';
@@ -60,24 +60,55 @@ class profile extends Component {
     this.logoutTimeout = null;
     this.helper = new ProfiledHelper(this);
     this.abortController = new AbortController();
+    console.log('Profile Component Mounted',this.abortController.signal);
   }
+
+  // async componentDidMount() {
+  //   // this.isComponentMounted = true;
+  //   this.helper.UserData(this.abortController.signal);
+  //   this.helper.UserPersonalData(this.abortController.signal);
+  //   let Name = await AsyncStorage.getItem('Name');
+  //   let Departmenttt = await AsyncStorage.getItem('Department');
+
+  //   let ImagePicUrl = await AsyncStorage.getItem('ImagePicUrl');
+  //   // if (this.isComponentMounted) {
+  //   this.setState({
+  //     Name: Name,
+  //     ImagePicUrl: ImagePicUrl,
+  //     Departmenttt: Departmenttt,
+  //   });
+  // // }
+  // }
+
 
   async componentDidMount() {
-    // this.isComponentMounted = true;
-    this.helper.UserData(this.abortController.signal);
-    this.helper.UserPersonalData(this.abortController.signal);
-    let Name = await AsyncStorage.getItem('Name');
-    let Departmenttt = await AsyncStorage.getItem('Department');
-
-    let ImagePicUrl = await AsyncStorage.getItem('ImagePicUrl');
-    // if (this.isComponentMounted) {
-    this.setState({
-      Name: Name,
-      ImagePicUrl: ImagePicUrl,
-      Departmenttt: Departmenttt,
-    });
-  // }
+    try {
+      const isAuthenticated = await AsyncStorage.getItem('IsAuthenticated');
+      const Name = await AsyncStorage.getItem('Name');
+      const Departmenttt = await AsyncStorage.getItem('Department');
+      const ImagePicUrl = await AsyncStorage.getItem('ImagePicUrl');
+  
+      if (!isAuthenticated || isAuthenticated !== 'true') {
+        console.warn('User not authenticated, redirecting to AuthStack');
+        this.props.navigation.dispatch(StackActions.replace('AuthStack'));
+        return;
+      }
+  
+      // Fetch user data if authenticated
+     await this.helper.UserData(this.abortController.signal);
+     await this.helper.UserPersonalData(this.abortController.signal);
+  
+      this.setState({
+        Name,
+        ImagePicUrl,
+        Departmenttt,
+      });
+    } catch (error) {
+      console.error('Error in componentDidMount:', error);
+      this.props.navigation.dispatch(StackActions.replace('AuthStack'));
+    }
   }
+  
   handleLogout = async () => {
     AsyncStorage.removeItem('Answer1');
     AsyncStorage.removeItem('IsAuthenticated');

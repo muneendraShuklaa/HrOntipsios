@@ -10,6 +10,8 @@ import {
   Image,
   ImageBackground,
   ScrollView,
+  ActivityIndicator,
+
 } from 'react-native';
 import { withMyHook } from '../../../Utils/Dark';
 import { vh, vw, normalize } from '../../../Utils/dimentions';
@@ -22,7 +24,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import utils from '../../../Utils';
 import RNLocation from 'react-native-location';
-import Geocoder from 'react-native-geocoder';
+// import Geocoder from 'react-native-geocoding';
+// import Geolocation from 'react-native-geolocation-service';
 import DashboardHelper from './helper';
 const timer = require('react-native-timer');
 import * as geolib from 'geolib';
@@ -78,6 +81,7 @@ class hrontips extends Component {
       Anniversary: [],
       Quote: '',
       LastName: '',
+      isloading: false,
       formattedAddress: '',
     };
     this.toggleTimer = this.toggleTimer.bind(this);
@@ -87,95 +91,163 @@ class hrontips extends Component {
     this.helper = new DashboardHelper(this);
   }
 
+  // pollGeolocation() {
+  //   // console.log('POLLING..................');
+  //   RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
+  //     var NY = {
+  //       lat: latestLocation.latitude ?? 0,
+  //       lng: latestLocation.longitude ?? 0,
+  //     };
+  //     const { latitude, longitude } = latestLocation;
+  //     const { taskLocation } = this.state;
+  //     // console.log('Track data is ---->', this.state.batteryLevel);
+
+  //     // alert(ActiveStatus)
+  //     let text = 'Waiting..';
+  //     if (this.state.location) {
+  //       text = JSON.stringify(this.state.location);
+  //     }
+
+  //     const dist = geolib.getDistance(
+  //       { latitude, longitude },
+  //       {
+  //         latitude:
+  //           taskLocation.length > 0 ? parseFloat(taskLocation[0]) : 28.34567,
+  //         longitude:
+  //           taskLocation.length > 0 ? parseFloat(taskLocation[1]) : 81.34567,
+  //       },
+  //     );
+  //     // console.log('disttanceee', dist);
+  //     if (dist <= 12410197) {
+  //       this.helper.track();
+  //       setTimeout(() => {
+  //         this.helper.track();
+  //         // this.helper.ClockInOut();      //--------->Saurabh cmnt clockin
+
+          
+  //         this.setState({ play: true, StatusClockin: 1 });
+  //       }, 1000);
+
+  //       // alert('Automatic Clocked In Based On your Location');
+  //       clearInterval(this.pollingInterval);
+  //     }
+  //   });
+  // }
+
+
   pollGeolocation() {
-    // console.log('POLLING..................');
-    RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
-      var NY = {
-        lat: latestLocation.latitude ?? 0,
-        lng: latestLocation.longitude ?? 0,
-      };
-      const { latitude, longitude } = latestLocation;
-      const { taskLocation } = this.state;
-      // console.log('Track data is ---->', this.state.batteryLevel);
-
-      // alert(ActiveStatus)
-      let text = 'Waiting..';
-      if (this.state.location) {
-        text = JSON.stringify(this.state.location);
-      }
-
-      const dist = geolib.getDistance(
-        { latitude, longitude },
-        {
-          latitude:
-            taskLocation.length > 0 ? parseFloat(taskLocation[0]) : 28.34567,
-          longitude:
-            taskLocation.length > 0 ? parseFloat(taskLocation[1]) : 81.34567,
-        },
-      );
-      // console.log('disttanceee', dist);
-      if (dist <= 12410197) {
-        this.helper.track();
-        // console.log('poll geolocation----');
-
-        setTimeout(() => {
+    RNLocation.getLatestLocation({ timeout: 60000 })
+      .then(latestLocation => {
+        if (!latestLocation) {
+          console.warn('Location is null – unable to get location.');
+          return;
+        }
+  
+        const { latitude, longitude } = latestLocation;
+  
+        var NY = {
+          lat: latitude ?? 0,
+          lng: longitude ?? 0,
+        };
+  
+        const { taskLocation } = this.state;
+  
+        let text = 'Waiting..';
+        if (this.state.location) {
+          text = JSON.stringify(this.state.location);
+        }
+  
+        const dist = geolib.getDistance(
+          { latitude, longitude },
+          {
+            latitude:
+              taskLocation.length > 0 ? parseFloat(taskLocation[0]) : 28.34567,
+            longitude:
+              taskLocation.length > 0 ? parseFloat(taskLocation[1]) : 81.34567,
+          },
+        );
+  
+        if (dist <= 12410197) {
           this.helper.track();
-          // this.helper.ClockInOut();      //--------->Saurabh cmnt clockin
-          this.setState({ play: true, StatusClockin: 1 });
-        }, 1000);
-
-        // alert('Automatic Clocked In Based On your Location');
-        // clearInterval(this.pollingInterval());
-        clearInterval(this.pollingInterval);
-      }
-    });
+          setTimeout(() => {
+            this.helper.track();
+            this.setState({ play: true, StatusClockin: 1 });
+          }, 1000);
+  
+          clearInterval(this.pollingInterval);
+        }
+      })
+      .catch(error => {
+        console.error('Failed to get latest location:', error);
+      });
   }
+  
+
+
   async componentDidMount() {
-    this.getBatteryLevel();
-
-    setTimeout(() => {
-      this.pollingInterval = setInterval(() => {
-        this.pollGeolocation();
-      }, 30 * 1000); // Poll every 30 seconds
-    }, 1 * 60 * 1000);
-    this.helper.GetImageProfile();
-    
-    this.imageProfileTimeout = setTimeout(() => {
+    this.setState({ isloading: false });
+    try {
+      this.getBatteryLevel();
+  
+      setTimeout(() => {
+        this.pollingInterval = setInterval(() => {
+          this.pollGeolocation();
+          this.setState({ isloading: false });
+        }, 30 * 1000); // Poll every 30 seconds
+      }, 1 * 60 * 1000); // Start polling after 1 minute
+  
+      // Call image profile once immediately
       this.helper.GetImageProfile();
-    }, 3000);
-    // setTimeout(() => {
-    //   this.helper.GetImageProfile();
-    // }, 3000);
+  
+      // Then again after 3 seconds
+      this.imageProfileTimeout = setTimeout(() => {
+        this.helper.GetImageProfile();
+        this.setState({ isloading: false });
+      }, 3000);
+  
+      timer.clearTimeout(this); // unclear usage, consider revising this
+  
+      // Await all AsyncStorage values
+      const [Name, Department, allreadyLogin, NotiToken, RoleName, LastName] =
+        await Promise.all([
+          AsyncStorage.getItem('Name'),
+          AsyncStorage.getItem('Department'),
+          AsyncStorage.getItem('allreadyLogin'),
+          AsyncStorage.getItem('NotiToken'),
+          AsyncStorage.getItem('RoleName'),
+          AsyncStorage.getItem('LastName'),
+        ]);
+  
 
-    // this.helper.UserData();
-    // this.helper.ClockInOut();
-    timer.clearTimeout(this);
-    let Name = await AsyncStorage.getItem('Name');
-    let Department = await AsyncStorage.getItem('Department');
-    let allreadyLogin = await AsyncStorage.getItem('allreadyLogin');
-    let NotiToken = await AsyncStorage.getItem('NotiToken');
-    let RoleName = await AsyncStorage.getItem('RoleName');
-    let LastName = await AsyncStorage.getItem('LastName');
-    this.helper.TimeTracker();
-    this.getLocationUser();
-    // setTimeout(() => {
-    //   this.getLocationUser();
-    // }, 2000);
 
-    // this.locationTimeout = setTimeout(() => {
-    //   this.getLocationUser();
-    // }, 2000);
-
-    this.setState({
-      Name: Name,
-      LastName: LastName,
-      NotiToken: NotiToken,
-      RoleName: RoleName,
-      allreadyLogin: allreadyLogin,
-      Department: Department,
-    });
-
+      // Track time
+      this.helper.TimeTracker();
+  
+      // Get location after 2 seconds
+      this.locationTimeout = setTimeout(() => {
+        this.getLocationUser();
+      }, 2000);
+  
+      // Set all state at once
+      this.setState({
+        Name,
+        Department,
+        allreadyLogin,
+        NotiToken,
+        RoleName,
+        LastName,
+      });
+  
+    } catch (error) {
+      this.setState({ isloading: false });
+      console.error('componentDidMount error:', error);
+      alert('Something went wrong during initialization.');
+    } finally {
+      this.setState({ isloading: false });
+    }
   }
+  
+
 
   componentWillUnmount() {
     // Clear all subscriptions
@@ -185,9 +257,9 @@ class hrontips extends Component {
     if (this.imageProfileTimeout) {
       clearTimeout(this.imageProfileTimeout);
     }
-    // if (this.locationTimeout) {
-    //   clearTimeout(this.locationTimeout);
-    // }
+    if (this.locationTimeout) {
+      clearTimeout(this.locationTimeout);
+    }
   }
 
   getFormattedTime(time) {
@@ -228,9 +300,9 @@ class hrontips extends Component {
     this.setState({ stopwatchStart: false, stopwatchReset: true });
   }
 
-  getFormattedTime(time) {
-    this.currentTime = time;
-  }
+  // getFormattedTime(time) {
+  //   this.currentTime = time;
+  // }
 
   showMsg() {
     this.setState({ showMsg: true }, () =>
@@ -242,6 +314,7 @@ class hrontips extends Component {
       ),
     );
   }
+
   clockout_Alert() {
     Alert.alert('Are you sure!', 'You want to Clock-Out', [
       {
@@ -316,44 +389,186 @@ class hrontips extends Component {
         // Alert.alert(e.message ? e.message : e);
       });
   }
-  getLocationUser = async () => {
-    RNLocation.configure({ distanceFilter: .5 });
 
-    RNLocation.requestPermission({
-      ios: 'always',
+  
 
-      android: {
-        detail: 'fine',
-        // detail: 'coarse',
-      },
-    }).then(granted => {
-      if (granted) {
-        RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
 
-          var NY = {
-            lat: latestLocation?.latitude ?? 0,
-            lng: latestLocation?.longitude ?? 0,
-          };
-          Geocoder.geocodePosition(NY)
-            .then(res => {
+getAddressFromLatLng = async (latitude, longitude) => {
+  try {
+    console.log("📍 Using coordinates:", latitude, longitude);
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
-              this.setState({ address: res[0].locality });
-              this.setState({ formattedAddress: res[0].formattedAddress });
-              setTimeout(() => {
-                this.setState({ address: res[0].locality });
-              }, 1000);
-            })
-            .catch(err => console.log(err));
-          this.setState({
-            latitude: latestLocation?.latitude,
-            longitude: latestLocation?.longitude,
-            current_latitude: latestLocation?.latitude,
-            current_longitude: latestLocation?.longitude,
-          });
-        });
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'ReactNativeApp/1.0',
+        'Accept-Language': 'en'
       }
     });
+
+    const data = await response.json();
+    console.log("📦 Nominatim Response:", JSON.stringify(data, null, 2));
+
+    if (data && data.address) {
+      const { house_number, road, city, state, country } = data.address;
+
+      // Construct display address with house_number (street number)
+      const displayAddress = `${house_number ? house_number + ', ' : ''}${road || ''}${road ? ', ' : ''}${city || ''}${city ? ', ' : ''}${state || ''}${state ? ', ' : ''}${country || ''}`;
+      console.log("✅ Address:", displayAddress);
+
+      this.setState({
+        address: displayAddress,
+        formattedAddress: displayAddress,
+        latitude,
+        longitude,
+
+      
+      });
+    } else {
+      console.warn("⚠️ No address found in response");
+    }
+  } catch (error) {
+    console.error("❌ Error while fetching address:", error.message || error);
+  }
+};
+
+
+
+
+  formatStopwatchTime(timeString) {
+    const parts = timeString.split(':');
+    return `${parts[1]}:${parts[2]}`; // returns MM:SS
+  }
+  
+  getLocationUser = async () => {
+    try {
+      const granted = await RNLocation.requestPermission({
+        ios: 'whenInUse',
+        android: { detail: 'fine' }
+      });
+      if (!granted) {
+        console.warn("Location permission not granted");
+        return;
+      }
+  
+      const latestLocation = await RNLocation.getLatestLocation({ timeout: 60000 });
+      if (!latestLocation) {
+        console.warn("No location found");
+        return;
+      }
+      const { latitude, longitude } = latestLocation;
+      this.setState({ latitude, longitude });
+      
+      await this.getAddressFromLatLng(latitude, longitude);
+    } catch (error) {
+      console.error("Error getting user location:", error);
+    }
   };
+
+
+ 
+  
+  
+  
+  
+  
+ 
+  // getLocationUser = async () => {
+  //   try {
+  //     // Configure RNLocation with a small distance filter
+  //     RNLocation.configure({ distanceFilter: 0.5 });
+  
+  //     // Request permission
+  //     const granted = await RNLocation.requestPermission({
+  //       ios: 'whenInUse',
+  //       android: {
+  //         detail: 'fine', // or 'coarse' depending on your needs
+  //       },
+  //     });
+  
+  //     if (granted) {
+  //       // Get the latest location with a timeout of 60 seconds
+  //       const latestLocation = await RNLocation.getLatestLocation({ timeout: 60000 });
+  
+  //       if (latestLocation) {
+  //         const NY = {
+  //           lat: latestLocation.latitude ?? 0,
+  //           lng: latestLocation.longitude ?? 0,
+  //         };
+  
+  //         // Set location-related state
+  //         this.setState({
+  //           latitude: latestLocation.latitude,
+  //           longitude: latestLocation.longitude,
+  //           current_latitude: latestLocation.latitude,
+  //           current_longitude: latestLocation.longitude,
+  //         });
+  
+  //         // Geocode to get the address from coordinates
+  //         Geocoder.geocodePosition(NY)
+  //           .then(res => {
+  //             if (res && res.length > 0) {
+  //               this.setState({ address: res[0].locality });
+  //               this.setState({ formattedAddress: res[0].formattedAddress });
+  
+  //               // Redundant setState call after 1 second (optional)
+  //               setTimeout(() => {
+  //                 this.setState({ address: res[0].locality });
+  //               }, 1000);
+  //             }
+  //           })
+  //           .catch(err => {
+  //             console.error("Geocoding error:", err);
+  //           });
+  //       }
+  //     } else {
+  //       console.warn("Location permission not granted");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in getLocationUser:", error);
+  //   }
+  // };
+  
+
+  // getLocationUser = async () => {
+  //   RNLocation.configure({ distanceFilter: .5 });
+
+  //   RNLocation.requestPermission({
+  //     ios: 'whenInUse',
+  //     android: {
+  //       detail: 'fine',
+  //       // detail: 'coarse',
+  //     },
+  //   }).then(granted => {
+  //     if (granted) {
+
+  //       RNLocation.getLatestLocation({ timeout: 60000 }).then(latestLocation => {
+          
+  //         var NY = {
+  //           lat: latestLocation?.latitude ?? 0,
+  //           lng: latestLocation?.longitude ?? 0,
+  //         };
+          
+  //         Geocoder.geocodePosition(NY)
+  //           .then(res => {
+              
+              
+  //             this.setState({ address: res[0].locality });
+  //             this.setState({ formattedAddress: res[0].formattedAddress });
+  //             setTimeout(() => {
+  //               this.setState({ address: res[0].locality });
+  //             }, 1000);
+  //           })
+  //           .catch(err => console.log(err));
+  //         this.setState({
+  //           latitude: latestLocation?.latitude,
+  //           longitude: latestLocation?.longitude,
+  //           current_latitude: latestLocation?.latitude,
+  //           current_longitude: latestLocation?.longitude,
+  //         });
+  //       });
+  //     }
+  //   });
+  // };
 
 
 
@@ -368,12 +583,6 @@ class hrontips extends Component {
       ClockIn_datetime,
       allreadyLogin,
     } = this.state;
-    // console.log(this.state.play,'-play=');
-    // console.log(this.state.StatusClockin,'-StatusClockin=');
-    // console.log(this.state.stopwatchStart,'-stopwatchStart=');
-    console.log(this.state.stopwatchStartTime,'-stopwatchStartTime=');
-    // console.log(this.state.play == true && this.state.StatusClockin == 1,'-test play condition=');
-
 
     // console.log('battery level is =====>', this.state.batteryLevel);
     // console.log('Birthday--->', this.state.Birthday);
@@ -497,15 +706,18 @@ class hrontips extends Component {
                         }}
                       />
                       <Stopwatch
+
                         laps
                         // msecs
                         start={this.state.stopwatchStart}
                         reset={this.state.stopwatchReset}
                         startTime={this.state.stopwatchStartTime}
                         // options={options}
+                        getTime={this.getFormattedTime} 
+                        
                         options={{
                           container: {
-                            backgroundColor: this.props.isDark ? utils.color.Darkk : utils.color.TextColorWhite,
+                            backgroundColor: this.props.isDark ? utils.color.Darkk: utils.color.TextColorWhite,
                             // backgroundColor: utils.color.HeaderColor,
                             // padding: 5,
                             borderRadius: 5,
@@ -515,7 +727,7 @@ class hrontips extends Component {
                             fontSize: 24,
                             fontWeight: 'bold',
                             // color: '#FFF',
-                            color: this.props.isDark ? utils.color.TextColorWhite : utils.color.HeaderColor,
+                            color: this.props.isDark ? utils.color.TextColorWhite:utils.color.HeaderColor,
                             marginLeft: 7,
                           },
                         }}
@@ -544,7 +756,7 @@ class hrontips extends Component {
                             fontSize: 20,
                           },
                         ]}>
-                        {address}
+                        {address} 
                       </Text>
                       {/* <Text>
                         Battery Level:{''}
@@ -612,22 +824,31 @@ class hrontips extends Component {
                     </ImageBackground>
                   ) : (
                     <TouchableOpacity
-                      style={{ marginTop: 15 }}
-                      onPress={() => {
-                        setTimeout(() => {
-                          this.helper.track();
+                    disabled={this.state.isloading}
+                    style={{ marginTop: 15, opacity: this.state.isloading ? 0.6 : 1 }}
+                      // style={{ marginTop: 15 }}
+                      onPress={async () => {
+                        try {
                           this.setState({
                             play: true,
                             stopwatchStartTime: 0,
-                            StatusClockin: 1
+                            StatusClockin: 1,
+                            isloading: false,
                           });
-                        }, 1000);
-                        this.helper.ClockInOut();
-                        setTimeout(() => {
-                          this.helper.TimeTracker();
-                        }, 1100);
-                        this.helper.registerAddress();
+                          this.setState({ isloading: true });
+                          await this.helper.ClockInOut();
+                          await this.helper.registerAddress();
+                          await this.helper.track();
+                         
+                          await this.helper.TimeTracker();
+                        
+                          this.setState({ isloading: false });
+                        } catch (error) {
+                          this.setState({ isloading: false });
+                          console.log(error);
+                        }
                       }}>
+                      
                       <ImageBackground
                         source={utils.icons.Rectangl}
                         style={{
@@ -646,7 +867,7 @@ class hrontips extends Component {
                               textAlign: 'center',
                             },
                           ]}>
-                          Clock In{' '}
+                          Clock In {' '}
                         </Text>
                       </ImageBackground>
                     </TouchableOpacity>
@@ -655,17 +876,40 @@ class hrontips extends Component {
                   {/* </TouchableOpacity> */}
 
                   {play == true && StatusClockin == 1 ? (
-                    <TouchableOpacity
-                      style={{ marginTop: 15 }}
-                      onPress={() => {
-                        setTimeout(() => {
-                          this.helper.registerAddress();
-                          this.helper.ClockOut();
-                          this.resetStopwatch();
-                        }, 1000);
-
-                        this.setState({ play: false });
-                      }}>
+                   <TouchableOpacity
+                   disabled={this.state.isloading}
+                   style={{ marginTop: 15, opacity: this.state.isloading ? 0.6 : 1 }}
+                   onPress={async () => {
+                     this.setState({ isloading: true });
+                 
+                     try {
+                       // Delay (you can remove this if not required)
+                       await new Promise(resolve => setTimeout(resolve, 1000));
+                 
+                       // Await helper method calls
+                       await this.helper.registerAddress();
+                       await this.helper.ClockOut();
+                 
+                       // Reset stopwatchclock 
+                       this.resetStopwatch();
+                 
+                       // Update play state
+                      //  this.setState({ play: false });
+                       this.setState({
+                        play: false,
+                        isloading: false,
+                      });
+                 
+                     } catch (error) {
+                       console.error('Error during ClockOut:', error);
+                       alert('Something went wrong. Please try again.');
+                       this.setState({ isloading: false });
+                     } finally {
+                       this.setState({ isloading: false });
+                     }
+                   }}
+                 >
+                 
                       <ImageBackground
                         // imageStyle={{tintColor: '#cacaca'}}
                         source={utils.icons.Rectangl}
@@ -712,7 +956,7 @@ class hrontips extends Component {
                             textAlign: 'center',
                           },
                         ]}>
-                        Clock Out{' '}
+                        Clock Out {' '}
                       </Text>
                     </ImageBackground>
                   )}
@@ -723,6 +967,18 @@ class hrontips extends Component {
               </View>
             </View>
 
+
+ <Modal
+  transparent={true}
+  animationType="none"
+  visible={this.state.isloading}
+  onRequestClose={() => {}}>
+  <View style={styles.modalBackground}>
+    <View style={styles.activityIndicatorWrapper}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+  </View>
+</Modal>
             <View style={{ paddingLeft: 20, paddingRight: 20 }}>
 
               <Text
@@ -735,7 +991,7 @@ class hrontips extends Component {
                     // alignSelf: 'center',
                   },
                 ]}>
-                What's New
+                What's New 
               </Text>
 
               <View
@@ -897,7 +1153,7 @@ class hrontips extends Component {
                         marginTop: 7,
                       },
                     ]}>
-                    My Task
+                    My Task 
                   </Text>
                 </TouchableOpacity>
 
@@ -2112,4 +2368,61 @@ var styles = StyleSheet.create({
     fontWeight: '400',
     color: 'black',
   },
+  modalBackground: {
+    // flex: 1,
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'rgba(0, 0, 0, 0.4)'
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#fff',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
+
+// import React, {Component} from 'react';
+// import {
+//   View,
+//   Text,
+//   TouchableOpacity,
+//   FlatList,
+//   StatusBar,
+//   ImageBackground,
+//   StyleSheet,
+//   Image,
+//   ScrollView,
+// } from 'react-native';
+// import utils from '../../../Utils';
+// import {withMyHook} from '../../../Utils/Dark';
+// import {vh, vw, normalize} from '../../../Utils/dimentions';
+
+// import ImageHelper from './helper';
+// import {SafeAreaView} from 'react-native-safe-area-context';
+// class hrontips extends Component {
+//   constructor(props) {
+ 
+//     super(props);
+//     this.state = {
+     
+//     };
+//     this.helper = new ImageHelper(this);
+//   }
+
+
+//   render() {
+//     return (
+//       <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+       
+//       </SafeAreaView>
+//     );
+//   }
+// }
+// export const HrOnTips = withMyHook(hrontips);
+// const styles = StyleSheet.create({});

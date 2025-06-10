@@ -389,7 +389,7 @@ PODS:
     - React-Core
   - RNCPushNotificationIOS (1.11.0):
     - React-Core
-  - RNDateTimePicker (7.0.1):
+  - RNDateTimePicker (7.7.0):
     - React-Core
   - RNDeviceInfo (10.12.0):
     - React-Core
@@ -610,7 +610,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  boost: 4f3c4fa76dfb56462a3955d0fa933feef662adcc
+  boost: 950d14a7cd67d253e3b3db3929c916cc6ddac622
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   FBLazyVector: a7a655862f6b09625d11c772296b01cd5164b648
@@ -665,7 +665,7 @@ SPEC CHECKSUMS:
   ReactCommon: 6e27065b582af0ef4d4ca9f9b09acafbd429913b
   RNCAsyncStorage: 01062b75ce749e3a18091a9ad7749effdf09ea43
   RNCPushNotificationIOS: 6c4ca3388c7434e4a662b92e4dfeeee858e6f440
-  RNDateTimePicker: 72b949e2e893764a6a2216379f43ca78e1d26409
+  RNDateTimePicker: 590f2000e4272050b98689cee6c8abc66c25bb22
   RNDeviceInfo: addb9b427c2822a2d8e94c87a136a224e0af738c
   RNFBApp: 827b4dfadf8c039738c1c928474e45b3ec306ba0
   RNFBMessaging: 6465e1ccc5421e9493a5ed8d7d69e4daf8a2de6d

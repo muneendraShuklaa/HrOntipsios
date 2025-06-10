@@ -1,6 +1,7 @@
 
 
 import * as React from 'react';
+import { useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,14 +9,19 @@ import {
   useColorScheme,
   PermissionsAndroid,
   LogBox,
-  ToastAndroid
+  ToastAndroid,
+  Platform
 } from 'react-native';
-
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+
+import OneSignal from 'react-native-onesignal';
+
 
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { Login } from './js/Screens/Auth/login';
@@ -39,6 +45,7 @@ import { Welcome } from './js/Screens/Auth/welcome';
 import { NewTask } from './js/Screens/Home/newTask';
 import { MyTask } from './js/Screens/Home/myTask';
 import { AddDSR } from './js/Screens/Home/addDsr';
+// import {Location} from './js/notification/Location';
 import { Profile } from './js/Screens/Home/profile';
 import { Notification } from './js/Screens/Home/notification';
 import { Commenting } from './js/Screens/Home/Comment';
@@ -50,6 +57,20 @@ import { vh, vw, normalize } from './js/Utils/dimentions';
 import { Team } from './js/Screens/Home/team';
 import { ImageView } from './js/Screens/Home/imageView';
 
+
+import RegularizationApproval from './js/Screens/Home/regularizationApproval/regularizationApproval.js';
+import RegularizationStatus from './js/Screens/Home/regularizationStatus/regularizationStatus.js';
+import ManageAttendance from './js/Screens/Home/manageAttendance/manageAttendance.js';
+import styles from './js/Components/Header/styles.js';
+import useNetworkStatus from './js/Utils/useNetworkStatus.js';
+import { AttendanceReport } from './js/Screens/Home/attendanceReport/attendanceReport.js';
+import ViewReimbursement from './js/Screens/Home/reimbursement/viewReimbursement.js';
+import { navigationRef } from './js/Components/Common/NavigationService.js';
+// import { firebase } from '@react-native-firebase/messaging';
+import axios from 'axios';
+import Endpoint from './js/Utils/Endpoint.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { use } from 'react';
 // const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 import { EditDSR } from './js/Screens/Home/editDsr';
@@ -61,11 +82,6 @@ import AddRimbursement from'./js/Screens/Home/addReimbursement/addReimbursement.
 // console.warn =()=>{}
 // console.error =()=>{}
 
-  ErrorUtils.setGlobalHandler((error, isFatal) => {
-    // Send error to your server or logging service
-    console.log(error, isFatal);
-  });
-
 if (__DEV__) {
   require("./ReactotronConfig.js");
 }
@@ -76,15 +92,6 @@ LogBox.ignoreLogs([
 ]);
 // AppRegistry.registerHeadlessTask('myapp',()=>{console.log("testing 123")})
 // AppRegistry.run
-// const firebaseConfig={
-//   apiKey:'AIzaSyDuWI0CpY9QUHq9gCZ46wpOgr-HkLb4twY',
-//   authDomain:'hrontips-cda03.firebaseapp.com',
-//   projectId:'hrontips-cda03',
-//   storageBucket:'hrontips-cda03.firebasestorage.app',
-//   messagingSenderId:'758960097793',
-//   appId:'1:758960097793:ios:1818affe310dc97bcb0e00'
-// }
-
 const firebaseConfig = {
   apiKey:'AIzaSyDuWI0CpY9QUHq9gCZ46wpOgr-HkLb4twY',
   projectId:'hrontips-cda03',
@@ -100,81 +107,245 @@ const firebaseConfig = {
       }),
 };
 
-
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
+// const onRegister = async (token) => {
+//   try {
+//     const empid = await AsyncStorage.getItem('EmpId');
+//     const clientId = JSON.parse(await AsyncStorage.getItem('ClientId'));
 
-const onRegister = async token => {
-  console.log('s Token=======>', token);
+//     const response = await axios.post(Endpoint.baseUrl + Endpoint.RegisterDevice, {
+//       EmpId: empid,
+//       Clientid: clientId,
+//       DeviceToken: token,
+//     }, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Clientid: clientId,
+//       },
+//       signal,
+//     });
+
+//     console.log('Device registered:', response.data);
+//   } catch (err) {
+//     console.error('Error registering device:', err);
+//   }
+// };
+
+
+// const onRegister = async token => {
+//   console.log('s refresh Token=======>', token);
+
+//   // let token = await AsyncStorage.getItem('NotiToken');
+//   let empid = await AsyncStorage.getItem('EmpId');
+
+//   const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+
+//   await axios
+//     .post(
+//       Endpoint.baseUrl + Endpoint.RegisterDevice,
+//       {
+//         EmpId: empid,
+//         Clientid: JSON.parse(jsonValueClientID),
+//         DeviceToken: token,
+//       },
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Clientid: JSON.parse(jsonValueClientID),
+//         },
+//         signal
+//       },
+//     )
+//     .then(async response => {
+//       console.log(response.data,'resp regis');
+
+//     })
+//     .catch(function (error) {
+//       if (axios.isCancel(error)) {
+//         console.log('Request was cancelled:', error.message);
+//       } else {
+//         console.log('Login error regis:', error);
+//       }
+//     });
+//   // 
+// };
+
+fcmService.registerAppWithFCM();
+fcmService.register(onRegister, onNotification, onOpenNotification);
+console.log('FCMService registered');
+localNotificationService.configure(onOpenNotification);
+
+
+// kpill-----
+
+const onRegister = async (token) => {
+  try {
+    const empid = await AsyncStorage.getItem('EmpId');
+    const clientId = JSON.parse(await AsyncStorage.getItem('ClientId'));
+
+    const response = await axios.post(
+      Endpoint.baseUrl + Endpoint.RegisterDevice,
+      {
+        EmpId: empid,
+        Clientid: clientId,
+        DeviceToken: token,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Clientid: clientId,
+        },
+      }
+    );
+
+    if (response.data?.status === 'success') {
+      console.log('✅ Device registered successfully');
+    } else {
+      console.warn('⚠️ Failed to register device:', response.data);
+    }
+  } catch (error) {
+    console.error('❌ Error registering device:', error);
+  }
 };
 
-const onNotification = notify => {
-  console.log('[App] local onNotification', notify);
-  const options = {
-    soundName: 'default',
-    playSound: true,
-    largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
-    smallIcon: 'ic_launcher', // (optional) default:  "ic_notification" with fallback for "ic_launcher"
-  };
+
+const onNotification = (notify) => {
+  console.log('🔔 Notification received:', notify);
+
+  const title = notify?.notification?.title || notify?.title || 'No Title';
+  const body = notify?.notification?.body || notify?.body || 'No Body';
 
   localNotificationService.showNotification(
     0,
-    notify.notification.title,
-    notify.notification.body,
-    notify,
-    options,
+    title,
+    body,
+    {}, // no additional data
+    {
+      soundName: 'default',
+      playSound: true,
+      largeIcon: 'ic_launcher',
+      smallIcon: 'ic_launcher',
+    }
   );
 };
 
 
 
 
-const onOpenNotification = async notify => {
-  // console.log('************ Is notify----->', notify);
-  if (notify) {
-    NavigationContainer.navigate('Home', notify.data);
-  } else if (notify && notify.data && notify.data.page == 'today') {
-    navigate('Today', notify.data);
+const onOpenNotification = async (notify) => {
+  console.log('Notification opened------->:', notify);
+
+  if (notify && notify.data) {
+    // Use navigationRef to navigate
+    navigationRef.current?.navigate('Home', notify.data);
   }
 };
-fcmService.registerAppWithFCM();
-fcmService.register(onRegister, onNotification, onOpenNotification);
-localNotificationService.configure(onOpenNotification);
-import OneSignal from 'react-native-onesignal';
 
-import RegularizationApproval from './js/Screens/Home/regularizationApproval/regularizationApproval.js';
-import RegularizationStatus from './js/Screens/Home/regularizationStatus/regularizationStatus.js';
-import ManageAttendance from './js/Screens/Home/manageAttendance/manageAttendance.js';
-import styles from './js/Components/Header/styles.js';
-import useNetworkStatus from './js/Utils/useNetworkStatus.js';
-import { AttendanceReport } from './js/Screens/Home/attendanceReport/attendanceReport.js';
-import ViewReimbursement from './js/Screens/Home/reimbursement/viewReimbursement.js';
-import { navigationRef } from './js/Components/Common/NavigationService.js';
-import { firebase } from '@react-native-firebase/messaging';
-import axios from 'axios';
-import Endpoint from './js/Utils/Endpoint.js';
-// OneSignal.init("f7924110-6e36-4b81-a8d0-83eac5d15f63");
-OneSignal.setNotificationWillShowInForegroundHandler(
-  notificationReceivedEvent => {
-    // console.log(
-    //   'OneSignal: notification will show in foreground:',
-    //   notificationReceivedEvent,
-    // );
-    let notification = notificationReceivedEvent.getNotification();
-    // console.log('notification: ', notification);
-    const data = notification.additionalData;
-    // console.log('additionalData: ', data);
-    // Complete with null means don't show a notification.
-    notificationReceivedEvent.complete(notification);
-  },
-);
-
-// // //Method for handling notifications opened
-OneSignal.setNotificationOpenedHandler(notification => {
-  // console.log('OneSignal: notification opened:', notification);
+// Setup background message handler
+messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  console.log('Background message received:', remoteMessage);
+  onNotification(remoteMessage);
 });
+
+// Setup onMessage handler when app is in foreground
+messaging().onMessage(async (remoteMessage) => {
+  console.log('Foreground message received:', remoteMessage);
+  onNotification(remoteMessage);
+});
+
+// Setup notification opened handler
+messaging().onNotificationOpenedApp(async (remoteMessage) => {
+  console.log('Notification opened from background state:', remoteMessage);
+  onOpenNotification(remoteMessage);
+});
+
+// Check if the app was opened by a notification
+messaging()
+  .getInitialNotification()
+  .then(remoteMessage => {
+    if (remoteMessage) {
+      console.log('App opened from quit state by notification:', remoteMessage);
+      onOpenNotification(remoteMessage);
+    }
+  });
+
+
+// messaging().setBackgroundMessageHandler(async remoteMessage => {
+//   console.log('📩 Message handled in the background!', remoteMessage);
+//   // You can also trigger a local notification here if needed
+// })
+
+// const onNotification = notify => {
+//   console.log('[App] onNotification', notify);
+
+//   console.log("kapil --1")
+//   const options = {
+//     soundName: 'default',
+//     playSound: true,
+//     largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
+//     smallIcon: 'ic_launcher', // (optional) default:  "ic_notification" with fallback for "ic_launcher"
+//   };
+// // console.log('notify . tilte', notify.notification);
+
+//   // localNotificationService.showNotification(
+//   //   0,
+//   //   notify.notification.title,
+//   //   notify.notification.body,
+//   //   // notify,
+//   //   {},
+//   //   options,
+//   // );
+
+//   console.log("kapil --2")
+//   localNotificationService.showNotification(
+//     0,
+//     notify?.notification?.title || 'No Title',
+//     notify?.notification?.body || '',
+//     notify?.data ? { data: notify.data } : {},
+//     options
+//   );
+  
+//   console.log("kapil --3")
+// };
+
+
+
+
+// const onOpenNotification = async notify => {
+//   console.log('************ Is notify----->', notify);
+//   if (notify) {
+//     NavigationContainer.navigate('Home', notify.data);
+//   } else if (notify && notify.data && notify.data.page == 'today') {
+//     navigate('Today', notify.data);
+//   }
+// };
+
+
+// OneSignal.init("f7924110-6e36-4b81-a8d0-83eac5d15f63");
+
+// OneSignal.setNotificationWillShowInForegroundHandler(
+//   notificationReceivedEvent => {
+//     // console.log(
+//     //   'OneSignal: notification will show in foreground:',
+//     //   notificationReceivedEvent,
+//     // );
+//     let notification = notificationReceivedEvent.getNotification();
+//     // console.log('notification: ', notification);
+//     const data = notification.additionalData;
+//     // console.log('additionalData: ', data);
+//     // Complete with null means don't show a notification.
+//     notificationReceivedEvent.complete(notification);
+//   },
+// );
+
+
+// // // //Method for handling notifications opened
+// OneSignal.setNotificationOpenedHandler(notification => {
+//   // console.log('OneSignal: notification opened:', notification);
+// });
 // PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 const BottomTabBarr = () => {
@@ -362,6 +533,7 @@ const Stack = createStackNavigator();
 
 function HomeStack() {
   return (
+    
     <Stack.Navigator>
       {/* <Stack.Screen
         name="SelectCompany"
@@ -526,6 +698,7 @@ function HomeStack() {
         component={Announcement}
         options={{ headerShown: false }}
       />
+    
 
       {/* <Stack.Screen name="AddVendor" component={AddVendor} options={{ headerShown: false }} />
       <Stack.Screen name="PdfFile" component={PdfFile} options={{ headerShown: false }} /> */}
@@ -536,14 +709,98 @@ function HomeStack() {
 
 const App = () => {
   const [isConnected, setIsConnected] = React.useState(null);
-  axios.get(Endpoint.baseUrl)
-  .catch(error => {
-    console.log("AXIOS ERROR", error.message);
-    console.log(error.config);
-    if (error.response) {
-      console.log("RESPONSE ERROR", error.response.status);
-    }
-  });
+
+  useEffect(() => {
+    const requestNotificationPermission = async () => {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.check(
+          'android.permission.POST_NOTIFICATIONS'
+          );
+          if (granted) {
+            console.log("Notification permission already granted");
+          } else {
+            const requestResult = await PermissionsAndroid.request(
+              'android.permission.POST_NOTIFICATIONS'
+            );
+            if (requestResult === PermissionsAndroid.RESULTS.GRANTED) {
+              console.log("Notification permission granted");
+            } else {
+              console.log("Notification permission denied");
+            }
+          }
+        } catch (error) {
+          console.error("Error checking/requesting notification permission", error);
+        }
+      }
+    };
+    requestNotificationPermission();
+  }, []);
+
+
+
+  useEffect(() => {
+
+    console.log('App mounted');
+  
+    fcmService.register(
+
+      token => {
+        console.log('FCM Token:', token);
+      },
+      notification => {
+        console.log('Foreground notification:', notification);
+        localNotificationService.showNotification(
+          0,
+          notification.notification?.title,
+          notification.notification?.body,
+          notification,
+          { soundName: 'default', playSound: true }
+        );
+      },
+      notification => {
+        console.log('Opened from notification:', notification);
+        // optionally navigate based on data
+      }
+    );
+  }, []);
+
+
+
+  // kapil today 3jun----?
+
+  // useEffect(() => {
+
+    
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     try {
+  //       console.log('FCM Message:', remoteMessage);
+  
+  //       const title = remoteMessage?.notification?.title || 'No Title';
+  //       const body = remoteMessage?.notification?.body || 'No Body';
+  
+  //       localNotificationService.showNotification(
+  //         0,
+  //         title,
+  //         body,
+  //         remoteMessage?.data || {},
+  //         {
+  //           soundName: 'default',
+  //           playSound: true,
+  //           largeIcon: 'ic_launcher',
+  //           smallIcon: 'ic_launcher',
+  //         }
+  //       );
+  //     } catch (e) {
+  //       console.error('Notification handling error:', e);
+  //     }
+  //   });
+  
+  //   return unsubscribe;
+  // }, []);
+  
+
+
 
   // React.useEffect(() => {
   //   const unsubscribe = NetInfo.addEventListener((state) => {
@@ -560,6 +817,7 @@ const App = () => {
   //   };
   // }, []);
   useNetworkStatus();
+
 
   return (
     <NavigationContainer ref={navigationRef}>

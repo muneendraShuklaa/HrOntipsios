@@ -1,16 +1,16 @@
 export default {
   // ---------------------------- Production Url -----------------------
 
-  // baseUrl: 'https://prodapi.hrontips.com/',
-  // baseUrlTask: 'https://prodapi.hrontips.com/',
+  baseUrl: 'https://prodapi.hrontips.com/',
+  baseUrlTask: 'https://prodapi.hrontips.com/',
 
   //  ----------------------------------------------------------------------------
 
   // -------------------------Stage Url ------------------------------------------
 
-  baseUrl: 'https://stageapi.hrontips.com/',
+  // baseUrl: 'https://stageapi.hrontips.com/',
 
-  baseUrlTask: 'https://stageapi.hrontips.com/',
+  // baseUrlTask: 'https://stageapi.hrontips.com/',
 
   // -------------------------------------------------------------------
 
