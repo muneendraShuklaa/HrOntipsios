@@ -27,7 +27,7 @@ import {
 } from 'react-native-calendars';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import DateTimePicker from 'react-native-modal-datetime-picker';
+// import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import SelectDropdown from 'react-native-select-dropdown';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';

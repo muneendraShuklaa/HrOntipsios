@@ -7,10 +7,12 @@ export default StyleSheet.create({
     height: vh(60),
     // height:vh(90),
     // width:"100%",borderBottomStartRadius:30,borderBottomEndRadius:30,
-    // justifyContent:'space-around',
+    justifyContent:'space-between',
     alignItems: 'center',
     marginTop: 0,
+    paddingHorizontal : 10,
     flexDirection: 'row',
+
     // backgroundColor: utils.color.BackPagecolor,
   },
   titleContainer: {

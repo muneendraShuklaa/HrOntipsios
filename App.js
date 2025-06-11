@@ -1,7 +1,7 @@
 
 
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect,useRef ,useState} from 'react';
 import {
   View,
   Text,
@@ -22,7 +22,7 @@ import messaging from '@react-native-firebase/messaging';
 
 import OneSignal from 'react-native-onesignal';
 
-
+import { AppState } from "react-native";
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { Login } from './js/Screens/Auth/login';
 import { Dashboard } from './js/Screens/Home/Dashboard';
@@ -110,68 +110,6 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-
-// const onRegister = async (token) => {
-//   try {
-//     const empid = await AsyncStorage.getItem('EmpId');
-//     const clientId = JSON.parse(await AsyncStorage.getItem('ClientId'));
-
-//     const response = await axios.post(Endpoint.baseUrl + Endpoint.RegisterDevice, {
-//       EmpId: empid,
-//       Clientid: clientId,
-//       DeviceToken: token,
-//     }, {
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Clientid: clientId,
-//       },
-//       signal,
-//     });
-
-//     console.log('Device registered:', response.data);
-//   } catch (err) {
-//     console.error('Error registering device:', err);
-//   }
-// };
-
-
-// const onRegister = async token => {
-//   console.log('s refresh Token=======>', token);
-
-//   // let token = await AsyncStorage.getItem('NotiToken');
-//   let empid = await AsyncStorage.getItem('EmpId');
-
-//   const jsonValueClientID = await AsyncStorage.getItem('ClientId');
-
-//   await axios
-//     .post(
-//       Endpoint.baseUrl + Endpoint.RegisterDevice,
-//       {
-//         EmpId: empid,
-//         Clientid: JSON.parse(jsonValueClientID),
-//         DeviceToken: token,
-//       },
-//       {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           Clientid: JSON.parse(jsonValueClientID),
-//         },
-//         signal
-//       },
-//     )
-//     .then(async response => {
-//       console.log(response.data,'resp regis');
-
-//     })
-//     .catch(function (error) {
-//       if (axios.isCancel(error)) {
-//         console.log('Request was cancelled:', error.message);
-//       } else {
-//         console.log('Login error regis:', error);
-//       }
-//     });
-//   // 
-// };
 
 fcmService.registerAppWithFCM();
 fcmService.register(onRegister, onNotification, onOpenNotification);
@@ -273,81 +211,6 @@ messaging()
   });
 
 
-// messaging().setBackgroundMessageHandler(async remoteMessage => {
-//   console.log('📩 Message handled in the background!', remoteMessage);
-//   // You can also trigger a local notification here if needed
-// })
-
-// const onNotification = notify => {
-//   console.log('[App] onNotification', notify);
-
-//   console.log("kapil --1")
-//   const options = {
-//     soundName: 'default',
-//     playSound: true,
-//     largeIcon: 'ic_launcher', // (optional) default: "ic_launcher"
-//     smallIcon: 'ic_launcher', // (optional) default:  "ic_notification" with fallback for "ic_launcher"
-//   };
-// // console.log('notify . tilte', notify.notification);
-
-//   // localNotificationService.showNotification(
-//   //   0,
-//   //   notify.notification.title,
-//   //   notify.notification.body,
-//   //   // notify,
-//   //   {},
-//   //   options,
-//   // );
-
-//   console.log("kapil --2")
-//   localNotificationService.showNotification(
-//     0,
-//     notify?.notification?.title || 'No Title',
-//     notify?.notification?.body || '',
-//     notify?.data ? { data: notify.data } : {},
-//     options
-//   );
-  
-//   console.log("kapil --3")
-// };
-
-
-
-
-// const onOpenNotification = async notify => {
-//   console.log('************ Is notify----->', notify);
-//   if (notify) {
-//     NavigationContainer.navigate('Home', notify.data);
-//   } else if (notify && notify.data && notify.data.page == 'today') {
-//     navigate('Today', notify.data);
-//   }
-// };
-
-
-// OneSignal.init("f7924110-6e36-4b81-a8d0-83eac5d15f63");
-
-// OneSignal.setNotificationWillShowInForegroundHandler(
-//   notificationReceivedEvent => {
-//     // console.log(
-//     //   'OneSignal: notification will show in foreground:',
-//     //   notificationReceivedEvent,
-//     // );
-//     let notification = notificationReceivedEvent.getNotification();
-//     // console.log('notification: ', notification);
-//     const data = notification.additionalData;
-//     // console.log('additionalData: ', data);
-//     // Complete with null means don't show a notification.
-//     notificationReceivedEvent.complete(notification);
-//   },
-// );
-
-
-// // // //Method for handling notifications opened
-// OneSignal.setNotificationOpenedHandler(notification => {
-//   // console.log('OneSignal: notification opened:', notification);
-// });
-// PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-
 const BottomTabBarr = () => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -409,6 +272,7 @@ const BottomTabBarr = () => {
         name="HrOnTipsRequestLeave"
         component={HrOnTips}
         options={{
+          unmountOnBlur: true,
           tabBarIcon: ({ focused }) => (
             <View
               style={{
@@ -709,6 +573,24 @@ function HomeStack() {
 
 const App = () => {
   const [isConnected, setIsConnected] = React.useState(null);
+ 
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      console.log("AppState changed to", nextAppState);
+      if (appState.current.match(/active/) && nextAppState === "background") {
+        console.log("App went to background");
+      }
+      if (appState.current.match(/background/) && nextAppState === "active") {
+        console.log("App came to foreground");
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => subscription.remove();
+  }, []);
+
 
   useEffect(() => {
     const requestNotificationPermission = async () => {
@@ -767,55 +649,7 @@ const App = () => {
 
 
 
-  // kapil today 3jun----?
-
-  // useEffect(() => {
-
-    
-  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //     try {
-  //       console.log('FCM Message:', remoteMessage);
   
-  //       const title = remoteMessage?.notification?.title || 'No Title';
-  //       const body = remoteMessage?.notification?.body || 'No Body';
-  
-  //       localNotificationService.showNotification(
-  //         0,
-  //         title,
-  //         body,
-  //         remoteMessage?.data || {},
-  //         {
-  //           soundName: 'default',
-  //           playSound: true,
-  //           largeIcon: 'ic_launcher',
-  //           smallIcon: 'ic_launcher',
-  //         }
-  //       );
-  //     } catch (e) {
-  //       console.error('Notification handling error:', e);
-  //     }
-  //   });
-  
-  //   return unsubscribe;
-  // }, []);
-  
-
-
-
-  // React.useEffect(() => {
-  //   const unsubscribe = NetInfo.addEventListener((state) => {
-  //     if (state.isConnected) {
-  //       ToastAndroid.show("Internet Connected", ToastAndroid.SHORT);
-  //     } else {
-  //       ToastAndroid.show("No Internet Connection", ToastAndroid.LONG);
-  //     }
-  //     setIsConnected(state.isConnected);
-  //   });
-
-  //   return () => {
-  //     unsubscribe(); 
-  //   };
-  // }, []);
   useNetworkStatus();
 
 

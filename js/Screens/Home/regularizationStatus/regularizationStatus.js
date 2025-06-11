@@ -15,7 +15,7 @@ import {
     Calendar
 } from 'react-native-calendars';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+// import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 

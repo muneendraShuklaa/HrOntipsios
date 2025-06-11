@@ -44,8 +44,7 @@ class header extends PureComponent {
               {/* <Text style={[utils.fontStyle.TextTitle,{justifyContent:'center',alignSelf:'center',textAlign:'justify',alignContent:'center'}]}>
                                 {this.props.title}
                             </Text> */}
-            </View>
-            <Text
+                               <Text
               style={[
                 utils.fontStyle.TextTitle,
                 {
@@ -57,6 +56,8 @@ class header extends PureComponent {
               ]}>
               {this.props.title}
             </Text>
+            </View>
+         
             <View style={{flexDirection: 'row', marginLeft: '20%'}}>
               <TouchableOpacity
                 onPress={this.props.rightFunctionality}
@@ -67,6 +68,7 @@ class header extends PureComponent {
                 />
               </TouchableOpacity>
             </View>
+
           </View>
         ) : (
           <View style={[styles.container, {height: vh(60)}]}>

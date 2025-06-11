@@ -1710,7 +1710,7 @@ var styles = StyleSheet.create({
   viewBtn: {
     position: 'absolute',
     // flexDirection: 'row',
-    bottom: 30,
+    bottom: 40,
     height: 0,
     width: '100%',
     marginBottom: 20,

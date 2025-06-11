@@ -11,6 +11,7 @@ import {
   ScrollView,
   StatusBar,
   KeyboardAvoidingView,
+  Modal
 } from 'react-native';
 import { withMyHook } from '../../../Utils/Dark';
 import { vh, vw, normalize } from '../../../Utils/dimentions';
@@ -141,24 +142,67 @@ class login extends Component {
     });
   };
 
-  validateNLogin = () => {
-    if (this.state.email == false) {
-      alert('Please enter your Email-Id.');
-    } else {
-      if (this.state.password == '') {
-        alert('Please enter your password.');
-      } else {
-        
-        // this.props.navigation.navigate("Dashboard")
-        const signal = this.abortController.signal;
-        this.helper.signIN(signal);
-        setTimeout(() => {
-          this.helper.registerDevice(signal);
-        }, 4000);
-        // this.helper.registerDevice(signal);
+  validateNLogin = async () => {
+    this.setState({ isloading: true });
+    try {
+      if (!this.state.email) {
+        alert('Please enter your Email-Id.');
+        this.setState({ isloading: false });
+        return;
       }
+  
+      if (!this.state.password) {
+        this.setState({ isloading: false });
+        alert('Please enter your password.');
+        return;
+      }
+  
+      const signal = this.abortController.signal;
+  
+      // Await sign-in
+      await this.helper.signIN(signal);
+  
+      // Set timeout for delayed device registration
+      setTimeout(async () => {
+        try {
+          await this.helper.registerDevice(signal);
+        } catch (error) {
+          this.setState({ isloading: false });
+          console.error('Error registering device:', error);
+          alert('Device registration failed.');
+        }
+        finally {
+          this.setState({ isloading: false }); // hide loader after registration
+        }
+      }, 5000);
+  
+      // Optional: Navigate to dashboard here if login is successful
+      // this.props.navigation.navigate("Dashboard");
+      
+    } catch (error) {
+      this.setState({ isloading: false });
+      console.error('Login failed:', error);
+      alert('Login failed. Please try again.');
     }
   };
+  // validateNLogin = () => {
+  //   if (this.state.email == false) {
+  //     alert('Please enter your Email-Id.');
+  //   } else {
+  //     if (this.state.password == '') {
+  //       alert('Please enter your password.');
+  //     } else {
+        
+  //       // this.props.navigation.navigate("Dashboard")
+  //       const signal = this.abortController.signal;
+  //       this.helper.signIN(signal);
+  //       setTimeout(() => {
+  //         this.helper.registerDevice(signal);
+  //       }, 4000);
+  //       // this.helper.registerDevice(signal);
+  //     }
+  //   }
+  // };
   render() {
     return (
       <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -170,6 +214,18 @@ class login extends Component {
           barStyle="light-content"
         />
         <ScrollView>
+
+        <Modal
+  transparent={true}
+  animationType="none"
+  visible={this.state.isloading}
+  onRequestClose={() => {}}>
+  <View style={styles.modalBackground}>
+    <View style={styles.activityIndicatorWrapper}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+  </View>
+</Modal>
           <ImageBackground
             // mageStyle={{resizeMode: 'contain'}
             style={{
@@ -451,4 +507,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
   },
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)'
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#fff',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });

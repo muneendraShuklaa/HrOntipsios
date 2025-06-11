@@ -96,7 +96,14 @@ class leavebalance extends Component {
                 // marginLeft: '10%',
               }}
               showsHorizontalScrollIndicator={false}
-              data={this.state.LeaveDeatilsss?.length>0?this.state.LeaveDeatilsss:[]}
+              data={
+                this.state.LeaveDeatilsss?.length > 0
+                  ? this.state.LeaveDeatilsss
+                  : [
+                      { Balance: '0', LeaveCode: 'CL' },
+                      { Balance: '0', LeaveCode: 'EL' },
+                    ]
+              }
               keyExxtractor={(item, index) => index.toString}
               renderItem={({item, index}) =>
                 this.renderItemLeave(item, index, this.props.isDark)

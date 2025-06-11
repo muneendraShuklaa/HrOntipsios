@@ -18,6 +18,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 import moment from 'moment';
+import { back } from 'react-native/Libraries/Animated/Easing';
 class dsr extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +45,7 @@ class dsr extends Component {
                 backgroundColor={utils.color.HeaderColor}
             /> */}
           <Header
-            title="Daily Status Report"
+            title="Daily Status Report "
             lefticon={utils.icons.Back}
             leftFunction={() => {
               this.props.navigation.goBack();
@@ -53,8 +54,10 @@ class dsr extends Component {
             rightFunctionality={() => {
               this.RBSheet.open();
             }}
+         
             isDark={this.props.isDark}
           />
+
           {this.state.DSR == '' ? (
             <View style={{flex: 1, marginTop: 50}}>
               {/* <LottieView style={{ height: 100, width: 100, alignSelf: 'center',  }} source={require('../../../Components/Lottie/98288-loading.json')} autoPlay loop /> */}
@@ -367,7 +370,7 @@ const styles = StyleSheet.create({
   viewBtn: {
     position: 'absolute',
     // flexDirection: 'row',
-    bottom: 30,
+    bottom: 40,
     height: 0,
     width: '100%',
     marginBottom: 20,

@@ -368,7 +368,7 @@ class RegularizationApproval extends Component {
           }}>
             <Text style={[styles.Title, {
               color: this.state.expandedItem === item.Id ? "#00BFFF" : "#000"
-            }]}>In : {item.ClockInTime} Out: {item.ClockOutTime}</Text>
+            }]}>In : {item.ClockIntime} Out: {item.ClockOuttime}</Text>
             <View style={{
               marginLeft: vw(100)
             }}>
