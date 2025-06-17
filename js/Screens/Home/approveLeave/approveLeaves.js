@@ -83,10 +83,14 @@ class approveLeaves extends Component {
             style={{
               alignSelf: 'center',
               marginRight: 10,
-              // tintColor: '#fff',
+              tintColor: '#fff',
               resizeMode: 'contain',
             }}
           />
+              {/* <Image
+                        source={utils.icons.Back}
+                        style={{alignSelf: 'center', marginRight: 10, tintColor: '#fff'}}
+                      /> */}
           <Text
             style={[
               utils.fontStyle.FontFamilymachoB,
