@@ -56,7 +56,7 @@ import utils from './js/Utils';
 import { vh, vw, normalize } from './js/Utils/dimentions';
 import { Team } from './js/Screens/Home/team';
 import { ImageView } from './js/Screens/Home/imageView';
-
+import PushNotification from '@react-native-community/push-notification-ios'
 
 import RegularizationApproval from './js/Screens/Home/regularizationApproval/regularizationApproval.js';
 import RegularizationStatus from './js/Screens/Home/regularizationStatus/regularizationStatus.js';
@@ -647,6 +647,17 @@ const App = () => {
     );
   }, []);
 
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (Platform.OS === 'ios' && nextAppState === 'active') {
+        PushNotification.setApplicationIconBadgeNumber(0); // Reset badge
+      }
+    });
+  
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
 
   

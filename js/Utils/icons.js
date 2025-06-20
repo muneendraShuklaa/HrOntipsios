@@ -91,6 +91,7 @@ const images = {
   promoter: require('../Components/Image/promoter.png'),
   fireWork: require('../Components/Image/firework.png'),
   darkBackGround: require('../Components/Image/darkBackLogin2.png'),
+  
 };
 
 export default images;

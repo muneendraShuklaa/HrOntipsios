@@ -148,7 +148,7 @@ export default class ProfiledHelper {
         }
       );
 
-      console.log(response, 'userpersonaldata===    check ----one');
+      console.log(response, 'userpersonaldata===    check ----one-------------------------');
       if (signal?.aborted) return;
 
       const data = response?.data?.Table?.[0];
@@ -159,6 +159,7 @@ export default class ProfiledHelper {
           EmployeeName: data.EmployeeName,
           JobTittle: data.JobTittle,
           ManagerName: data.ManagerName,
+          
         });
       }
 

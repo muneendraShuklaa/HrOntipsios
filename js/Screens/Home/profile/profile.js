@@ -702,6 +702,7 @@ class profile extends Component {
                 PaySlip
               </Text>
             </View>
+
             {this.state.PaySlip == false ? (
               <TouchableOpacity
                 style={{alignSelf: 'center', padding: 10}}
@@ -731,6 +732,8 @@ class profile extends Component {
               </TouchableOpacity>
             )}
           </View>
+
+          
           {this.state.PaySlip == true ? (
             <View
               style={{

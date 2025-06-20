@@ -29,18 +29,38 @@ class LocalNotificationService {
       //     onOpenNotification(notification);
       // },
 
-      onNotification: function (notification) {
-        // console.log('** NOTIFICATION: **', notification);
+      // onNotification: function (notification) {
+      //   // console.log('** NOTIFICATION: **', notification);
 
+      //   if (Platform.OS === 'ios') {
+      //     if (notification.alert.length !== 0) {
+      //       //handleNotification(notification)
+      //       // notification.finish(PushNotificationIOS.FetchResult.NoData);
+      //     }
+      //   } else {
+      //     // handleNotification(notification)
+      //   }
+      // },
+
+      onNotification: function (notification) {
+        console.log('[LocalNotificationService] onNotification:', notification);
+      
         if (Platform.OS === 'ios') {
-          if (notification.alert.length !== 0) {
-            //handleNotification(notification)
-            // notification.finish(PushNotificationIOS.FetchResult.NoData);
+          // 👇 Clear the badge count on app icon
+          PushNotification.setApplicationIconBadgeNumber(0);
+      
+          // Finish the notification process for iOS
+          if (notification.finish) {
+            notification.finish();
           }
-        } else {
-          // handleNotification(notification)
+        }
+      
+        // Optional: Handle notification tap
+        if (notification.userInteraction) {
+          onOpenNotification && onOpenNotification(notification);
         }
       },
+      
       // IOS ONLY (optional): default: all - Permissions to register.
       permissions: {
         alert: true,
@@ -77,7 +97,7 @@ class LocalNotificationService {
       soundName: options.soundName || 'default',
       userInteraction: false, // BOOLEAN : If notification was opened by the user from notification
       channelId: '32',
-      badge: true,
+      badge: 0,
     });
   };
 

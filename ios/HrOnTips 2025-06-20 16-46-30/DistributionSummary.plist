@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>HrOnTips.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>8</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>335B1F1B02AFDCC24344832EB75F452987EBC8BE</string>
+				<key>dateExpires</key>
+				<string>4/15/26</string>
+				<key>type</key>
+				<string>Apple Distribution</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>335B1F1B02AFDCC24344832EB75F452987EBC8BE</string>
+						<key>dateExpires</key>
+						<string>4/15/26</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>OneSignal.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>7858VWW5K7</string>
+						<key>name</key>
+						<string>Jsimple LLC</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>335B1F1B02AFDCC24344832EB75F452987EBC8BE</string>
+						<key>dateExpires</key>
+						<string>4/15/26</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>OneSignalCore.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>7858VWW5K7</string>
+						<key>name</key>
+						<string>Jsimple LLC</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>335B1F1B02AFDCC24344832EB75F452987EBC8BE</string>
+						<key>dateExpires</key>
+						<string>4/15/26</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>OneSignalExtension.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>7858VWW5K7</string>
+						<key>name</key>
+						<string>Jsimple LLC</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>335B1F1B02AFDCC24344832EB75F452987EBC8BE</string>
+						<key>dateExpires</key>
+						<string>4/15/26</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>OneSignalOutcomes.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>7858VWW5K7</string>
+						<key>name</key>
+						<string>Jsimple LLC</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.0</string>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>7858VWW5K7.org.native.HrOnTips2</string>
+				<key>aps-environment</key>
+				<string>production</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>7858VWW5K7</string>
+				<key>get-task-allow</key>
+				<false/>
+			</dict>
+			<key>name</key>
+			<string>HrOnTips.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>9d46f6d4-bb5a-4a97-842a-e1a20770c17f</string>
+				<key>dateExpires</key>
+				<string>4/23/26</string>
+				<key>name</key>
+				<string>iOS Team Ad Hoc Provisioning Profile: org.native.HrOnTips2</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>7858VWW5K7</string>
+				<key>name</key>
+				<string>Jsimple LLC</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.8</string>
+		</dict>
+	</array>
+</dict>
+</plist>
