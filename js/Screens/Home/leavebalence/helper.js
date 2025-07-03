@@ -8,13 +8,14 @@ export default class LeavedHelper {
     this.self = self;
   }
 
+ 
   LeaveStatus = async () => {
     // this.self.setState({ isloading: true })
     // console.log("Leave",EmpId,AuthToken)
     const EmpId = await AsyncStorage.getItem('EmpId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
-    console.log('Leave', EmpId, AuthToken, JSON.parse(jsonValueClientID));
+    console.log('Leave -----', EmpId, AuthToken, JSON.parse(jsonValueClientID));
 
     await axios
       .post(
@@ -31,25 +32,29 @@ export default class LeavedHelper {
         },
       )
       .then(async response => {
-        // console.log('leaavevevdatata', response.data);
+        console.log('leaavevevdatata', response?.data);
         this.self.setState({
           LeaveRecord: response?.data?.Table,
         });
       })
-      .catch(function (error) {
-        // alert("Please Enter Valid Credentials")
-        alert(response?.data?.message);
-        // console.warn("guggsgggdsy", error);
-      });
+    .catch(function (error) {
+  if (error.response?.data?.message) {
+    // alert(error.response.data.message);
+  } else {
+    // alert("Something went wrong");
+    console.warn("Error:", error);
+  }
+});
   };
 
-  GetLeaveBalance = async () => {
+ GetLeaveBalance = async () => {
     // this.self.setState({ isloading: true })
     // console.log("Leave",EmpId,AuthToken)
     const EmpId = await AsyncStorage.getItem('EmpId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
-    console.log('Leave', EmpId, AuthToken, JSON.parse(jsonValueClientID));
+
+    console.log('Leave -----', EmpId, AuthToken, JSON.parse(jsonValueClientID));
 
     await axios
       .post(
@@ -70,14 +75,19 @@ export default class LeavedHelper {
         this.self.setState({
           LeaveDeatilsss: response?.data?.Table1,
         });
+        console.log("kapil-----",response?.data?.Table1)
       })
-      .catch(function (error) {
-        // alert("Please Enter Valid Credentials")
-        alert(response?.data?.message);
-        // console.warn("guggsgggdsy", error);
-      });
+   .catch(function (error) {
+  if (error.response?.data?.message) {
+    // alert(error.response.data.message);
+  } else {
+    // alert("Something went wrong");
+    console.warn("Error ---- kapil:", error);
+  }
+});
   };
-  CancelLeave = async () => {
+
+ CancelLeave = async () => {
     const EmpId = await AsyncStorage.getItem('EmpId');
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
@@ -107,18 +117,23 @@ export default class LeavedHelper {
         },
       )
       .then(async response => {
-        console.log(
-          'cancelleavestatus',
-          EmpId,
-          jsonValueClientID,
-          AuthToken,
-          TransId,
-          Comments,
-        );
+        // console.log(
+        //   'cancelleavestatus',
+        //   EmpId,
+        //   jsonValueClientID,
+        //   AuthToken,
+        //   TransId,
+        //   Comments,
+        // );
         console.log('leave startsu', response);
       })
-      .catch(function (error) {
-        // alert(response.data.message)
-      });
+   .catch(function (error) {
+  if (error.response?.data?.message) {
+    // alert(error.response.data.message);
+  } else {
+    // alert("Something went wrong");
+    console.warn("Error-----:", error);
+  }
+});
   };
 }

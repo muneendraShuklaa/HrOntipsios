@@ -43,9 +43,10 @@ class requestleave extends Component {
       isDateTimePickerVisible: false,
       isDateTimePickerVisibleEnd: false,
       LeaveType: '',
-      Full: 'Full',
+      Full: 'full',
       Time: 'Start Date',
       TimeEnd: 'End Date',
+      Hours: '',
       DropdownVendorList: [],
       sideModalImageDoc: false,
       imageArray2: [],
@@ -138,43 +139,56 @@ class requestleave extends Component {
       });
   }
   applyLeave(daysDiff) {
-    console.log('parameter value --->', daysDiff);
-    if (this.state.LeaveType == '') {
-      alert('Please Select Leave Type');
-    } else {
-      if (this.state.selectedDate == '') {
-        alert('Please enter Start Date');
-      } else {
-        if (this.state.selectedEndDate == '') {
-          alert('Please enter End Date');
-        } else {
-          if (this.state.notesadd == '') {
-            alert('Please enter details of your leave');
-          } else {
-            if (this.state.avalavleType == '') {
-              alert('Please select Availability Type');
-            } else if (this.state.selectedEndDate == 'Invalid') {
-              alert('Enter Valid End Date');
-            } else if (
-              this.state.LeaveType == 'Casual Leave' &&
-              daysDiff > this.state.validation - 1
-            ) {
-              alert(
-                `you can't take more than ${this.state.validation} Casual Leave at a time.`,
-              );
-            } else {
-              // alert('hello');
-              this.helper.uploadLeaveDoc();
-              setTimeout(() => {
-                // this.props.navigation.navigate('bottomTabBarr');
-              }, 2000);
-            }
-          }
-        }
-      }
-    }
-    // this.helper.uploadLeaveDoc();
+  const {
+    LeaveType,
+    selectedDate,
+    selectedEndDate,
+    notesadd,
+    avalavleType,
+    Hours,
+    Full,
+    validation,
+    
+  } = this.state;
+
+  if (!LeaveType) {
+    alert('Please Select Leave Type');
+    return;
   }
+
+  if (!selectedDate) {
+    alert('Please enter Start Date');
+    return;
+  }
+
+  if (Full === 'full' && !selectedEndDate) {
+    alert('Please enter End Date');
+    return;
+  }
+
+  if (Full === 'half' && !Hours) {
+    alert('Please enter hours for Half Day leave');
+    return;
+  }
+
+  if (!notesadd) {
+    alert('Please enter details of your leave');
+    return;
+  }
+
+  if (!avalavleType) {
+    alert('Please select Availability Type');
+    return;
+  }
+
+  if (LeaveType === 'Casual Leave' && daysDiff > validation - 1) {
+    alert(`You can't take more than ${validation} Casual Leave at a time.`);
+    return;
+  }
+
+  // Submit
+  this.helper.uploadLeaveDoc();
+}
   handleDateRangeSelect = range => {
     const { startDate, endDate } = range;
     this.setState({ startDate, endDate });
@@ -374,57 +388,102 @@ class requestleave extends Component {
                   {this.state.selectedDate?.dateString}
                 </TextInput>
               </TouchableOpacity>
-              <TouchableOpacity
-                // onPress={() => {
-                //   this.showDateTimePickerEnd();
-                // }}
-                onPress={() => {
-                  this.RBSheet1.open();
-                }}
-                style={{
-                  flexDirection: 'row',
-                  alignSelf: 'center',
-                  height: 50,
-                  borderWidth: 1,
-                  borderColor: utils.color.bordercolor,
-                  backgroundColor: '#fff',
-                  borderRadius: 10,
-                  width: '47%',
-                }}>
-                <Icon
-                  name="calendar"
-                  size={20}
-                  style={{
-                    alignSelf: 'center',
-                    marginLeft: '5%',
-                    color: '#3083EF',
-                  }}
-                />
 
-                <TextInput
-                  pointerEvents='none'
-                  style={[
-                    utils.fontStyle.FontFamilyRegular,
-                    {
-                      color: '#000',
-                      textAlign: 'center',
-                      backgroundColor: '#fff',
-                      width: '80%',
-                      borderRadius: 10,
-                      fontSize: 18,
-                    },
-                  ]}
-                  placeholder="End Date"
-                  placeholderTextColor="grey"
-                  editable={false}>
-                  {/* {moment(this.state.selectedDate).format('ll')} */}
-                  {/* {moment(this.state.selectedDate?.dateString).format('ll')} */}
-                  {/* {this.state.selectedEndDate?.dateString} */}
-                  {this.state.LeaveType !== "Leave WithOut Pay" ? this.state.Balance <= differenceDays
-                    ? this.setState({ selectedEndDate: 'Invalid' })
-                    : this.state.selectedEndDate?.dateString : this.state.selectedEndDate?.dateString}
-                </TextInput>
-              </TouchableOpacity>
+
+                {this.state.Full === 'full' ? (
+  <TouchableOpacity
+    onPress={() => {
+      this.RBSheet1.open();
+    }}
+    style={{
+      flexDirection: 'row',
+      alignSelf: 'center',
+      height: 50,
+      borderWidth: 1,
+      borderColor: utils.color.bordercolor,
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      width: '47%',
+    }}>
+    <Icon
+      name="calendar"
+      size={20}
+      style={{
+        alignSelf: 'center',
+        marginLeft: '5%',
+        color: '#3083EF',
+      }}
+    />
+    <TextInput
+      style={[
+        utils.fontStyle.FontFamilyRegular,
+        {
+          color: '#000',
+          textAlign: 'center',
+          backgroundColor: '#fff',
+          width: '80%',
+          borderRadius: 10,
+          fontSize: 18,
+        },
+      ]}
+      placeholder="End Date"
+      placeholderTextColor="grey"
+      editable={false}>
+      {this.state.selectedEndDate?.dateString}
+    </TextInput>
+  </TouchableOpacity>
+) :( 
+
+<View style={{
+ 
+      flexDirection: 'row',
+      alignSelf: 'center',
+      height: 50,
+      borderWidth: 1,
+      borderColor: utils.color.bordercolor,
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      width: '47%',
+    }}>
+  <Icon
+      name='clock-o'
+      size={26}
+      style={{
+        alignSelf: 'center',
+        marginLeft: '5%',
+        color: '#3083EF',
+      }}
+    />
+  
+<TextInput
+  placeholder="Hours"
+  placeholderTextColor="grey"
+  value={this.state.Hours}
+  onChangeText={text => {
+    const filtered = text.replace(/[^0-9]/g, ''); // only digits
+    if (filtered.length === 0) {
+      this.setState({Hours: ''});
+    } else if (parseInt(filtered) >= 1 && parseInt(filtered) <= 9) {
+      this.setState({Hours: filtered});
+    }
+  }}
+  keyboardType="numeric"
+  maxLength={1} // optional, to prevent typing more than one character
+  style={[
+    utils.fontStyle.FontFamilyRegular,
+    {
+      color: '#000',
+      paddingLeft: 10,
+      backgroundColor: '#fff',
+      width: '78%',
+      borderRadius: 10,
+      fontSize: 18,
+    },
+  ]}
+/>
+
+  </View>)}
+
             </View>
             {this.state.selectedEndDate == 'Invalid' ? (
               <Text style={{ color: 'red', marginTop: 10 }}>
@@ -445,9 +504,13 @@ class requestleave extends Component {
                 borderColor: utils.color.HeaderColor,
                 borderRadius: 5,
               }}>
-              <TouchableOpacity
+           <TouchableOpacity
                 onPress={() => {
-                  this.setState({ Full: 'full' });
+                this.setState({
+      Full: 'full',
+      Hours: '',
+      selectedEndDate: '', // Reset end date
+    });
                 }}
                 style={{
                   width: '50%',
@@ -472,9 +535,14 @@ class requestleave extends Component {
                   Full day
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
+
+                     <TouchableOpacity
                 onPress={() => {
-                  this.setState({ Full: 'half' });
+                  // this.setState({Full: 'half'});
+                  this.setState({
+      Full: 'half',
+      selectedEndDate: '', // Make sure end date is cleared
+    });
                 }}
                 style={{
                   width: '50%',

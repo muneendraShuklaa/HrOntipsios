@@ -82,38 +82,53 @@ export default class RequestHelper {
         // console.log('responce', 'ooooomgghggg');
       });
   };
-  uploadLeaveDoc = async () => {
+uploadLeaveDoc = async () => {
+
+
+  console.log('uploadLeaveDoc called', this.self.state.imageArray2);
+  try {
+    // console.log('uploadLeaveDoc called', this.state.imageArray2);
+
+    if (!this.self.state.imageArray2) {
+      Alert.alert('No Document Selected', 'Please select a document to upload.');
+      return;
+    }
+
     let photo = this.self.state.imageArray2;
     const jsonValueClientID = await AsyncStorage.getItem('ClientId');
     const EmpId = await AsyncStorage.getItem('EmpId');
     const AuthToken = await AsyncStorage.getItem('AuthToken');
-    console.log(this.self.state.imageArray2, photo, 'leavehh value......');
+
     let formData = new FormData();
     formData.append('LeaveType', this.self.state.Leavevalue);
     formData.append(
       'FromDate',
-      new Date(this.self.state.selectedDate?.dateString).toISOString(),
+      new Date(this.self.state.selectedDate?.dateString).toISOString()
     );
     formData.append(
       'ToDate',
-      new Date(this.self.state.selectedEndDate?.dateString).toISOString(),
+      this.state.Full === 'half'
+        ? new Date(this.self.state.selectedDate?.dateString).toISOString()
+        : new Date(this.self.state.selectedEndDate?.dateString).toISOString()
     );
+    formData.append('LeaveDuration', this.self.state.Full === 'half' ? 0 : 1);
+    formData.append('Hours', this.self.state.Full === 'half' ? this.self.state.Hours : '');
     formData.append('Comments', this.self.state.notesadd);
     formData.append('Availability', this.self.state.avalavleType);
     formData.append('EmpId', EmpId);
-    formData.append('LeaveDuration', '1');
-    formData.append('Hours', '');
     formData.append('ClientId', JSON.parse(jsonValueClientID));
-    {
-      photo == ''
-        ? null
-        : formData.append('FileName', {
-            uri: photo.path,
-            name: 'image.jpg',
-            type: photo.mime || 'image/jpeg',
-          });
+
+    if (photo && photo.path) {
+      formData.append('FileName', {
+        uri: photo.path,
+        name: 'image.jpg',
+        type: photo.mime || 'image/jpeg',
+      });
     }
-    return axios({
+
+    console.log('formData-------------', formData);
+
+    const response = await axios({
       url: Endpoint.baseUrl + Endpoint.ApplyLeave,
       method: 'POST',
       data: formData,
@@ -122,29 +137,88 @@ export default class RequestHelper {
         'Content-Type': 'multipart/form-data',
         clientid: JSON.parse(jsonValueClientID).toString(),
       },
-    })
-      .then(async response => {
+    });
+
+    console.log('apply leave response----->', response.data);
+    this.props.navigation?.dispatch(StackActions.replace('HomeStack'));
+  } catch (error) {
+    console.warn('apply leave error----->', error);
+
+    if (error.response) {
+      console.warn('Server responded with:', error.response.status, error.response.data);
+    } else if (error.request) {
+      console.warn('No response received:', error.request);
+    } else {
+      console.warn('Request error:', error.message);
+    }
+
+    Alert.alert('Leave Request Failed', 'Something went wrong while submitting your leave request.');
+  }
+};
+
+  // uploadLeaveDoc = async () => {
+  //   let photo = this.self.state.imageArray2;
+  //   const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+  //   const EmpId = await AsyncStorage.getItem('EmpId');
+  //   const AuthToken = await AsyncStorage.getItem('AuthToken');
+  //   console.log(this.self.state.imageArray2, photo, 'leavehh value......');
+  //   let formData = new FormData();
+  //   formData.append('LeaveType', this.self.state.Leavevalue);
+  //   formData.append(
+  //     'FromDate',
+  //     new Date(this.self.state.selectedDate?.dateString).toISOString(),
+  //   );
+  //   formData.append(
+  //     'ToDate',
+  //     new Date(this.self.state.selectedEndDate?.dateString).toISOString(),
+  //   );
+  //   formData.append('Comments', this.self.state.notesadd);
+  //   formData.append('Availability', this.self.state.avalavleType);
+  //   formData.append('EmpId', EmpId);
+  //   formData.append('LeaveDuration', '1');
+  //   formData.append('Hours', '');
+  //   formData.append('ClientId', JSON.parse(jsonValueClientID));
+  //   {
+  //     photo == ''
+  //       ? null
+  //       : formData.append('FileName', {
+  //           uri: photo.path,
+  //           name: 'image.jpg',
+  //           type: photo.mime || 'image/jpeg',
+  //         });
+  //   }
+  //   return axios({
+  //     url: Endpoint.baseUrl + Endpoint.ApplyLeave,
+  //     method: 'POST',
+  //     data: formData,
+  //     headers: {
+  //       token: AuthToken,
+  //       'Content-Type': 'multipart/form-data',
+  //       clientid: JSON.parse(jsonValueClientID).toString(),
+  //     },
+  //   })
+  //     .then(async response => {
      
-        this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
-        // const options = {
-        //   soundName: 'default',
-        //   playSound: true,
-        //   largeIcon: 'ic_launcher',
-        //   smallIcon: 'ic_launcher',
-        // };
+  //       this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
+  //       // const options = {
+  //       //   soundName: 'default',
+  //       //   playSound: true,
+  //       //   largeIcon: 'ic_launcher',
+  //       //   smallIcon: 'ic_launcher',
+  //       // };
       
-        // localNotificationService.showNotification(
-        //   0,
-        //   'Leave Applied',
-        //   'Your leave application was submitted successfully.',
-        //   {},
-        //   options,
-        // );
+  //       // localNotificationService.showNotification(
+  //       //   0,
+  //       //   'Leave Applied',
+  //       //   'Your leave application was submitted successfully.',
+  //       //   {},
+  //       //   options,
+  //       // );
         
-      })
-      .catch(function (error) {
+  //     })
+  //     .catch(function (error) {
       
-        console.warn('apply leave error----->', error);
-      });
-  };
+  //       console.warn('apply leave error----->', error);
+  //     });
+  // };
 }

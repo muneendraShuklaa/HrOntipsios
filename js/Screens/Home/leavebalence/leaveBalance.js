@@ -50,6 +50,11 @@ class leavebalance extends Component {
   componentDidMount() {
     this.helper.LeaveStatus();
     this.helper.GetLeaveBalance();
+
+      this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.helper.LeaveStatus();
+      this.helper.GetLeaveBalance();
+    });
   }
   render() {
     return (
@@ -84,15 +89,17 @@ class leavebalance extends Component {
           <View
             style={{
               height: 110,
-              justifyContent: 'center',
+              // justifyContent: 'center',
+              // alignSelf: 'center',
+                  justifyContent: 'center',
               alignSelf: 'center',
             }}>
             <FlatList
               horizontal
               style={{
-                width: '100%',
+                width: 'auto',
                 // marginTop: 10,
-
+              
                 // marginLeft: '10%',
               }}
               showsHorizontalScrollIndicator={false}

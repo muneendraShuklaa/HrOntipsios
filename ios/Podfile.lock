@@ -299,8 +299,6 @@ PODS:
     - React
   - react-native-geolocation (3.0.5):
     - React-Core
-  - react-native-html-to-pdf (0.12.0):
-    - React-Core
   - react-native-location (2.5.0):
     - React
   - react-native-maps (1.5.0):
@@ -448,7 +446,6 @@ DEPENDENCIES:
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-geocoder (from `../node_modules/react-native-geocoder`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
-  - react-native-html-to-pdf (from `../node_modules/react-native-html-to-pdf`)
   - react-native-location (from `../node_modules/react-native-location`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
@@ -542,8 +539,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-geocoder"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
-  react-native-html-to-pdf:
-    :path: "../node_modules/react-native-html-to-pdf"
   react-native-location:
     :path: "../node_modules/react-native-location"
   react-native-maps:
@@ -643,7 +638,6 @@ SPEC CHECKSUMS:
   react-native-document-picker: 10fce9a283ba4b74533d8378e76b3c38a66347d6
   react-native-geocoder: bc977303c9c53cce36bcdb3c6f17e6832f86beb6
   react-native-geolocation: f0747b9cb2f0f720e9612253bb3ead7d83904ae4
-  react-native-html-to-pdf: 7a49e6c58ac5221bcc093027b195f4b214f27a9d
   react-native-location: 70e6bdfe4a98a80ebda57fd5b30994e48d082e99
   react-native-maps: 4af46f2e794b2165df3be0b1f5c891d151c77ce2
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
