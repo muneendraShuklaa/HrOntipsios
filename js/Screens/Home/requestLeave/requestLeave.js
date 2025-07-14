@@ -187,6 +187,8 @@ class requestleave extends Component {
   }
 
   // Submit
+
+  console.log('kapil---------', this.state);
   this.helper.uploadLeaveDoc();
 }
   handleDateRangeSelect = range => {

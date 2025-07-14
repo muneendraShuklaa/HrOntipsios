@@ -344,12 +344,15 @@ class RegularizationStatus extends Component {
                                     }}
                                 />
 
-                                {this.state.isVisible ? <DateTimePicker
-                                    value={new Date()}
-                                    mode="time"
-                                    display="spinner"
-                                    onChange={this.handleDateChange}
-                                /> : <TextInput
+                              {this.state.isVisible && Platform.OS === 'ios' ? (
+  <DateTimePicker
+    value={new Date()}
+    mode="time"
+    display="spinner"
+    onChange={this.handleDateChange}
+    style={{ position: 'absolute', bottom: 0, width: '100%', backgroundColor: '#fff' }}
+  />
+) : (<TextInput
                                     style={{
                                         flex: 1,
                                         color: '#000',
@@ -363,7 +366,7 @@ class RegularizationStatus extends Component {
 
                                 >
                                     {this.state.selectedDate?.dateString}
-                                </TextInput>}
+                                </TextInput> )}
                             </TouchableOpacity>
 
                             <View style={{
@@ -465,7 +468,7 @@ class RegularizationStatus extends Component {
                                         height: 150,
                                         color: '#000',
                                         textAlignVertical: 'top',
-                                        paddingRight: 10,
+                                        padding: 10,
                                     },
                                 ]}></TextInput>
                             {/* </View> */}

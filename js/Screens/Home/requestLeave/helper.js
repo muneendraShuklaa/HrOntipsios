@@ -4,7 +4,6 @@ import Endpoint from '../../../Utils/Endpoint';
 import moment from 'moment';
 import {Alert} from 'react-native';
 import {StackActions} from '@react-navigation/native';
-import { localNotificationService } from '../../../notification/localNotification';
 
 export default class RequestHelper {
   constructor(self) {
@@ -82,6 +81,9 @@ export default class RequestHelper {
         // console.log('responce', 'ooooomgghggg');
       });
   };
+
+
+
 uploadLeaveDoc = async () => {
 
 
@@ -156,69 +158,160 @@ uploadLeaveDoc = async () => {
   }
 };
 
-  // uploadLeaveDoc = async () => {
-  //   let photo = this.self.state.imageArray2;
-  //   const jsonValueClientID = await AsyncStorage.getItem('ClientId');
-  //   const EmpId = await AsyncStorage.getItem('EmpId');
-  //   const AuthToken = await AsyncStorage.getItem('AuthToken');
-  //   console.log(this.self.state.imageArray2, photo, 'leavehh value......');
-  //   let formData = new FormData();
-  //   formData.append('LeaveType', this.self.state.Leavevalue);
-  //   formData.append(
-  //     'FromDate',
-  //     new Date(this.self.state.selectedDate?.dateString).toISOString(),
-  //   );
-  //   formData.append(
-  //     'ToDate',
-  //     new Date(this.self.state.selectedEndDate?.dateString).toISOString(),
-  //   );
-  //   formData.append('Comments', this.self.state.notesadd);
-  //   formData.append('Availability', this.self.state.avalavleType);
-  //   formData.append('EmpId', EmpId);
-  //   formData.append('LeaveDuration', '1');
-  //   formData.append('Hours', '');
-  //   formData.append('ClientId', JSON.parse(jsonValueClientID));
-  //   {
-  //     photo == ''
-  //       ? null
-  //       : formData.append('FileName', {
-  //           uri: photo.path,
-  //           name: 'image.jpg',
-  //           type: photo.mime || 'image/jpeg',
-  //         });
-  //   }
-  //   return axios({
-  //     url: Endpoint.baseUrl + Endpoint.ApplyLeave,
-  //     method: 'POST',
-  //     data: formData,
-  //     headers: {
-  //       token: AuthToken,
-  //       'Content-Type': 'multipart/form-data',
-  //       clientid: JSON.parse(jsonValueClientID).toString(),
-  //     },
-  //   })
-  //     .then(async response => {
+
+
+//   uploadLeaveDoc = async () => {
+//   const self = this.self; // 👈 Fix this
+//   console.log('uploadLeaveDoc called', self.state.imageArray2);
+
+//   let photo = self.state.imageArray2;
+//   const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+//   const EmpId = await AsyncStorage.getItem('EmpId');
+//   const AuthToken = await AsyncStorage.getItem('AuthToken');
+
+//   let formData = new FormData();
+//   formData.append('LeaveType', self.state.Leavevalue);
+//   formData.append(
+//     'FromDate',
+//     new Date(self.state.selectedDate?.dateString).toISOString(),
+//   );
+//   formData.append(
+//     'ToDate',
+//     self.state.Full === 'half'
+//       ? new Date(self.state.selectedDate?.dateString).toISOString()
+//       : new Date(self.state.selectedEndDate?.dateString).toISOString(),
+//   );
+//   formData.append('LeaveDuration', self.state.Full === 'half' ? 0 : 1);
+//   formData.append('Hours', self.state.Full === 'half' ? self.state.Hours : '');
+//   formData.append('Comments', self.state.notesadd);
+//   formData.append('Availability', self.state.avalavleType);
+//   formData.append('EmpId', EmpId);
+//   formData.append('ClientId', JSON.parse(jsonValueClientID));
+
+//   if (photo !== '') {
+//     formData.append('FileName', {
+//       uri: photo.path,
+//       name: 'image.jpg',
+//       type: photo.mime || 'image/jpeg',
+//     });
+//   }
+
+//   console.log('formData-------------', formData);
+
+//   return axios({
+//     url: Endpoint.baseUrl + Endpoint.ApplyLeave,
+//     method: 'POST',
+//     data: formData,
+//     headers: {
+//       token: AuthToken,
+//       'Content-Type': 'multipart/form-data',
+//       clientid: JSON.parse(jsonValueClientID).toString(),
+//     },
+//   })
+
+//     .then(async response => {
+//       console.log('apply leave response----->', response.data);
+//       self.props.navigation.dispatch(StackActions.replace('HomeStack'));
+//     })
+
+
+//     .catch(error => {
+//       console.warn('apply leave error----->', error);
+
+//       // Alert.alert('Leave Request Failed', 'Something went wrong.');
+
+//       // ✅ Safe navigation
+//       // if (self?.props?.navigation) {
+//       //   self.props.navigation.dispatch(StackActions.replace('HomeStack'));
+//       // } else {
+//       //   console.warn('Navigation is undefined in catch block.');
+//       // }
+//     });
+// };
+
+
+  uploadLeaveDoc = async () => {
+    console.log('uploadLeaveDoc called', this.self.state.imageArray2,
+   
+    );
+    let photo = this.self.state.imageArray2;
+    console.log("1-----")
+    const jsonValueClientID = await AsyncStorage.getItem('ClientId');
+      console.log("2-----")
+    const EmpId = await AsyncStorage.getItem('EmpId');
+      console.log("3-----")
+    const AuthToken = await AsyncStorage.getItem('AuthToken');
+      console.log("4----- ----",AuthToken, EmpId, JSON.parse(jsonValueClientID));
+    console.log(this.self.state.imageArray2, photo, 'leavehh value......');
+      console.log("5-----")
+    let formData = new FormData();
+    formData.append('LeaveType', this.self.state.Leavevalue);
+      console.log("6-----")
+    formData.append(
+      'FromDate',
+      new Date(this.self.state.selectedDate?.dateString).toISOString(),
+    );
+      console.log("7-----")
+  formData.append(
+  'ToDate',
+  this.self.state.Full === 'half'
+    ? new Date(this.self.state.selectedDate?.dateString).toISOString()
+    : new Date(this.self.state.selectedEndDate?.dateString).toISOString()
+);
+
+formData.append('LeaveDuration', this.self.state.Full === 'half' ? 0 : 1);
+
+formData.append('Hours', this.self.state.Full === 'half' ? this.self.state.Hours : '');
+
+      console.log("8-----")
+    formData.append('Comments', this.self.state.notesadd);
+      console.log("9-----")
+    formData.append('Availability', this.self.state.avalavleType);
+      console.log("10-----")
+    formData.append('EmpId', EmpId);
+      console.log("11-----")
+   
+
+ 
+    formData.append('ClientId', JSON.parse(jsonValueClientID));
+    console.log("14-----")
+    {
+      photo == ''
+        ? null
+        : formData.append('FileName', {
+            uri: photo.path,
+            name: 'image.jpg',
+            type: photo.mime || 'image/jpeg',
+          });
+    }
+    console.log("15-----")
+
+    console.log('formData-------------', formData);
+    return axios({
+      url: Endpoint.baseUrl + Endpoint.ApplyLeave,
+      method: 'POST',
+      data: formData,
+      headers: {
+        token: AuthToken,
+        'Content-Type': 'multipart/form-data',
+        clientid: JSON.parse(jsonValueClientID).toString(),
+      },
+    })
+      .then(async response => {
      
-  //       this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
-  //       // const options = {
-  //       //   soundName: 'default',
-  //       //   playSound: true,
-  //       //   largeIcon: 'ic_launcher',
-  //       //   smallIcon: 'ic_launcher',
-  //       // };
-      
-  //       // localNotificationService.showNotification(
-  //       //   0,
-  //       //   'Leave Applied',
-  //       //   'Your leave application was submitted successfully.',
-  //       //   {},
-  //       //   options,
-  //       // );
-        
-  //     })
-  //     .catch(function (error) {
-      
-  //       console.warn('apply leave error----->', error);
-  //     });
-  // };
+        console.log('apply leave response----->', response.data);
+        this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
+      })
+ .catch((error) => {
+
+
+  console.warn('apply leave error----->', error);
+    //  this.self.props.navigation.dispatch(StackActions.replace('HomeStack'));
+
+
+  
+   
+  
+});
+  };
 }
