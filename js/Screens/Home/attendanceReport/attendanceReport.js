@@ -15,7 +15,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import moment from "moment";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import RNHTMLtoPDF from "react-native-html-to-pdf";
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
 // import RNFS from "react-native-fs";
 import Share from 'react-native-share';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -100,6 +100,9 @@ class attendanceReport extends Component {
         this.setState({ isVisible: true, dateType: field });
     };
     generatePDF = async (employeeData) => {
+
+
+        console.log('generatePDF called', employeeData);
         try {
             const htmlContent = `
                 <html>
@@ -119,13 +122,22 @@ class attendanceReport extends Component {
                 </html>
             `;
 
-            const options = {
-                html: htmlContent,
-                fileName: "EmployeeDetails",
-                directory: "Documents",
-            };
+               const options = {
+      html: htmlContent,
+      fileName: 'EmployeeDetails_' + employeeData.EmployeeId,
+      directory: 'Documents',
+      base64: true, // recommended for sharing
+    };
+            // const options = {
+            //     html: htmlContent,
+            //     fileName: "EmployeeDetails",
+            //     directory: "Documents",
+            // };
 
+            console.log('PDF options:', options);
             const file = await RNHTMLtoPDF.convert(options);
+
+            console.log('PDF options:', file);
             const filePath = file.filePath;
 
             // Alert.alert("PDF Created", `Saved at: ${filePath}`);
