@@ -61,7 +61,8 @@ export default class DSREditHelper {
       .then(result => {
         console.log('get Add data...adddtata', result);
         this.self.setState({Success: true});
-        this.self.props.navigation.navigate('bottomTabBarr');
+        // this.self.props.navigation.navigate('bottomTabBarr');
+         this.self.props.navigation.navigate('DSR');
       })
       .catch(error => console.log('error', error));
   };

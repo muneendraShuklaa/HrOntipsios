@@ -160,7 +160,7 @@ class editdsr extends Component {
                   onChangeText={text => {
                     this.setState({hour: text});
                   }}
-                  style={{marginLeft: 10, color: '#000'}}>
+                  style={{ width : '100%',marginLeft: 10, color: '#000'}}>
                   {this.state.TotalHours}
                 </TextInput>
               </View>
@@ -270,6 +270,7 @@ class editdsr extends Component {
                   maxLength={500}
                   placeholderTextColor={'#000'}
                   style={{
+                    marginTop : 8,
                     textAlignVertical: 'top',
                     width: '85%',
                     color: '#000',

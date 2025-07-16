@@ -117,6 +117,7 @@ class adddsr extends Component {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
+              alignItems: 'center',
             }}>
             <View style={{height: 50, justifyContent: 'center'}}>
               <TouchableOpacity
@@ -159,7 +160,7 @@ class adddsr extends Component {
                   marginRight: 10,
                   width: 'auto',
                 }}>
-                <TextInput
+                <Text
                   style={[
                     utils.fontStyle.FontFamilyRegular,
                     {
@@ -173,7 +174,7 @@ class adddsr extends Component {
                   {moment(this.state.selectedDate?.dateString).format('ll')}
                   {/* {moment(this.state.selectedDate?.dateString).format('ll')} */}
                   {/* {this.state.selectedEndDate?.dateString} */}
-                </TextInput>
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -342,6 +343,7 @@ class adddsr extends Component {
                   placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
                   style={{
                     marginLeft: 10,
+                    width : '100%',
                     color: this.props.isDark ? '#fff' : '#000',
                   }}></TextInput>
               </View>
@@ -436,6 +438,7 @@ class adddsr extends Component {
                   borderRadius: 10,
                   marginTop: 10,
                   marginLeft: 10,
+
                 }}>
                 <Icon
                   name="comment-o"
@@ -454,7 +457,7 @@ class adddsr extends Component {
                   maxLength={500}
                   placeholderTextColor={this.props.isDark ? '#fff' : '#000'}
                   style={{
-                    // marginLeft: 10,
+                    marginTop: 6,
                     textAlignVertical: 'top',
                     color: this.props.isDark ? '#fff' : '#000',
                     width: '85%',
